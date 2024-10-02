@@ -1,103 +1,199 @@
 """
 The core of Gregium
-contains vital elements required for gregium to work
+v0.2
+
+See docs at: 
+https://docs.google.com/document/d/1KtBRR3mXbcjt4zKhA5wF2QNwm-vt10tR8TIWEoapXyA/edit?usp=sharing
 """
 
-# Importing all necessary files
-import pygame,math,warnings,zipfile,os,threading,json
+# Pygame Imports
+import pygame, pygame.freetype, pygame.image
+
+# Other Required Imports
+import math
+import warnings
+import zipfile
+import os
+import threading
+import json
 from pathlib import Path
 from pynput import keyboard
-import pygame.freetype
-import pygame.image
 
-# Initializing pygame
-pygame.init() # ????? This is just a note to find, I moved this a little for more "paragraphs" seperation
+# Declaring Globals
+PATH = str(Path(__file__).parent.absolute())
+WINDOW = None
 
-def alignPos(pos:tuple[float,float],align:str="topLeft"):
+# Initializing Pygame
+pygame.init()
+
+def init():
     """
-    Align to a position on the window including
-    topRight, topLeft, bottomRight, bottomLeft, centerRight, centerLeft, centerTop, centerBottom, and center
+    Will define the global WINDOW variable to the current 
+    working window, required for many functions to run
+
+    *pygame.display.set_mode() must be run first to create the window
     """
+    # Redefines global "WINDOW" to be the current working surface
+    global WINDOW
+    WINDOW = pygame.display.get_surface()
+
+def alignPos(pos:tuple[float,float], 
+             align:str="topLeft") -> tuple[float,float]:
+    """
+    Aligns a position to a corner of the window, possible corners to align to include, 
+    topRight, topLeft, bottomRight, bottomLeft, centerRight, 
+    centerLeft, centerTop, centerBottom, and center, 
+    each of which scale relative to the size of the window.
+    The default position is topLeft and running alignPos 
+    with topLeft returns the same value; 
+    bottomRight is the opposite corner and will add the 
+    total x & y values of the window respectively.
+
+    Will raise error if gregium.init() is not run first
+    """
+
+    # Make sure there is a window specified
     if WINDOW != None:
+        
+        # Set corner based on which one is found
         match align:
             case "topRight":
-                return (pos[0]+WINDOW.get_width(),pos[1])
+                return (pos[0]+WINDOW.get_width(),
+                        pos[1])
             case "topLeft":
                 return pos
             case "bottomRight":
-                return (pos[0]+WINDOW.get_width(),pos[1]+WINDOW.get_height())
+                return (pos[0]+WINDOW.get_width(),
+                        pos[1]+WINDOW.get_height())
             case "bottomLeft":
-                return (pos[0],pos[1]+WINDOW.get_height())
+                return (pos[0],
+                        pos[1]+WINDOW.get_height())
             case "centerRight":
-                return (pos[0]+WINDOW.get_width(),pos[1]+(WINDOW.get_height()/2))
+                return (pos[0]+WINDOW.get_width(),
+                        pos[1]+(WINDOW.get_height()/2))
             case "centerLeft":
                 return (pos[0],pos[1]+(WINDOW.get_height()/2))
             case "centerBottom":
-                return (pos[0]+(WINDOW.get_width()/2),pos[1]+WINDOW.get_height())
+                return (pos[0]+(WINDOW.get_width()/2),
+                        pos[1]+WINDOW.get_height())
             case "centerTop":
-                return (pos[0]+(WINDOW.get_width()/2),pos[1])
+                return (pos[0]+(WINDOW.get_width()/2),
+                        pos[1])
             case _:
                 return pos
                 
     else:
         raise Exception("Must run init first")
 
-def rotate(origin, point, angle):
+def rotate(origin:tuple[float,float], point:tuple[float,float], 
+           angle:float) -> tuple[float,float]:
     """
-    Rotate a point counterclockwise by a given angle around a given origin.
+    Will rotate a point counterclockwise around a given origin, 
+    new point position is based on original distance to the origin, 
+    angle must be given in degree form for function to work properly.
 
-    The angle should be given in degrees.
+    *May have small rounding errors
     """
+
+    # Convert Degrees to radians
     ang = math.radians(angle)
+
+    # Split up point tuple
     ox, oy = origin
     px, py = point
 
+    # Get new position based on angle
     qx = ox + math.cos(ang) * (px - ox) - math.sin(ang) * (py - oy)
     qy = oy + math.sin(ang) * (px - ox) + math.cos(ang) * (py - oy)
-    return qx, qy
 
-def get_window_center():
+    # Return new position in the form of a tuple
+    return (qx, qy)
+
+def get_window_center() -> tuple[float,float]:
+    """
+    Returns the center of the current working window.
+
+    *Will raise error if gregium.init() is not run first
+    """
+
+    # Get center & return
     return (WINDOW.get_width()/2,WINDOW.get_height()/2)
 
-def get_center(original:tuple[float,float],size:tuple[float,float]):
+def position_center(original:tuple[float,float],
+                    size:tuple[float,float]) -> tuple[float,float]:
+    """
+    Will return the coordinates required 
+    (assuming shape is blitted from top-left corner) 
+    in which the center of the object will be at original 
+    for given size.
+
+    *Not the same as get_center()
+    """
+
+    # Sutract size to make blitting pos (top-left) yield the center
     return (original[0]-(size[0]/2),original[1]-(size[1]/2))
 
-def get_rect_center(rect:pygame.Rect) -> tuple[float,float]:
-    return (rect.x+rect.w/2,rect.y+rect.h/2)
+def get_center(original:tuple[float,float],
+                size:tuple[float,float]) -> tuple[float,float]:
+    """
+    Will return the center of the shape assuming the original 
+    is in the top left of the given size.
 
-PATH = str(Path(__file__).parent.absolute())
-WINDOW = None
-def init():
+    *Not the same as position_center()
     """
-    RUN AFTER WINDOW CREATION
+def get_rect_center(rect:pygame.Rect) -> tuple[float,float]:
     """
-    global WINDOW
-    WINDOW = pygame.display.get_surface()
+    Returns the center coordinates of the given pygame.Rect 
+    element based on the x & y coordinates of it.
+    """
+    # Add width & height to rect to get center coordinates
+    return (rect.x+rect.w/2,rect.y+rect.h/2)
 
 #### ---- FONT HANDLER ---- ####
 class FontType(type):
     def __init__(self):
         """
-        MODULE FUNCTION (DO NOT RUN)
+        Only used in Font.from_sys() and Font.from_file() so that 
+        extensions such as pylance or other python extensions that 
+        complete will work correctly when initializing from the alternate methods.
         """
         self.font:pygame.freetype.Font = pygame.freetype.Font()
     
-    def blit(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0):
+    def blit(self,text:str,pos:tuple[int,int],size:int=20,
+             fgcolor:tuple[int,int,int]=(255,255,255),
+             bgcolor:tuple[int,int,int]=None,
+             angle:int=0):
         pass
 
-    def blit_center(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0):
+    def blit_center(self,text:str,pos:tuple[int,int],size:int=20,
+                    fgcolor:tuple[int,int,int]=(255,255,255),
+                    bgcolor:tuple[int,int,int]=None,
+                    angle:int=0):
         pass
 
-    def blit_true_center(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0):
+    def blit_true_center(self,text:str,pos:tuple[int,int],size:int=20,
+                         fgcolor:tuple[int,int,int]=(255,255,255),
+                         bgcolor:tuple[int,int,int]=None,
+                         angle:int=0):
         pass
     
 class Font:
     def __init__(self,fontInst:pygame.freetype.Font):
+        """
+        Defines a font instance from a pygame.freetype.font, 
+        font must have been initialized through pygame.freetype.font 
+        unless using the 
+        Font.from_sys() or Font.from_file() method.
+        gregium.Font allows easier blitting and modification of 
+        fonts pygame is unable to replicate.
+        """
         self.font:pygame.freetype.Font = fontInst
 
     def blit(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None):
         """
-        Renders text on surface with top right at pos
+        Will blit text to the main working window at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully left-aligned based on the pos parameter.
+
+        *Will raise an error if gregium.init() is not run first
         """
         if altWindow == None:
             altWindow = WINDOW
@@ -106,17 +202,21 @@ class Font:
 
     def blit_center(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None):
         """
-        Render text on surface with center of first line at pos
+        Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully left-aligned based on the pos parameter.
+
+        *Will raise an error if gregium.init() is not run first
         """
         if altWindow == None:
             altWindow = WINDOW
         for layer,txt in enumerate(text.split("\n")):
             fgr = self.font.get_rect(txt,size=size,rotation=angle)
-            self.font.render_to(altWindow,get_center((pos[0],pos[1]+(layer*size)),(fgr.w,fgr.h)),txt,fgcolor,bgcolor,size=size,rotation=angle)
+            self.font.render_to(altWindow,position_center((pos[0],pos[1]+(layer*size)),(fgr.w,fgr.h)),txt,fgcolor,bgcolor,size=size,rotation=angle)
 
     def blit_true_center(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None):
         """
-        Render text on surface with center of absolute center at pos
+        Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully center-aligned based on the pos parameter.
+
+        *Will raise an error if gregium.init() is not run first
         """
         if altWindow == None:
             altWindow = WINDOW
@@ -124,14 +224,20 @@ class Font:
         yOffS = ((len(splitTxt)-1)*size)/2
         for layer,txt in enumerate(splitTxt):
             fgr = self.font.get_rect(txt,size=size,rotation=angle)
-            self.font.render_to(altWindow,get_center((pos[0],pos[1]+(layer*size)-yOffS),(fgr.w,fgr.h)),txt,fgcolor,bgcolor,size=size,rotation=angle)
+            self.font.render_to(altWindow,position_center((pos[0],pos[1]+(layer*size)-yOffS),(fgr.w,fgr.h)),txt,fgcolor,bgcolor,size=size,rotation=angle)
 
     @classmethod
     def from_sys(self,fontName:str) -> FontType:
+        """
+        Will initialize the same font as the gregium.Font method but instead from a system font using the pygame.freetype.SysFont method.
+        """
         return self(pygame.freetype.SysFont(fontName,20))
     
     @classmethod
     def from_file(self,filePath:str) -> FontType:
+        """
+        Will initialize the same font as the gregium.Font method but instead uses a font file path the same way the main gregium.Font is initialized via the pygame.freetype.Font method.
+        """
         return self(pygame.freetype.Font(filePath,20))
         
 #### ---- SPRITE HANDLER ---- ####
@@ -155,6 +261,8 @@ def SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,rotation:int=0,hasOneIma
 
     except:
         warnings.warn(f"Image: {filePath} not found")
+        imageO = pygame.Surface((1,1))
+        image = imageO
     
     if hasOneImage:
         return image
@@ -593,9 +701,3 @@ class CLI:
 def stop():
     listenerE.stop()
     quit()
-
-CLITEST = CLI()
-CLITEST.addCmd({"name":{"root":{"type":"*","var":"test","next":"foo"},"foo":{"type":"*","var":"test2","next":"etc"}}})
-
-print(CLITEST.cmds)
-print(CLITEST.run("help name"))
