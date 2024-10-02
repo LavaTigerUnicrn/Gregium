@@ -3,13 +3,15 @@ The core of Gregium
 contains vital elements required for gregium to work
 """
 
+# Importing all necessary files
 import pygame,math,warnings,zipfile,os,threading,json
 from pathlib import Path
 from pynput import keyboard
-pygame.init()
-
 import pygame.freetype
 import pygame.image
+
+# Initializing pygame
+pygame.init() # ????? This is just a note to find, I moved this a little for more "paragraphs" seperation
 
 def alignPos(pos:tuple[float,float],align:str="topLeft"):
     """
