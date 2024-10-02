@@ -18,6 +18,8 @@ def alignPos(pos:tuple[float,float],align:str="topLeft"):
     Align to a position on the window including
     topRight, topLeft, bottomRight, bottomLeft, centerRight, centerLeft, centerTop, centerBottom, and center
     """
+
+    # When the window is loaded, align items based on the value of "align"
     if WINDOW != None:
         match align:
             case "topRight":
@@ -39,6 +41,7 @@ def alignPos(pos:tuple[float,float],align:str="topLeft"):
             case _:
                 return pos
                 
+    # If the window isn't loaded, throw an informational error
     else:
         raise Exception("Must run init first")
 
@@ -48,25 +51,35 @@ def rotate(origin, point, angle):
 
     The angle should be given in degrees.
     """
+
+    # Converts the value of "angle" into radians
     ang = math.radians(angle)
+
+    # Unpacks the "origin" and "point" variables
     ox, oy = origin
     px, py = point
 
+    # Calculates and returns the position of the point rotated upon the origin
     qx = ox + math.cos(ang) * (px - ox) - math.sin(ang) * (py - oy)
     qy = oy + math.sin(ang) * (px - ox) + math.cos(ang) * (py - oy)
     return qx, qy
 
 def get_window_center():
+    """Gets the center coordinates of the window."""
     return (WINDOW.get_width()/2,WINDOW.get_height()/2)
 
 def get_center(original:tuple[float,float],size:tuple[float,float]):
+    # ????????????
     return (original[0]-(size[0]/2),original[1]-(size[1]/2))
 
 def get_rect_center(rect:pygame.Rect) -> tuple[float,float]:
+    """Gets the center coordinates of a given rect."""
     return (rect.x+rect.w/2,rect.y+rect.h/2)
 
+# ??????????????????
 PATH = str(Path(__file__).parent.absolute())
 WINDOW = None
+
 def init():
     """
     RUN AFTER WINDOW CREATION
@@ -76,6 +89,7 @@ def init():
 
 #### ---- FONT HANDLER ---- ####
 class FontType(type):
+    # ?????????
     def __init__(self):
         """
         MODULE FUNCTION (DO NOT RUN)
