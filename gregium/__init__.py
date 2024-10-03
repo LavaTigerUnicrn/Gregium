@@ -160,12 +160,11 @@ def get_rect_center(rect:pygame.Rect) -> tuple[float,float]:
 
 #### ---- FONT HANDLER ---- ####
 class FontType(type):
-    # ?????????
     def __init__(self):
         """
         Only used in Font.from_sys() and Font.from_file() so that 
         extensions such as pylance or other python extensions that 
-        complete will work correctly when initializing from the alternate methods.
+        autocomplete will work correctly when initializing from the alternate methods.
         """
         self.font:pygame.freetype.Font = pygame.freetype.Font()
     
@@ -193,9 +192,9 @@ class Font:
         Defines a font instance from a pygame.freetype.font, 
         font must have been initialized through pygame.freetype.font 
         unless using the 
-        Font.from_sys() or Font.from_file() method.
+        Font.from_sys() or Font.from_file() methods.
         gregium.Font allows easier blitting and modification of 
-        fonts pygame is unable to replicate.
+        fonts which pygame is unable to replicate.
         """
         self.font:pygame.freetype.Font = fontInst
 
@@ -205,8 +204,12 @@ class Font:
 
         *Will raise an error if gregium.init() is not run first
         """
+
+        # Sets working window to the main window if nothing is specified
         if altWindow == None:
             altWindow = WINDOW
+
+        # Blits text onto specified window (or default if no window is provided)
         for layer,txt in enumerate(text.split("\n")):
             self.font.render_to(altWindow,(pos[0],pos[1]+(layer*size)),txt,fgcolor,bgcolor,size=size,rotation=angle)
 
@@ -216,8 +219,12 @@ class Font:
 
         *Will raise an error if gregium.init() is not run first
         """
+
+        # Sets working window to the main window if nothing is specified
         if altWindow == None:
             altWindow = WINDOW
+
+        # Blits center of the text onto coordinates in the specified window (or default if no window is provided)
         for layer,txt in enumerate(text.split("\n")):
             fgr = self.font.get_rect(txt,size=size,rotation=angle)
             self.font.render_to(altWindow,position_center((pos[0],pos[1]+(layer*size)),(fgr.w,fgr.h)),txt,fgcolor,bgcolor,size=size,rotation=angle)
@@ -228,8 +235,12 @@ class Font:
 
         *Will raise an error if gregium.init() is not run first
         """
+
+        # Sets working window to the main window if nothing is specified
         if altWindow == None:
             altWindow = WINDOW
+
+        # ????????????? Not exactly sure
         splitTxt = text.split("\n")
         yOffS = ((len(splitTxt)-1)*size)/2
         for layer,txt in enumerate(splitTxt):
@@ -256,26 +267,33 @@ def SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,rotation:int=0,hasOneIma
     Generates an Image-Only sprite without class information
     First Surface is original image (for repeat changing)
     Second Surface is modified image to current settings, if nothing is applied both surfaces will be the same
-    If image load fails empty surface will be returned as well as having a warning
+    If image load fails, empty surface will be returned as well as having a warning
 
     If you wish for only 1 image (being the edited) set the 'hasOneImage' tag to true
     """
     
     try:
+        # Loads the image based on the given file path
         imageO = pygame.image.load(filePath)
         image = imageO
+
+        # Transforms the scale/rotation of the image if specified
         if size != None:
             pygame.transform.scale(image,size)
         if rotation != None:
             pygame.transform.rotate(image,rotation)
 
+    # Warns user if the filepath is invalid
     except:
         warnings.warn(f"Image: {filePath} not found")
         imageO = pygame.Surface((1,1))
         image = imageO
     
+    # Returns only the edited image, if user specifies to
     if hasOneImage:
         return image
+    
+    # Returns the original and edited image
     return [imageO,image]
 
 class Sprite:
@@ -283,13 +301,16 @@ class Sprite:
         """
         Create a basic sprite for rendering
         """
+
         try:
+            # Loads the image and sets up variables of the class
             self.origImage = pygame.image.load(filePath).convert_alpha()
             self.width = self.origImage.get_width()
             self.height = self.origImage.get_height()
             self.rotation = 0
             self.inverted = False
 
+            # Sets up spritesheets for animation as specified by the user
             if sheetSize != None:
                 self.is_sheet = True
                 self.sheetSize = sheetSize
@@ -298,72 +319,108 @@ class Sprite:
                 self.imageRect = pygame.Rect(0,0,self.width,self.height)
                 self.width /= self.sheetSize[0]
                 self.height /= self.sheetSize[1]
+
+            # Disables sprite sheets and animation
             else:
                 self.is_sheet = False
                 self.sheetSize = (1,1)
 
+            # Updates the sprite's image
             self.updateImage()
             
+        # If an invalid argument is passed, nullify the image
         except Exception as e:
             print(e)
             self.origImage = None
             self.is_sheet = False
 
     def updateImage(self):
+        """
+        Updates the image for animation/movement
+        """
 
+        # Return with a failed exit code if there is no image
         if self.origImage == None:
             return -1
         
+        # ????????
         self.imageBlit = pygame.Surface((self.width,self.height),pygame.SRCALPHA)
 
+        # If spritesheets are enabled, display the next sprite
         if self.is_sheet:
             self.imageRect.w = self.width
             self.imageRect.h = self.height
             self.imageBlit.blit(pygame.transform.scale(self.origImage,(self.width*self.sheetSize[0],self.height*self.sheetSize[1])),(0,0),self.imageRect)
+        
+        # Otherwise, redisplay the sprite
         else:
             self.imageBlit.blit(pygame.transform.scale(self.origImage,(self.width*self.sheetSize[0],self.height*self.sheetSize[1])),(0,0))
 
+        # Reposition the sprite and reset the sprite's Rect value
         self.imageBlit = pygame.transform.rotate(self.imageBlit,self.rotation)
         self.imageBlitRect = self.imageBlit.get_rect()
 
     def tint_add(self,rgb:tuple[int,int,int]):
+        """Tint the sprite with the given color"""
+        
+        # Return with a failed exit code if there is no image
         if self.origImage == None:
             return -1
         
+        # Tints the sprite with the rgb color
         self.imageBlit.fill(rgb,special_flags=pygame.BLEND_RGB_ADD)
 
     def tint_mult(self,rgb:tuple[int,int,int]):
+        """??????"""
+
+        # Return with a failed exit code if there is no image
         if self.origImage == None:
             return -1
         
+        # ??????? idk difference between the tint single and mult
+        # Also nolan should ther be a return 1 here
         self.imageBlit.fill(rgb,special_flags=pygame.BLEND_RGB_MULT)
 
     def blit(self,window:pygame.Surface,xy:tuple[int,int]):
+
+        # Return with a failed exit code if there is no image
         if self.origImage == None:
             return -1
         
+        # Blits the sprite using existing class variables and arguments
         window.blit(self.imageBlit,xy)
 
         return 1
     
     def blit_center(self,window:pygame.Surface,xy:tuple[int,int]):
+
+        # Return with a failed exit code if there is no image
         if self.origImage == None:
             return -1
         
+        # Blits the sprite's center at the given coordinates
         window.blit(self.imageBlit,(xy[0]-self.imageBlitRect.w/2,xy[1]-self.imageBlitRect.h/2))
 
         return 1
     
     def blit_pivot_center(self,window:pygame.Surface,xy:tuple[int,int],pivot:tuple[int,int],angle:float):
+
+        # Return with a failed exit code if there is no image
         if self.origImage == None:
             return -1
         
+        # ????????? idk difference with this p
         newPoint = rotate(pivot,xy,angle)
         window.blit(self.imageBlit,(newPoint[0]-self.imageBlitRect.w/2,newPoint[1]-self.imageBlitRect.h/2))
 
         return 1
     
     def updateSheet(self):
+        """
+            Updates the active sprite in the spritesheet
+        """
+
+        # ?????????? NEeds commenting i sorta get it but not fuly
         if self.sheetTick >= self.sheetAnimTicks:
             self.sheetTick = 0
             self.imageRect.x += self.width
@@ -393,20 +450,26 @@ class collide:
     def point_to_rect(rect:pygame.Rect,point:tuple[float,float],showBoundingBox:bool=False,boundCollideCol:tuple[int,int,int]=(0,255,0),boundApartColor:tuple[int,int,int]=(255,0,0)) -> bool:
         """
         Cheks for if each rect is colliding with a point
-        If showBoundingBox = True then a box outline will be pasted onto the main window being boundCollideCol on collision and boundApartColor when it isn't
+        If showBoundingBox is True, then a box outline will be pasted onto the main window being boundCollideCol on collision and boundApartColor when it isn't
         """
+
+        # Initializing variables
         has_collide = False
         rx = rect.x
         ry = rect.y
+
+        # If the point is inside the Rect, updated has_collide to True
         if point[0] >= rx and point[1] >= ry and point[0] <= rx + rect.w and point[1] <= ry + rect.h:
             has_collide = True
-        
+
+        # Draw the bounding box if specified by user
         if showBoundingBox:
             if has_collide:
                 pygame.draw.rect(WINDOW,boundCollideCol,rect,5)
             else:
                 pygame.draw.rect(WINDOW,boundApartColor,rect,5)
 
+        # Return if the rect collided with the point
         return has_collide
 
     @staticmethod
@@ -419,8 +482,11 @@ class collide:
         
         raise NotImplementedError()
 
+# Set up object with events
 events = {"other":{},"quit":False,"mouseDown":False,"mouseUp":False,"mousePos":(0,0),"keyInput":"","highlighted":True}
+
 def clearEvent():
+    """Resets events to defaults ???????? needs a check definiely"""
     global events
     events = {"other":{},"quit":False,"mouseDown":False,"mouseUp":False,"mousePos":pygame.mouse.get_pos(),"keyInput":events["keyInput"],"highlighted":events["highlighted"]}
 def supplyEvent(event:pygame.event.Event):
@@ -428,6 +494,8 @@ def supplyEvent(event:pygame.event.Event):
     Gives pygame events to gregium (events supplied must be from pygame.from.event.get() from each for iteration, to put it simply use <for event in pygame.event.get()> and use this function with event as param)
     """
     global events
+
+    # Update the global events variable based on the value of "event"
     match event.type:
         case pygame.QUIT:
             events["quit"]
@@ -443,10 +511,15 @@ def supplyEvent(event:pygame.event.Event):
             events["other"][event.type] = True
 
 def on_press(key):
+    """?????"""
     global events
+
+    # ??????? what is highilighted exactlh?
     if events["highlighted"]:
         try:
             events["keyInput"] += key.char
+
+        # ??????????
         except AttributeError:
             if key == keyboard.Key.backspace:
                 events["keyInput"] = events["keyInput"][:-1]
@@ -454,6 +527,7 @@ def on_press(key):
                 events["keyInput"] += " "
 
 def keyHandler():
+    """??????"""
     with keyboard.Listener(on_press=on_press) as listener:
         global listenerE
         listenerE = listener
@@ -465,8 +539,10 @@ threading.Thread(target=keyHandler,args=()).start()
 class button:
     def __init__(self,pos:tuple[float,float],size:tuple[float,float],color:tuple[int,int,int]=(255,255,255),outline:tuple[int,int,int]=(0,0,0),outlineThick:int=5,suppliedFont:Font=None,text:str="",textCol:tuple[int,int,int]=(0,0,0),textSize:int=25,colorHighlight:tuple[int,int,int]=(200,200,200),outlineHighlight:tuple[int,int,int]=(55,55,55),align:str="topLeft"):
         """
-        Generates a simple button at pos with outline if outlinethick is above 0 and text if font and text are supplied
+        Generates a simple button at pos with outline (if a thickness is provided) and text (if font and text are provided)
         """
+
+        # Initialize class variables
         self.pos = list(pos)
         self.align = align
         rectPos = alignPos(pos,align)
@@ -493,29 +569,44 @@ class button:
         3: mouse pressed down on collision
         """
 
+        # Initializing variables, checking for collision with current mouse position
         rtrn = 0
         rectPos = alignPos(self.pos,self.align)
         self.rect.x,self.rect.y = rectPos[0],rectPos[1]
         coll = collide.point_to_rect(self.rect,events["mousePos"])
+
+        # Check if mouse is simply hovering over the react
         if coll and not self.hasClicked:
             pygame.draw.rect(WINDOW,self.colorH,self.rect)
-            if self.renderOutline:
-                pygame.draw.rect(WINDOW,self.outlineColH,self.rect,self.outlineThick)
             if events["mouseDown"]:
                 self.hasClicked = True
+            
+            # Draw an outline if a thickness was provided
+            if self.renderOutline:
+                pygame.draw.rect(WINDOW,self.outlineColH,self.rect,self.outlineThick)
+            
             rtrn = 1
+        
         else:
+            # Draw and render the rectangle onto the window
             pygame.draw.rect(WINDOW,self.color,self.rect)
+
+            # Draw an outline if a thickness was provided
             if self.renderOutline:
                 pygame.draw.rect(WINDOW,self.outlineCol,self.rect,self.outlineThick)
+
+        # Check if a click event is active
         if self.hasClicked:
             rtrn = 3
+
+            # Check if the click is completed (mouse is pressed and released)
             if coll and events["mouseUp"]:
                 rtrn = 2
                 self.hasClicked = False
             elif events["mouseUp"] or not coll:
                 self.hasClicked = False
 
+        # Render text if text and font were provided
         if self.renderText:
             self.fontS.blit_true_center(self.text,get_rect_center(self.rect),self.fontSize,fgcolor=self.textCol)
 
@@ -526,6 +617,8 @@ class alertBox:
         """
         Generates alert box with supplied buttons, title can be multi-lined with \\n usage
         """
+
+        # Initializing class variables
         self.buttons = buttons
         wc = get_window_center()
         self.color = color
@@ -539,19 +632,24 @@ class alertBox:
 
     def render(self):
         """
-        Render alert, will return 0 on no buttons pressed and the pressed button on clicked
+        Render an alert. Will return 0 on no buttons pressed. Returns the pressed button if one is clicked
         """
 
+        # Prepare and draw the alert
         outP = 0
         wc = get_window_center()
         self.box.x,self.box.y = wc[0]-350,wc[1]-250
         pygame.draw.rect(WINDOW,self.color,self.box)
         pygame.draw.rect(WINDOW,self.outline,self.box,5)
         self.font.blit_center(self.title,(wc[0],wc[1]-200),size=40)
+
+        # Loop through all given buttons
         for n, buttonN in enumerate(self.buttons):
             self.button.pos[0],self.button.pos[1] = (((self.buttonW+20)*n)+wc[0]-330),wc[1]+130
             self.button.text = buttonN
             self.button.hasClicked = self.buttonClickData[n]
+
+            # If a button is clicked, output that button
             if self.button.render() == 2:
                 outP = buttonN
             self.buttonClickData[n] = self.button.hasClicked
@@ -559,38 +657,56 @@ class alertBox:
         return outP
 
 def cmdParseSeg(segment:str,requestedType:str,min="N/A",max="N/A"):
-        match requestedType:
-            case "str":
-                return segment.replace("\"","")
-            case "int":
-                try:
-                    segNum = int(segment)
-                    if min != "N/A":
-                        if not segNum >= min:
-                            return (6,"Value outside of accepted range")
-                    if max != "N/A":
-                        if not segNum <= max:
-                            return (6,"Value outside of accepted range")
-                    return segNum
-                except:
-                    return (5,"Could not make into an Integer")
-            case "float":
-                try:
-                    segNum = float(segment)
-                    if min != "N/A":
-                        if not segNum >= min:
-                            return (6,"Value outside of accepted range")
-                    if max != "N/A":
-                        if not segNum <= max:
-                            return (6,"Value outside of accepted range")
-                    return segNum
-                except:
-                    return (7,"Could not make into an Float")
-            case "json":
-                try:
-                    return json.loads(segment)
-                except Exception as e:
-                    return (8,"Json error: "+e)
+    """Function for parsing strings, integers, floats, and json"""
+
+    # Check for different types of the material to parse
+    match requestedType:
+
+        case "str":
+            # Remove all double quotes in strings
+            return segment.replace("\"","")
+
+        case "int":
+            try:
+                # Make sure the integer is within the range of (min, max)
+                segNum = int(segment)
+                if min != "N/A":
+                    if segNum < min:
+                        return (6,"Value outside of accepted range")
+                if max != "N/A":
+                    if segNum > max:
+                        return (6,"Value outside of accepted range")
+                return segNum
+            
+            # Return with exit code 5 if argument was invalid
+            except:
+                return (5,"Could not make into an Integer")
+            
+        
+        case "float":
+            try:
+                # Make sure the float is within the range of (min, max)
+                segNum = float(segment)
+                if min != "N/A":
+                    if not segNum >= min:
+                        return (6,"Value outside of accepted range")
+                if max != "N/A":
+                    if not segNum <= max:
+                        return (6,"Value outside of accepted range")
+                return segNum
+            
+            # Return with exit code 7 if argument was invalid
+            except:
+                return (7,"Could not make into an Float")
+            
+        case "json":
+            try:
+                # Return a parsed python object of the given segment
+                return json.loads(segment)
+            
+            # Return with exit code 8 if something fails (usually an invalid json)
+            except Exception as e:
+                return (8,"Json error: "+e)
                 
 class CLI:
     def __init__(self,tree:dict={}):
@@ -615,12 +731,18 @@ class CLI:
             self.cmds[cmd] = commandDict[cmd]
 
     def helpcmd(self,*args):
+        """Generate a help message for using commands"""
+
         cmdList = ""
+
+        # Return a specific help message for a given command
         if len(args) > 0:
             cmdD = self.cmds[args[0]]
             for cmdSeg in cmdD:
                 cmdList += f"{cmdSeg}:{cmdD[cmdSeg]}\n"
             return f'{args[0]}:\n{cmdList}'
+        
+        # Return a list of every existing command
         for cmd in self.cmds:
             cmdList += f'{cmd}\n'
         return f'Commands:\n{cmdList}Type help (command) for specific syntax'
@@ -629,13 +751,16 @@ class CLI:
         """
         Read a full command from a string and output code (error, return) or (0, return) on sucess
         """
+
         #Initial split
         newCmd = cmd.split(" ")
+
         #Recombine strings and json
         cmdRun = []
         isOpenStr = False
         openJsonIndex = 0
         sectionComb = ""
+
         for section in newCmd:
             sectionComb += section
             wasOpenStr = False
@@ -709,5 +834,6 @@ class CLI:
             return (4, "Command not found")
 
 def stop():
+    """Stops the gregium engine"""
     listenerE.stop()
     quit()
