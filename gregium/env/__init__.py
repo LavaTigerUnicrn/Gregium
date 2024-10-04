@@ -161,8 +161,7 @@ def save(fileName:str=None):
         raise Exception("ENV NOT INITIALIZED")
     
     # If a valid file name is given, write a serialized version of ENV in that file
-    # NOALN ?????????? moment i think error handling moment, what if user sends invalid file?
-    if fileName != None:
+    if fileName != None or not fileName in os.listdir(os.getcwd()):
         with open(os.getcwd()+"/"+fileName,"w") as env:
             env.write(reparseEnv(ENV))
 
