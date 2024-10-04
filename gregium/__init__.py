@@ -16,6 +16,7 @@ import zipfile
 import os
 import threading
 import json
+import sys
 from pathlib import Path
 from pynput import keyboard
 
@@ -443,44 +444,6 @@ class zip:
         with zipfile.ZipFile(zipPath,"w") as zip:
             for file in os.listdir(folder):
                 zip.write(folder+"\\"+file)
-    
-#### ---- COLLISION HANDLER ---- ####
-class collide:
-    @staticmethod
-    def point_to_rect(rect:pygame.Rect,point:tuple[float,float],showBoundingBox:bool=False,boundCollideCol:tuple[int,int,int]=(0,255,0),boundApartColor:tuple[int,int,int]=(255,0,0)) -> bool:
-        """
-        Cheks for if each rect is colliding with a point
-        If showBoundingBox is True, then a box outline will be pasted onto the main window being boundCollideCol on collision and boundApartColor when it isn't
-        """
-
-        # Initializing variables
-        has_collide = False
-        rx = rect.x
-        ry = rect.y
-
-        # If the point is inside the Rect, updated has_collide to True
-        if point[0] >= rx and point[1] >= ry and point[0] <= rx + rect.w and point[1] <= ry + rect.h:
-            has_collide = True
-
-        # Draw the bounding box if specified by user
-        if showBoundingBox:
-            if has_collide:
-                pygame.draw.rect(WINDOW,boundCollideCol,rect,5)
-            else:
-                pygame.draw.rect(WINDOW,boundApartColor,rect,5)
-
-        # Return if the rect collided with the point
-        return has_collide
-
-    @staticmethod
-    def rect_to_rect(rect1:pygame.Rect,rect2:pygame.Rect,showBoundingBox:bool=False,boundCollideCol:tuple[int,int,int]=(0,255,0),boundApartColor:tuple[int,int,int]=(255,0,0)) -> bool:
-        """
-        Cheks for if each rect is colliding with another
-        If showBoundingBox = True then a box outline will be pasted onto the main window being boundCollideCol on collision and boundApartColor when it isn't
-        """
-        has_collide = False
-        
-        raise NotImplementedError()
 
 # Set up object with events
 events = {"other":{},"quit":False,"mouseDown":False,"mouseUp":False,"mousePos":(0,0),"keyInput":"","highlighted":True}
@@ -573,7 +536,7 @@ class button:
         rtrn = 0
         rectPos = alignPos(self.pos,self.align)
         self.rect.x,self.rect.y = rectPos[0],rectPos[1]
-        coll = collide.point_to_rect(self.rect,events["mousePos"])
+        coll = self.rect.collidepoint(events["mousePos"][0],events["mousePos"][1])
 
         # Check if mouse is simply hovering over the react
         if coll and not self.hasClicked:
@@ -752,41 +715,66 @@ class CLI:
         Read a full command from a string and output code (error, return) or (0, return) on sucess
         """
 
-        #Initial split
+        # Initial split
         newCmd = cmd.split(" ")
 
-        #Recombine strings and json
+        # Recombine strings and json
         cmdRun = []
         isOpenStr = False
         openJsonIndex = 0
         sectionComb = ""
 
+        # Check each section
         for section in newCmd:
+
+            # Add each section to the combined section
             sectionComb += section
             wasOpenStr = False
+
+            # Check each letter of the section
             for ltr in section:
+
+                # Check to see if all json
                 if wasOpenStr and openJsonIndex == 0:
                     return (1,"String must end at parameter end") 
+                
+                # Check for '"' in the string
                 if ltr == "\"":
                     isOpenStr = not isOpenStr
+
+                    # If a string is closed, make sure it is noted
                     if not isOpenStr:
                         wasOpenStr = True
+
+                # If a { is found outside a string, increase the json index by 1 (json depth)
                 if ltr == "{" and not isOpenStr:
                     openJsonIndex += 1
+
+                # If a } is found outside a string, increase the json index by 1 (json depth)
                 if ltr == "}" and not isOpenStr:
                     openJsonIndex -= 1
+                
+                # Prevent negative open json
                 if openJsonIndex < 0:
                     return (2,"Closed json before opening")
+                
+            # If there is nothing left in the parameter, add it to the sections of command to run
             if not isOpenStr and openJsonIndex == 0:
                 cmdRun.append(sectionComb)
                 sectionComb = ""
             else:
+
+                # Otherwise continue to loop through
                 sectionComb += " "
+
+        # Raise error if json is still open
         if openJsonIndex > 0:
             return (3,"Not all json instances have been closed")
             
-        #Help command
+        # Run the help command (if applicable)
         if cmdRun[0] == "help":
+
+            # Run help command with specific command (if applicable)
             if len(cmdRun) > 1:
                 if cmdRun[1] in self.cmds:
                     return self.helpcmd(cmdRun[1])
@@ -795,39 +783,67 @@ class CLI:
             else:
                 return self.helpcmd()
 
-        #Run command
+        # Check if command exists
         if cmdRun[0] in self.cmds:
+
+            # Prepare variables for reading
             isReadingStart = False
             nextIndex = "root"
             cmd = self.cmds[cmdRun[0]]
             supArgs = {}
+
+            # Check each parameter in the command
             for item in cmdRun:
+
+                # Only start once the command name is passed
                 if isReadingStart:
+
+                    # Check which type of parameter it is (literal,func,or other)
                     match cmd[nextIndex]["type"]:
+
+                        # If type is literal, change the next section based on which name is supplied
                         case "literal":
                             nextFound = cmd[nextIndex]["next"]
+
+                            # If the entered output is invalid, raise an error
                             if item in nextFound:
                                 nextIndex = item
                             else:
                                 return (9,"Could not find next literal")
+                            
+                        # Is func is run without all arguments handle, raise "error"
                         case "func":
                             return (10,"Too many arguments")
+                        
+                        # Otherwise handle it with "cmdParseSeg" function
                         case _:
+
+                            # Check for function min or max
                             relMin = "N/A"
                             relMax = "N/A"
                             if "min" in cmd[nextIndex]:
                                 relMin = cmd[nextIndex]["min"]
                             if "max" in cmd[nextIndex]:
                                 relMax = cmd[nextIndex]["max"]
+
+                            # Get the parsed output
                             parsedSeg = cmdParseSeg(item,cmd[nextIndex]["type"],relMin,relMax)
+
+                            # Add the output to the arguments for the final function
                             if type(parsedSeg) != tuple:
                                 supArgs[cmd[nextIndex]["var"]] = parsedSeg
+
+                                # Continue to the next section of the command
                                 nextIndex = cmd[nextIndex]["next"]
                             else:
                                 return parsedSeg
                 isReadingStart = True
+
+            # If function is not yet due to run, not enough arguments have been supplied
             if nextIndex != "func":
                 return (11,"Not enough arguments")
+            
+            # Run the command's function and return
             return cmd[nextIndex]["run"](kwargs=supArgs)
                 
         else:
@@ -835,5 +851,9 @@ class CLI:
 
 def stop():
     """Stops the gregium engine"""
+
+    # Stop the key listener
     listenerE.stop()
-    quit()
+
+    # Quit python
+    sys.exit(1)
