@@ -17,12 +17,14 @@ import os
 import threading
 import json
 import sys
+import time
 from pathlib import Path
 from pynput import keyboard
 
 # Declaring Globals
 PATH = str(Path(__file__).parent.absolute())
 WINDOW = None
+SELECTEDBUTTON = None
 
 # Initializing Pygame
 pygame.init()
@@ -81,6 +83,9 @@ def alignPos(pos:tuple[float,float],
             case "centerTop":
                 return (pos[0]+(WINDOW.get_width()/2),
                         pos[1])
+            case "center":
+                return (pos[0]+(WINDOW.get_width()/2),
+                        pos[1]+(WINDOW.get_height()/2))
             case _:
                 return pos
                 
@@ -382,6 +387,8 @@ class Sprite:
         # Also nolan should ther be a return 1 here
         self.imageBlit.fill(rgb,special_flags=pygame.BLEND_RGB_MULT)
 
+        return 1
+
     def blit(self,window:pygame.Surface,xy:tuple[int,int]):
 
         # Return with a failed exit code if there is no image
@@ -434,7 +441,7 @@ class Sprite:
         self.sheetTick += 1
 
 #### ---- ZIP HANDLER ---- ####
-class zip:
+class ziphandle:
     
     @staticmethod
     def zipFolder(folder:str,zipPath:str) -> None:
@@ -446,23 +453,29 @@ class zip:
                 zip.write(folder+"\\"+file)
 
 # Set up object with events
-events = {"other":{},"quit":False,"mouseDown":False,"mouseUp":False,"mousePos":(0,0),"keyInput":"","highlighted":True}
+events = {"other":{},"quit":False,"mouseDown":False,"mouseUp":False,"mousePos":(0,0),"keyInput":"","highlighted":True,"enter":False}
 
 def clearEvent():
     """Resets events to defaults ???????? needs a check definiely"""
     global events
-    events = {"other":{},"quit":False,"mouseDown":False,"mouseUp":False,"mousePos":pygame.mouse.get_pos(),"keyInput":events["keyInput"],"highlighted":events["highlighted"]}
+    events = {"other":{},"quit":False,"mouseDown":False,"mouseUp":False,"mousePos":pygame.mouse.get_pos(),"keyInput":events["keyInput"],"highlighted":events["highlighted"],"enter":False}
 def supplyEvent(event:pygame.event.Event):
     """
     Gives pygame events to gregium (events supplied must be from pygame.from.event.get() from each for iteration, to put it simply use <for event in pygame.event.get()> and use this function with event as param)
     """
-    global events
+    global events,SELECTEDBUTTON
 
     # Update the global events variable based on the value of "event"
     match event.type:
+        case pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                events["enter"] = True
         case pygame.QUIT:
-            events["quit"]
+            events["quit"] = True
         case pygame.MOUSEBUTTONDOWN:
+            if SELECTEDBUTTON != None:
+                events["keyInput"] = ""
+            SELECTEDBUTTON = None
             events["mouseDown"] = True
         case pygame.MOUSEBUTTONUP:
             events["mouseUp"] = True
@@ -574,7 +587,49 @@ class button:
             self.fontS.blit_true_center(self.text,get_rect_center(self.rect),self.fontSize,fgcolor=self.textCol)
 
         return rtrn
-    
+
+class textBox:    
+    def __init__(self,pos:tuple[float,float],size:tuple[float,float],color:tuple[int,int,int]=(255,255,255),outline:tuple[int,int,int]=(0,0,0),outlineThick:int=5,suppliedFont:Font=None,text:str="",textCol:tuple[int,int,int]=(0,0,0),textSize:int=25,colorHighlight:tuple[int,int,int]=(200,200,200),outlineHighlight:tuple[int,int,int]=(55,55,55),align:str="topLeft",maxTextLength:int=-1):
+        """
+        Documentation comes later, bad code comes first :thumbsup:
+        """
+
+        if suppliedFont == None:
+            raise SyntaxError("Must have font for textBox")
+        
+        # Make a button with same stats as supplied by user
+        self.buttonMain = button(pos=pos,size=size,color=color,outline=outline,outlineThick=outlineThick,suppliedFont=suppliedFont,text=text,textCol=textCol,textSize=textSize,colorHighlight=colorHighlight,outlineHighlight=outlineHighlight,align=align)
+
+        # Initialize other vars
+        self.text = ""
+        self.defaultText = text
+        self.maxTextLength = maxTextLength
+
+    def render(self):
+        global SELECTEDBUTTON,events
+        # Enforce max text length
+        if len(self.text) > self.maxTextLength and self.maxTextLength > 0:
+            self.text[:-(len(self.text)-self.maxTextLength)]
+
+        # Set the text of the button (if no text has been inputted make default and if there is text add it to button)
+        if self.text == "":
+            self.buttonMain.text = self.defaultText
+        else:
+            self.buttonMain.text = self.text
+
+        # Render button annd get clicks
+        output = self.buttonMain.render()
+        if output == 2:
+
+            # Set the global selected button to this button when clicked
+            SELECTEDBUTTON = self
+            events["keyInput"] = self.text
+
+        if SELECTEDBUTTON == self:
+            self.text = events["keyInput"]
+            if events["enter"]:
+                return "ENTER"
+
 class alertBox:
     def __init__(self,suppliedFont:Font,buttons:tuple=("ok",),title:str=None,color:tuple[int,int,int]=(0,0,0),outline:tuple[int,int,int]=(255,255,255),textCol:tuple[int,int,int]=(255,255,255)):
         """
@@ -852,8 +907,12 @@ class CLI:
 def stop():
     """Stops the gregium engine"""
 
-    # Stop the key listener
-    listenerE.stop()
+    try:
+        # Attempts to stop the key listener
+        listenerE.stop()
+    except:
+        # The key handler has not been made and is not required to stop
+        pass
 
     # Quit python
-    sys.exit(1)
+    os._exit(1)
