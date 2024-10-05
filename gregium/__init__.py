@@ -474,18 +474,23 @@ def supplyEvent(event:pygame.event.Event):
             events["other"][event.type] = True
 
 def on_press(key):
-    """?????"""
+    """Detects key presses and typing ?????? needs verif"""
     global events
 
-    # ??????? what is highilighted exactlh?
+    # If a window is currently focused...
     if events["highlighted"]:
+
+        # Add the typed character to the input
         try:
             events["keyInput"] += key.char
 
-        # ??????????
         except AttributeError:
+
+            # Remove the last character if backspace is pressed
             if key == keyboard.Key.backspace:
                 events["keyInput"] = events["keyInput"][:-1]
+
+            # Add a space if space is pressed
             elif key == keyboard.Key.space:
                 events["keyInput"] += " "
 
