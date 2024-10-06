@@ -742,7 +742,7 @@ class CLI:
         int & float can have min and max
         literal must have a list of outputs
         func must have a "run" variable instead of next and var and the "run" variable must have the function in it
-        you can imput multiple commands by having multiple in the furthest outside dict
+        you can input multiple commands by having multiple in the furthest outside dict
         repeat commands will not get overwritten but will instead throw an error
         """
         for cmd in commandDict:
@@ -767,7 +767,7 @@ class CLI:
     
     def run(self,cmd:str) -> tuple[int,str]:
         """
-        Read a full command from a string and output code (error, return) or (0, return) on sucess
+        Read a full command from a string and output code (error, return) or (0, return) on success
         """
 
         # Initial split
