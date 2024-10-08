@@ -25,6 +25,8 @@ from pynput import keyboard
 PATH = str(Path(__file__).parent.absolute())
 WINDOW = None
 SELECTEDBUTTON = None
+SCRLX = 0
+SCRLY = 0
 
 # Initializing Pygame
 pygame.init()
@@ -396,7 +398,7 @@ class Sprite:
             return -1
         
         # Blits the sprite using existing class variables and arguments
-        window.blit(self.imageBlit,xy)
+        window.blit(self.imageBlit,xy[0]+SCRLX,xy[1]+SCRLY)
 
         return 1
     
@@ -407,7 +409,7 @@ class Sprite:
             return -1
         
         # Blits the sprite's center at the given coordinates
-        window.blit(self.imageBlit,(xy[0]-self.imageBlitRect.w/2,xy[1]-self.imageBlitRect.h/2))
+        window.blit(self.imageBlit,((xy[0]-self.imageBlitRect.w/2)+SCRLX,(xy[1]-self.imageBlitRect.h/2)+SCRLY))
 
         return 1
     
@@ -419,7 +421,7 @@ class Sprite:
         
         # ????????? idk difference with this p
         newPoint = rotate(pivot,xy,angle)
-        window.blit(self.imageBlit,(newPoint[0]-self.imageBlitRect.w/2,newPoint[1]-self.imageBlitRect.h/2))
+        window.blit(self.imageBlit,((newPoint[0]-self.imageBlitRect.w/2)+SCRLX,(newPoint[1]-self.imageBlitRect.h/2))+SCRLY)
 
         return 1
     
