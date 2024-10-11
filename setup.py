@@ -1,5 +1,5 @@
 from setuptools import setup
-setup(name="gregium",version="0.1",
+setup(name="gregium",version="0.1.1",
                  description="A simple package with easy features for using pygame",
                  author="LavaTigerUnicrn",
                  author_email="nolanlance711@gmail.com",
