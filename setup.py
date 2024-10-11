@@ -8,4 +8,17 @@ setup(name="gregium",version="0.1",
                  package_dir={"": "gregium"},
                  package_data={"gregium/editor": ["*.grg"], "gregium/editor/Space_Mono": ["*ttf"]},
                 install_requires=
-                ["pygame"])
+                ["pygame","pynput"],
+                classifiers=[
+    'Development Status :: 3 - Alpha',
+
+    'Intended Audience :: Developers',
+    'Topic :: Software Development :: Build Tools',
+
+    'License :: OSI Approved :: MIT License',   # Again, pick a license
+
+    'Programming Language :: Python :: 3',      #Specify which pyhton versions that you want to support
+    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',]
+    )
