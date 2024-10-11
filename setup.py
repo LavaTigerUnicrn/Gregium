@@ -1,10 +1,10 @@
 from setuptools import setup
-setup(name="gregium",version="0.1.2",
+setup(name="gregium",version="0.1.3",
                  description="A simple package with easy features for using pygame",
                  author="LavaTigerUnicrn",
                  author_email="nolanlance711@gmail.com",
                  url="https://github.com/LavaTigerUnicrn/Gregium",
-                 download_url="https://github.com/LavaTigerUnicrn/Gregium/archive/refs/tags/v0.1.2.tar.gz",
+                 download_url="https://github.com/LavaTigerUnicrn/Gregium/archive/refs/tags/v0.1.3.tar.gz",
                  packages=["gregium","gregium.env","gregium.editor"],
                  package_data={"gregium/editor": ["*.grg"], "gregium/editor/Space_Mono": ["*ttf"]},
                 install_requires=
@@ -15,10 +15,8 @@ setup(name="gregium",version="0.1.2",
     'Intended Audience :: Developers',
     'Topic :: Software Development :: Build Tools',
 
-    'License :: OSI Approved :: MIT License',   # Again, pick a license
+    'License :: OSI Approved :: MIT License',
 
-    'Programming Language :: Python :: 3',      #Specify which pyhton versions that you want to support
-    'Programming Language :: Python :: 3.4',
-    'Programming Language :: Python :: 3.5',
-    'Programming Language :: Python :: 3.6',]
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',]
     )
