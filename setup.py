@@ -6,7 +6,6 @@ setup(name="gregium",version="0.1",
                  url="https://github.com/LavaTigerUnicrn/Gregium",
                  download_url="https://github.com/LavaTigerUnicrn/Gregium/archive/refs/tags/v0.1.tar.gz",
                  packages=["gregium","gregium.env","gregium.editor"],
-                 package_dir={"": "gregium"},
                  package_data={"gregium/editor": ["*.grg"], "gregium/editor/Space_Mono": ["*ttf"]},
                 install_requires=
                 ["pygame","pynput"],
