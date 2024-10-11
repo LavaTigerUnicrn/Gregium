@@ -8,7 +8,7 @@ setup(name="gregium",version="0.1",
                  packages=["gregium","gregium.env","gregium.editor"],
                  package_data={"gregium/editor": ["*.grg"], "gregium/editor/Space_Mono": ["*ttf"]},
                 install_requires=
-                ["pygame","pynput"],
+                ["pygame-ce","pynput"],
                 classifiers=[
     'Development Status :: 3 - Alpha',
 
