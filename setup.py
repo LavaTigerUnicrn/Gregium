@@ -1,10 +1,10 @@
 from setuptools import setup
-setup(name="gregium",version="0.1.1",
+setup(name="gregium",version="0.1.2",
                  description="A simple package with easy features for using pygame",
                  author="LavaTigerUnicrn",
                  author_email="nolanlance711@gmail.com",
                  url="https://github.com/LavaTigerUnicrn/Gregium",
-                 download_url="https://github.com/LavaTigerUnicrn/Gregium/archive/refs/tags/v0.1.tar.gz",
+                 download_url="https://github.com/LavaTigerUnicrn/Gregium/archive/refs/tags/v0.1.2.tar.gz",
                  packages=["gregium","gregium.env","gregium.editor"],
                  package_data={"gregium/editor": ["*.grg"], "gregium/editor/Space_Mono": ["*ttf"]},
                 install_requires=
