@@ -16,7 +16,7 @@ def main():
     EDITOR_WINDOW_SCALE = ENV["WINDOW_SIZE"]
     gregium.init()
 
-    EDITOR_FONT_MAIN = gregium.Font.from_file(EDITPATH+"\\Space_Mono\\SpaceMono-Regular.ttf")
+    EDITOR_FONT_MAIN = gregium.Font.from_file(EDITPATH+"\\SpaceMono-Regular.ttf")
 
     IS_ACTIVE = True
 

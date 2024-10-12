@@ -1,3 +1,3 @@
-Gregium v0.1
+Gregium v0.1.4
 Very basic and poorly documented
 Editor WIP
