@@ -1,6 +1,6 @@
 from setuptools import setup
 
-with open("README.md","r") as r:
+with open("README.md","r",encoding="utf-8") as r:
     longdesc = r.read()
 setup(name="gregium",version="0.1.6",
                  description="A simple package with easy features for using pygame",
