@@ -1,6 +1,7 @@
 from setuptools import setup
 setup(name="gregium",version="0.1.4",
                  description="A simple package with easy features for using pygame",
+                 long_description="README.md",
                  author="LavaTigerUnicrn",
                  author_email="nolanlance711@gmail.com",
                  url="https://github.com/LavaTigerUnicrn/Gregium",
