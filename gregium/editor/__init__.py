@@ -2,7 +2,7 @@
 A basic editor for convenient navigation in Gregium
 """
 
-import pygame
+import pygame,logging
 import gregium.env
 import gregium
 
@@ -10,9 +10,16 @@ EDITPATH = gregium.PATH+"\\editor\\"
 gregium.env.load(EDITPATH+"editor.grg",ignoreCWD=True)
 ENV = gregium.env.ENV
 
+LOGGER = logging.getLogger(__name__)
+logging.basicConfig(filename='gregium.log', level=logging.DEBUG)
+logging.debug("Logger created (Editor)")
+
 def main():
     EDITOR_WINDOW = pygame.display.set_mode(ENV["WINDOW_SIZE"],pygame.RESIZABLE)
     EDITOR_WINDOW_SCALE = ENV["WINDOW_SIZE"]
+    pygame.display.set_caption("Gregium")
+    pygame.display.set_icon(pygame.image.load(gregium.PATH+"/gregiumHD.png"))
+    logging.info("Editor Window Created")
     gregium.init()
 
     EDITOR_FONT_MAIN = gregium.SPACEMONO
@@ -28,6 +35,7 @@ def main():
 
     ALERT = gregium.alertBox(suppliedFont=EDITOR_FONT_MAIN,buttons=("Ok",),title="title not set")
 
+    logging.info("Editor Starting")
     while IS_ACTIVE:
         EDITOR_WINDOW.fill((0,0,0))
         if NOT_QUIT_QUEUE < 0:

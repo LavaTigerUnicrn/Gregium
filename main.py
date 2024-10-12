@@ -1,5 +1,7 @@
 #Use for testing functions
-import gregium,pygame
+import gregium,pygame,gregium.editor
+
+gregium.editor.main()
 
 # Open pygame window, initialize gregium
 WINDOW = pygame.display.set_mode([1000,1000],pygame.NOFRAME)

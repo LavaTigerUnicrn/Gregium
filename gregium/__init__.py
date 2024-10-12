@@ -21,17 +21,25 @@ import time
 from pathlib import Path
 from pynput import keyboard
 
+# Many lines have logging to output errors and what's happening
+import logging
+
 # Declaring Globals
+LOGGER = logging.getLogger(__name__)
+logging.basicConfig(filename='gregium.log', level=logging.DEBUG)
+logging.debug("Logger created")
 PATH = str(Path(__file__).parent.absolute())
 WINDOW = None
 SELECTEDBUTTON = None
 SCRLX = 0
 SCRLY = 0
+logging.info("Globals declared")
 
 # Initializing Pygame
 pygame.init()
 
 def init():
+    logging.info("Init Ran: Surface Defined")
     """
     Will define the global WINDOW variable to the current 
     working window, required for many functions to run
@@ -196,6 +204,7 @@ class FontType(type):
     
 class Font:
     def __init__(self,fontInst:pygame.freetype.Font):
+        logging.info("Font Created")
         """
         Defines a font instance from a pygame.freetype.font, 
         font must have been initialized through pygame.freetype.font 
@@ -284,6 +293,7 @@ class Font:
 
     @classmethod
     def from_sys(self,fontName:str) -> FontType:
+        logging.info(f"Generating Font From SysFonts ({fontName})")
         """
         Will initialize the same font as the gregium.Font 
         method but instead from a system font using the pygame.freetype.SysFont method.
@@ -292,6 +302,7 @@ class Font:
     
     @classmethod
     def from_file(self,filePath:str) -> FontType:
+        logging.info(f"Generating Font From File FP: {filePath}")
         """
         Will initialize the same font as the gregium.Font method
           but instead uses a font file path the same way the main gregium.Font is initialized 
@@ -317,7 +328,8 @@ def SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,
     If you wish for only 1 image (being the edited) 
     set the 'hasOneImage' tag to true
     """
-    
+    logging.info(f"Sprite Image Loading FP: {filePath}")
+
     try:
         # Loads the image based on the given file path
         imageO = pygame.image.load(filePath)
@@ -325,13 +337,13 @@ def SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,
 
         # Transforms the scale/rotation of the image if specified
         if size != None:
-            pygame.transform.scale(image,size)
+            image = pygame.transform.scale(image,size)
         if rotation != None:
-            pygame.transform.rotate(image,rotation)
+            image = pygame.transform.rotate(image,rotation)
 
     # Warns user if the filepath is invalid
     except:
-        warnings.warn(f"Image: {filePath} not found")
+        logging.error(f"Image: {filePath} not found")
         imageO = pygame.Surface((1,1))
         image = imageO
     
@@ -344,6 +356,7 @@ def SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,
 
 class Sprite:
     def __init__(self,filePath:str,sheetSize:tuple[int,int]=None):
+        logging.info(f"Sprite Loading FP: {filePath}")
         """
         Create a basic sprite for rendering
         """
@@ -376,7 +389,7 @@ class Sprite:
             
         # If an invalid argument is passed, nullify the image
         except Exception as e:
-            print(e)
+            logging.error(f"{e}")
             self.origImage = None
             self.is_sheet = False
 
@@ -582,6 +595,7 @@ def keyHandler():
 
 # Start running keyHandler
 threading.Thread(target=keyHandler,args=()).start()
+logging.info("KeyHandler Loaded")
 
 #### ---- BUTTON HANDLER ---- ####
 
@@ -613,6 +627,7 @@ outlineHighlight: an RGB tuple that fills the outline of the text with the given
 align: a string that specifies how the text should be aligned within the button.
 rounding: follows general rules of pygame rect rounding, higher values yield more rounding
         """
+        logging.info("Generating Button")
 
         # Initialize class variables
         self.pos = list(pos)
@@ -708,7 +723,7 @@ class textBox:
         """
         Documentation comes later, bad code comes first :thumbsup:
         """
-
+        logging.info("Generating Textbox")
         if suppliedFont == None:
             raise SyntaxError("Must have font for textBox")
         
@@ -741,7 +756,7 @@ class textBox:
             else:
                 self.buttonMain.text = self.text
 
-        # Render button annd get clicks
+        # Render button and get clicks
         output = self.buttonMain.render()
         if output == 2:
 
@@ -770,6 +785,7 @@ outline: an RGB tuple of the outline of the alert box. Defaults to (255, 255, 25
 textCol: an RGB tuple that will change the text color using that RGB color. Defaults to (255, 255, 255), which is black.
 
         """
+        logging.info("Generating AlertBox")
 
         # Initializing class variables
         self.buttons = buttons
@@ -864,6 +880,8 @@ def cmdParseSeg(segment:str,requestedType:str,min="N/A",max="N/A"):
                 
 class CLI:
     def __init__(self,tree:dict={}):
+
+        logging.info("CLI Generated")
         """
         Make easy command interpreters that can be used outside, or inside terminal
         """
@@ -1041,6 +1059,7 @@ class CLI:
             return (4, "Command not found")
 
 def stop():
+    logging.debug("Gregium Stopped\n\n")
     """Stops the gregium engine"""
 
     try:
@@ -1052,3 +1071,5 @@ def stop():
 
     # Quit python
     os._exit(1)
+
+logging.info("Gregium Fully Prepared")
