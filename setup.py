@@ -4,7 +4,7 @@ with open("README.md","r",encoding="utf-8") as r:
     longdesc = r.read()
 setup(name="gregium",version="0.1.6",
                  description="A simple package with easy features for using pygame",
-                 long_description=r.read(),
+                 long_description=longdesc,
                  author="LavaTigerUnicrn",
                  author_email="nolanlance711@gmail.com",
                  url="https://github.com/LavaTigerUnicrn/Gregium",
