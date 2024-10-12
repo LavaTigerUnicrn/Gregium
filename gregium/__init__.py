@@ -358,11 +358,18 @@ class Sprite:
         if self.is_sheet:
             self.imageRect.w = self.width
             self.imageRect.h = self.height
-            self.imageBlit.blit(pygame.transform.scale(self.origImage,(self.width*self.sheetSize[0],self.height*self.sheetSize[1])),(0,0),self.imageRect)
+            self.imageBlit.blit(
+                pygame.transform.scale(self.origImage,
+                                        (self.width*self.sheetSize[0],
+                                        self.height*self.sheetSize[1])),(0,0),
+                                        self.imageRect)
         
         # Otherwise, redisplay the sprite
         else:
-            self.imageBlit.blit(pygame.transform.scale(self.origImage,(self.width*self.sheetSize[0],self.height*self.sheetSize[1])),(0,0))
+            self.imageBlit.blit(
+                pygame.transform.scale(self.origImage,
+                                        (self.width*self.sheetSize[0],
+                                        self.height*self.sheetSize[1])),(0,0))
 
         # Reposition the sprite and reset the sprite's Rect value
         self.imageBlit = pygame.transform.rotate(self.imageBlit,self.rotation)
@@ -409,11 +416,14 @@ class Sprite:
             return -1
         
         # Blits the sprite's center at the given coordinates
-        window.blit(self.imageBlit,((xy[0]-self.imageBlitRect.w/2)+SCRLX,(xy[1]-self.imageBlitRect.h/2)+SCRLY))
+        window.blit(self.imageBlit,((xy[0]-self.imageBlitRect.w/2)+SCRLX,
+                                    (xy[1]-self.imageBlitRect.h/2)+SCRLY))
 
         return 1
     
-    def blit_pivot_center(self,window:pygame.Surface,xy:tuple[int,int],pivot:tuple[int,int],angle:float):
+    def blit_pivot_center(self,window:pygame.Surface,
+                          xy:tuple[int,int],
+                          pivot:tuple[int,int],angle:float):
 
         # Return with a failed exit code if there is no image
         if self.origImage == None:
@@ -421,7 +431,8 @@ class Sprite:
         
         # ????????? idk difference with this p
         newPoint = rotate(pivot,xy,angle)
-        window.blit(self.imageBlit,((newPoint[0]-self.imageBlitRect.w/2)+SCRLX,(newPoint[1]-self.imageBlitRect.h/2))+SCRLY)
+        window.blit(self.imageBlit,((newPoint[0]-self.imageBlitRect.w/2)+SCRLX,
+                                    (newPoint[1]-self.imageBlitRect.h/2))+SCRLY)
 
         return 1
     
@@ -455,15 +466,30 @@ class ziphandle:
                 zip.write(folder+"\\"+file)
 
 # Set up object with events
-events = {"other":{},"quit":False,"mouseDown":False,"mouseUp":False,"mousePos":(0,0),"keyInput":"","highlighted":True,"enter":False}
+events = {"other":{},
+          "quit":False,
+          "mouseDown":False,
+          "mouseUp":False,
+          "mousePos":(0,0),
+          "keyInput":"",
+          "highlighted":True,
+          "enter":False}
 
 def clearEvent():
     """Resets events to defaults ???????? needs a check definiely"""
     global events
-    events = {"other":{},"quit":False,"mouseDown":False,"mouseUp":False,"mousePos":pygame.mouse.get_pos(),"keyInput":events["keyInput"],"highlighted":events["highlighted"],"enter":False}
+    events = {"other":{},"quit":False,"mouseDown":False,
+              "mouseUp":False,"mousePos":pygame.mouse.get_pos(),
+              "keyInput":events["keyInput"],
+              "highlighted":events["highlighted"],
+              "enter":False}
 def supplyEvent(event:pygame.event.Event):
     """
-    Gives pygame events to gregium (events supplied must be from pygame.from.event.get() from each for iteration, to put it simply use <for event in pygame.event.get()> and use this function with event as param)
+    Gives pygame events to gregium 
+    (events supplied must be from pygame.from.event.get()
+    from each for iteration, to put it simply use 
+    <for event in pygame.event.get()> 
+    and use this function with event as param)
     """
     global events,SELECTEDBUTTON
 
@@ -514,10 +540,21 @@ def keyHandler():
 threading.Thread(target=keyHandler,args=()).start()
 
 #### ---- BUTTON HANDLER ---- ####
+
 class button:
-    def __init__(self,pos:tuple[float,float],size:tuple[float,float],color:tuple[int,int,int]=(255,255,255),outline:tuple[int,int,int]=(0,0,0),outlineThick:int=5,suppliedFont:Font=None,text:str="",textCol:tuple[int,int,int]=(0,0,0),textSize:int=25,colorHighlight:tuple[int,int,int]=(200,200,200),outlineHighlight:tuple[int,int,int]=(55,55,55),align:str="topLeft"):
+    def __init__(self,pos:tuple[float,float],
+                 size:tuple[float,float],
+                 color:tuple[int,int,int]=(255,255,255),
+                 outline:tuple[int,int,int]=(0,0,0),
+                 outlineThick:int=5,suppliedFont:Font=None,
+                 text:str="",textCol:tuple[int,int,int]=(0,0,0),
+                 textSize:int=25,
+                 colorHighlight:tuple[int,int,int]=(200,200,200),
+                 outlineHighlight:tuple[int,int,int]=(55,55,55),
+                 align:str="topLeft"):
         """
-        Generates a simple button at pos with outline (if a thickness is provided) and text (if font and text are provided)
+        Generates a simple button at pos with outline 
+        (if a thickness is provided) and text (if font and text are provided)
         """
 
         # Initialize class variables
@@ -539,6 +576,8 @@ class button:
         self.hasClicked = False
 
     def render(self):
+        global BUTTONRENDERFUNC
+
         """
         Renders button with resulting int being
         0: no collision
@@ -551,44 +590,60 @@ class button:
         rtrn = 0
         rectPos = alignPos(self.pos,self.align)
         self.rect.x,self.rect.y = rectPos[0],rectPos[1]
-        coll = self.rect.collidepoint(events["mousePos"][0],events["mousePos"][1])
+        self.coll = self.rect.collidepoint(events["mousePos"][0],events["mousePos"][1])
 
         # Check if mouse is simply hovering over the react
-        if coll and not self.hasClicked:
+        if self.coll and not self.hasClicked:
             pygame.draw.rect(WINDOW,self.colorH,self.rect)
             if events["mouseDown"]:
                 self.hasClicked = True
             
-            # Draw an outline if a thickness was provided
-            if self.renderOutline:
-                pygame.draw.rect(WINDOW,self.outlineColH,self.rect,self.outlineThick)
-            
             rtrn = 1
-        
-        else:
-            # Draw and render the rectangle onto the window
-            pygame.draw.rect(WINDOW,self.color,self.rect)
-
-            # Draw an outline if a thickness was provided
-            if self.renderOutline:
-                pygame.draw.rect(WINDOW,self.outlineCol,self.rect,self.outlineThick)
 
         # Check if a click event is active
         if self.hasClicked:
             rtrn = 3
 
             # Check if the click is completed (mouse is pressed and released)
-            if coll and events["mouseUp"]:
+            if self.coll and events["mouseUp"]:
                 rtrn = 2
                 self.hasClicked = False
-            elif events["mouseUp"] or not coll:
+            elif events["mouseUp"] or not self.coll:
                 self.hasClicked = False
+        
+        # Render Button
+        BUTTONRENDERFUNC(self)
 
-        # Render text if text and font were provided
-        if self.renderText:
-            self.fontS.blit_true_center(self.text,get_rect_center(self.rect),self.fontSize,fgcolor=self.textCol)
-
+        # Finish function
         return rtrn
+
+## -- DEFAULT BUTTON RENDER CODE -- ##
+def defaultButtonRender(self:button):
+    """
+    The default rendering for a gregium button, 
+    any alternatives must change BUTTONRENDERFUNC and have 1 
+    argument (name can be anything) and will pass in the button class
+    """
+    # Draw an outline if a thickness was provided
+    if self.coll and not self.hasClicked:
+        pygame.draw.rect(WINDOW,self.colorH,self.rect)
+        if self.renderOutline:
+            pygame.draw.rect(WINDOW,self.outlineColH,self.rect,self.outlineThick)
+
+    else:
+        # Draw and render the rectangle onto the window
+        pygame.draw.rect(WINDOW,self.color,self.rect)
+
+        # Draw an outline if a thickness was provided
+        if self.renderOutline:
+            pygame.draw.rect(WINDOW,self.outlineCol,self.rect,self.outlineThick)
+
+    # Render text if text and font were provided
+    if self.renderText:
+        self.fontS.blit_true_center(self.text,get_rect_center(self.rect),self.fontSize,fgcolor=self.textCol)
+
+# Sets default render code
+BUTTONRENDERFUNC = defaultButtonRender
 
 class textBox:    
     def __init__(self,pos:tuple[float,float],size:tuple[float,float],color:tuple[int,int,int]=(255,255,255),outline:tuple[int,int,int]=(0,0,0),outlineThick:int=5,suppliedFont:Font=None,text:str="",textCol:tuple[int,int,int]=(0,0,0),textSize:int=25,colorHighlight:tuple[int,int,int]=(200,200,200),outlineHighlight:tuple[int,int,int]=(55,55,55),align:str="topLeft",maxTextLength:int=-1):
@@ -609,6 +664,7 @@ class textBox:
 
     def render(self):
         global SELECTEDBUTTON,events
+
         # Enforce max text length
         if len(self.text) > self.maxTextLength and self.maxTextLength > 0:
             self.text[:-(len(self.text)-self.maxTextLength)]

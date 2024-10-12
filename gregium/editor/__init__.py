@@ -5,7 +5,6 @@ A basic editor for convenient navigation in Gregium
 import pygame
 import gregium.env
 import gregium
-import sys
 
 EDITPATH = gregium.PATH+"\\editor\\"
 gregium.env.load(EDITPATH+"editor.grg",ignoreCWD=True)
