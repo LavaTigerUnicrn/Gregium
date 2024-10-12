@@ -1,15 +1,12 @@
 #Use for testing functions
-import gregium,pygame,gregium.editor
-
-gregium.editor.main()
+import gregium,pygame
 
 # Open pygame window, initialize gregium
 WINDOW = pygame.display.set_mode([1000,1000],pygame.NOFRAME)
 gregium.init()
 
 # Initialize a gregium Font and textBox
-EDITOR_FONT_MAIN = gregium.Font.from_file(gregium.PATH+"\\editor\\Space_Mono\\SpaceMono-Regular.ttf")
-BOX = gregium.textBox((-500,-50),size=(1000,100),suppliedFont=EDITOR_FONT_MAIN,text="yay!",align="center")
+BOX = gregium.textBox((-500,-50),size=(1000,100),text="yay!",align="center",rounding=15)
 
 # Main loop
 while not gregium.events["quit"]:

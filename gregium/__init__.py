@@ -206,9 +206,15 @@ class Font:
         """
         self.font:pygame.freetype.Font = fontInst
 
-    def blit(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None):
+    def blit(self,text:str,pos:tuple[int,int],size:int=20,
+             fgcolor:tuple[int,int,int]=(255,255,255),
+             bgcolor:tuple[int,int,int]=None,
+             angle:int=0,altWindow:pygame.Surface=None):
         """
-        Will blit text to the main working window at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully left-aligned based on the pos parameter.
+        Will blit text to the main working window at point pos unless altWindow is specified, 
+        all parameters are the same as normal pygame.freetype.Font.render() or 
+        pygame.freetype.Font.render_to() parameters; 
+        font will be fully left-aligned based on the pos parameter.
 
         *Will raise an error if gregium.init() is not run first
         """
@@ -219,11 +225,20 @@ class Font:
 
         # Blits text onto specified window (or default if no window is provided)
         for layer,txt in enumerate(text.split("\n")):
-            self.font.render_to(altWindow,(pos[0],pos[1]+(layer*size)),txt,fgcolor,bgcolor,size=size,rotation=angle)
+            self.font.render_to(altWindow,(pos[0],pos[1]+(layer*size)),
+                                txt,fgcolor,bgcolor,
+                                size=size,rotation=angle)
 
-    def blit_center(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None):
+    def blit_center(self,text:str,pos:tuple[int,int],size:int=20,
+                    fgcolor:tuple[int,int,int]=(255,255,255),
+                    bgcolor:tuple[int,int,int]=None,angle:int=0,
+                    altWindow:pygame.Surface=None):
         """
-        Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully left-aligned based on the pos parameter.
+        Will blit text to the main working window with center 
+        located at point pos unless altWindow is specified, 
+        all parameters are the same as normal pygame.freetype.Font.render() or 
+        pygame.freetype.Font.render_to() parameters; 
+        font will be fully left-aligned based on the pos parameter.
 
         *Will raise an error if gregium.init() is not run first
         """
@@ -232,14 +247,24 @@ class Font:
         if altWindow == None:
             altWindow = WINDOW
 
-        # Blits center of the text onto coordinates in the specified window (or default if no window is provided)
+        # Blits center of the text onto coordinates in the 
+        # specified window (or default if no window is provided)
         for layer,txt in enumerate(text.split("\n")):
             fgr = self.font.get_rect(txt,size=size,rotation=angle)
-            self.font.render_to(altWindow,position_center((pos[0],pos[1]+(layer*size)),(fgr.w,fgr.h)),txt,fgcolor,bgcolor,size=size,rotation=angle)
+            self.font.render_to(
+                altWindow,position_center((pos[0],pos[1]+(layer*size)),
+                (fgr.w,fgr.h)),txt,fgcolor,bgcolor,size=size,rotation=angle)
 
-    def blit_true_center(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None):
+    def blit_true_center(self,text:str,pos:tuple[int,int],size:int=20,
+                         fgcolor:tuple[int,int,int]=(255,255,255),
+                         bgcolor:tuple[int,int,int]=None,angle:int=0,
+                         altWindow:pygame.Surface=None):
         """
-        Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully center-aligned based on the pos parameter.
+        Will blit text to the main working window with 
+        center located at point pos unless altWindow is specified, 
+        all parameters are the same as normal pygame.freetype.Font.render() or 
+        pygame.freetype.Font.render_to() parameters; 
+        font will be fully center-aligned based on the pos parameter.
 
         *Will raise an error if gregium.init() is not run first
         """
@@ -248,36 +273,49 @@ class Font:
         if altWindow == None:
             altWindow = WINDOW
 
-        # ????????????? Not exactly sure
+        # Splits text line by line to make each one centered
         splitTxt = text.split("\n")
         yOffS = ((len(splitTxt)-1)*size)/2
         for layer,txt in enumerate(splitTxt):
             fgr = self.font.get_rect(txt,size=size,rotation=angle)
-            self.font.render_to(altWindow,position_center((pos[0],pos[1]+(layer*size)-yOffS),(fgr.w,fgr.h)),txt,fgcolor,bgcolor,size=size,rotation=angle)
+            self.font.render_to(altWindow,position_center(
+                (pos[0],pos[1]+(layer*size)-yOffS),
+                (fgr.w,fgr.h)),txt,fgcolor,bgcolor,size=size,rotation=angle)
 
     @classmethod
     def from_sys(self,fontName:str) -> FontType:
         """
-        Will initialize the same font as the gregium.Font method but instead from a system font using the pygame.freetype.SysFont method.
+        Will initialize the same font as the gregium.Font 
+        method but instead from a system font using the pygame.freetype.SysFont method.
         """
         return self(pygame.freetype.SysFont(fontName,20))
     
     @classmethod
     def from_file(self,filePath:str) -> FontType:
         """
-        Will initialize the same font as the gregium.Font method but instead uses a font file path the same way the main gregium.Font is initialized via the pygame.freetype.Font method.
+        Will initialize the same font as the gregium.Font method
+          but instead uses a font file path the same way the main gregium.Font is initialized 
+          via the pygame.freetype.Font method.
         """
         return self(pygame.freetype.Font(filePath,20))
-        
+
+# Define font variable
+SPACEMONO = Font.from_file(PATH+"\\editor\\SpaceMono-Regular.ttf")
+
 #### ---- SPRITE HANDLER ---- ####
-def SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,rotation:int=0,hasOneImage:bool=False) -> tuple[pygame.Surface,pygame.Surface]:
+def SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,
+                  rotation:int=0,
+                  hasOneImage:bool=False) -> tuple[pygame.Surface,pygame.Surface]:
     """
     Generates an Image-Only sprite without class information
     First Surface is original image (for repeat changing)
-    Second Surface is modified image to current settings, if nothing is applied both surfaces will be the same
-    If image load fails, empty surface will be returned as well as having a warning
+    Second Surface is modified image to current settings, 
+    if nothing is applied both surfaces will be the same
+    If image load fails, empty surface will be 
+    returned as well as having a warning
 
-    If you wish for only 1 image (being the edited) set the 'hasOneImage' tag to true
+    If you wish for only 1 image (being the edited) 
+    set the 'hasOneImage' tag to true
     """
     
     try:
@@ -476,7 +514,7 @@ events = {"other":{},
           "enter":False}
 
 def clearEvent():
-    """Resets events to defaults ???????? needs a check definiely"""
+    """Resets all events to default values (use before event loop)"""
     global events
     events = {"other":{},"quit":False,"mouseDown":False,
               "mouseUp":False,"mousePos":pygame.mouse.get_pos(),
@@ -486,7 +524,7 @@ def clearEvent():
 def supplyEvent(event:pygame.event.Event):
     """
     Gives pygame events to gregium 
-    (events supplied must be from pygame.from.event.get()
+    (events supplied must be from pygame.event.get()
     from each for iteration, to put it simply use 
     <for event in pygame.event.get()> 
     and use this function with event as param)
@@ -515,15 +553,18 @@ def supplyEvent(event:pygame.event.Event):
             events["other"][event.type] = True
 
 def on_press(key):
-    """?????"""
+    """
+    Module only function, binds all keypresses and events to a respective value
+    """
     global events
 
-    # ??????? what is highilighted exactlh?
+    # Adds character if screen is highlighted
     if events["highlighted"]:
         try:
             events["keyInput"] += key.char
 
-        # ??????????
+        # If it is a special character (backspace/space) that isn't a 
+        # <char> then do respective action (backspace/space)
         except AttributeError:
             if key == keyboard.Key.backspace:
                 events["keyInput"] = events["keyInput"][:-1]
@@ -531,12 +572,15 @@ def on_press(key):
                 events["keyInput"] += " "
 
 def keyHandler():
-    """??????"""
+    """
+    Module only function, catches all key press events to be processed by on_press funciton
+    """
     with keyboard.Listener(on_press=on_press) as listener:
         global listenerE
         listenerE = listener
         listener.join()
-        
+
+# Start running keyHandler
 threading.Thread(target=keyHandler,args=()).start()
 
 #### ---- BUTTON HANDLER ---- ####
@@ -546,15 +590,28 @@ class button:
                  size:tuple[float,float],
                  color:tuple[int,int,int]=(255,255,255),
                  outline:tuple[int,int,int]=(0,0,0),
-                 outlineThick:int=5,suppliedFont:Font=None,
+                 outlineThick:int=5,suppliedFont:Font=SPACEMONO,
                  text:str="",textCol:tuple[int,int,int]=(0,0,0),
                  textSize:int=25,
                  colorHighlight:tuple[int,int,int]=(200,200,200),
                  outlineHighlight:tuple[int,int,int]=(55,55,55),
-                 align:str="topLeft"):
+                 align:str="topLeft",
+                 rounding:int=0):
         """
-        Generates a simple button at pos with outline 
-        (if a thickness is provided) and text (if font and text are provided)
+        Generates a simple button. The following arguments can be provided to customize the button:
+pos: a tuple that determines the (x, y) coordinates of where to place the top left corner of the button.
+size: a tuple that determines the width and height of the button, respectively.
+color: an RGB tuple that fills the button with the given RGB color. Defaults to (255, 255, 255), which is white.
+outline: an RGB tuple that fills the button's border with the given RGB color. Has no effect if outlineThick is zero, i.e. there is no border.
+outlineThick: an integer that determines the thickness of the button's border in pixels. Defaults to five (5) pixels.
+suppliedFont: a Font object that should be set up with gregium's Font instantiator. Defaults to None, which will load the SpaceMono font.
+text: a string that represents text inside the button. By default, there is no text.
+textCol: an RGB tuple that specifies what color the text should be. Defaults to (0, 0, 0), which is black.
+textSize: an integer that represents the size of the text in standard text size (1/72th of an inch equals 1 text size point).
+colorHighlight: an RGB tuple that fills in the background of only the text with the provided RGB color. Defaults to (200, 200, 200), which is gray.
+outlineHighlight: an RGB tuple that fills the outline of the text with the given RGB color. Defaults to (55, 55, 55), which is dark gray.
+align: a string that specifies how the text should be aligned within the button.
+rounding: follows general rules of pygame rect rounding, higher values yield more rounding
         """
 
         # Initialize class variables
@@ -574,6 +631,7 @@ class button:
         self.renderOutline = outlineThick > 0
         self.outlineThick = outlineThick
         self.hasClicked = False
+        self.rounding = rounding
 
     def render(self):
         global BUTTONRENDERFUNC
@@ -594,7 +652,6 @@ class button:
 
         # Check if mouse is simply hovering over the react
         if self.coll and not self.hasClicked:
-            pygame.draw.rect(WINDOW,self.colorH,self.rect)
             if events["mouseDown"]:
                 self.hasClicked = True
             
@@ -626,17 +683,18 @@ def defaultButtonRender(self:button):
     """
     # Draw an outline if a thickness was provided
     if self.coll and not self.hasClicked:
-        pygame.draw.rect(WINDOW,self.colorH,self.rect)
+        pygame.draw.rect(WINDOW,self.colorH,self.rect,border_radius=self.rounding)
         if self.renderOutline:
-            pygame.draw.rect(WINDOW,self.outlineColH,self.rect,self.outlineThick)
+            pygame.draw.rect(WINDOW,self.outlineColH,self.rect,self.outlineThick,border_radius=self.rounding)
 
     else:
         # Draw and render the rectangle onto the window
-        pygame.draw.rect(WINDOW,self.color,self.rect)
+        pygame.draw.rect(WINDOW,self.color,self.rect,border_radius=self.rounding)
+        
 
         # Draw an outline if a thickness was provided
         if self.renderOutline:
-            pygame.draw.rect(WINDOW,self.outlineCol,self.rect,self.outlineThick)
+            pygame.draw.rect(WINDOW,self.outlineCol,self.rect,self.outlineThick,border_radius=self.rounding)
 
     # Render text if text and font were provided
     if self.renderText:
@@ -646,7 +704,7 @@ def defaultButtonRender(self:button):
 BUTTONRENDERFUNC = defaultButtonRender
 
 class textBox:    
-    def __init__(self,pos:tuple[float,float],size:tuple[float,float],color:tuple[int,int,int]=(255,255,255),outline:tuple[int,int,int]=(0,0,0),outlineThick:int=5,suppliedFont:Font=None,text:str="",textCol:tuple[int,int,int]=(0,0,0),textSize:int=25,colorHighlight:tuple[int,int,int]=(200,200,200),outlineHighlight:tuple[int,int,int]=(55,55,55),align:str="topLeft",maxTextLength:int=-1):
+    def __init__(self,pos:tuple[float,float],size:tuple[float,float],color:tuple[int,int,int]=(255,255,255),outline:tuple[int,int,int]=(0,0,0),outlineThick:int=5,suppliedFont:Font=SPACEMONO,text:str="",textCol:tuple[int,int,int]=(0,0,0),textSize:int=25,colorHighlight:tuple[int,int,int]=(200,200,200),outlineHighlight:tuple[int,int,int]=(55,55,55),align:str="topLeft",maxTextLength:int=-1,rounding:int=0):
         """
         Documentation comes later, bad code comes first :thumbsup:
         """
@@ -655,7 +713,7 @@ class textBox:
             raise SyntaxError("Must have font for textBox")
         
         # Make a button with same stats as supplied by user
-        self.buttonMain = button(pos=pos,size=size,color=color,outline=outline,outlineThick=outlineThick,suppliedFont=suppliedFont,text=text,textCol=textCol,textSize=textSize,colorHighlight=colorHighlight,outlineHighlight=outlineHighlight,align=align)
+        self.buttonMain = button(pos=pos,size=size,color=color,outline=outline,outlineThick=outlineThick,suppliedFont=suppliedFont,text=text,textCol=textCol,textSize=textSize,colorHighlight=colorHighlight,outlineHighlight=outlineHighlight,align=align,rounding=rounding)
 
         # Initialize other vars
         self.text = ""
@@ -665,15 +723,23 @@ class textBox:
     def render(self):
         global SELECTEDBUTTON,events
 
+        isSelected = SELECTEDBUTTON == self
+
         # Enforce max text length
         if len(self.text) > self.maxTextLength and self.maxTextLength > 0:
             self.text[:-(len(self.text)-self.maxTextLength)]
 
         # Set the text of the button (if no text has been inputted make default and if there is text add it to button)
         if self.text == "":
-            self.buttonMain.text = self.defaultText
+            if isSelected:
+                self.buttonMain.text = f">{self.defaultText}<"
+            else:
+                self.buttonMain.text = self.defaultText
         else:
-            self.buttonMain.text = self.text
+            if isSelected:
+                self.buttonMain.text = f">{self.text}<"
+            else:
+                self.buttonMain.text = self.text
 
         # Render button annd get clicks
         output = self.buttonMain.render()
@@ -683,15 +749,26 @@ class textBox:
             SELECTEDBUTTON = self
             events["keyInput"] = self.text
 
-        if SELECTEDBUTTON == self:
+        if isSelected:
             self.text = events["keyInput"]
             if events["enter"]:
                 return "ENTER"
 
 class alertBox:
-    def __init__(self,suppliedFont:Font,buttons:tuple=("ok",),title:str=None,color:tuple[int,int,int]=(0,0,0),outline:tuple[int,int,int]=(255,255,255),textCol:tuple[int,int,int]=(255,255,255)):
+    def __init__(self,suppliedFont:Font=SPACEMONO,buttons:tuple=("ok",),
+                 title:str=None,
+                 color:tuple[int,int,int]=(0,0,0),
+                 outline:tuple[int,int,int]=(255,255,255),
+                 textCol:tuple[int,int,int]=(255,255,255),
+                 rounding:int=0):
         """
-        Generates alert box with supplied buttons, title can be multi-lined with \\n usage
+        suppliedFont: a gregium Font object that alters the font of alert text.
+buttons: a tuple with as many strings as desired, strings will be converted to buttons and spread horizontally across the box, if the amount of buttons is only 1, use ('buttonText',) as opposed to ('buttonText') to prevent errors in generation. These buttons will be displayed on the alert as options to click on. An example of buttons that can be added are “Accept” or “Deny” buttons.
+title: a string containing the title that will be displayed on the alert. The alert's title can be multi-line if \\n is put in the string. Defaults to None.
+color: an RGB tuple that will fill the background color of the entire alert box with that RGB color. Defaults to (0, 0, 0), which is white.
+outline: an RGB tuple of the outline of the alert box. Defaults to (255, 255, 255), which is black.
+textCol: an RGB tuple that will change the text color using that RGB color. Defaults to (255, 255, 255), which is black.
+
         """
 
         # Initializing class variables
@@ -701,7 +778,8 @@ class alertBox:
         self.outline = outline
         self.box = pygame.Rect(wc[0]-350,wc[1]-250,700,500)
         self.buttonW = (660-(20*(len(buttons)-1)))/len(buttons)
-        self.button = button((0,wc[1]+130),(self.buttonW,100),color,outline,text="Loading...",textCol=textCol,suppliedFont=suppliedFont)
+        self.button = button((0,wc[1]+130),(self.buttonW,100),color,outline,text="Loading...",textCol=textCol,suppliedFont=suppliedFont,rounding=rounding)
+        self.rounding = rounding
         self.buttonClickData = [False for x in range(len(buttons))]
         self.title = title
         self.font = suppliedFont
