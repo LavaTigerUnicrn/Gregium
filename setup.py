@@ -23,5 +23,5 @@ setup(name="gregium",version="0.1.6",
 
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',],
-    long_description_content_type="md"
+    long_description_content_type="text/markdown"
     )
