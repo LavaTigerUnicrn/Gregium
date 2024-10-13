@@ -524,16 +524,19 @@ events = {"other":{},
           "mousePos":(0,0),
           "keyInput":"",
           "highlighted":True,
-          "enter":False}
+          "enter":False,
+          "heldKeys": []
+          }
 
 def clearEvent():
     """Resets all events to default values (use before event loop)"""
     global events
-    events = {"other":{},"quit":False,"mouseDown":False,
-              "mouseUp":False,"mousePos":pygame.mouse.get_pos(),
-              "keyInput":events["keyInput"],
-              "highlighted":events["highlighted"],
-              "enter":False}
+    events = {"other": {}, "quit": False,"mouseDown": False,
+              "mouseUp": False,"mousePos": pygame.mouse.get_pos(),
+              "keyInput" :events["keyInput"],
+              "highlighted": events["highlighted"],
+              "enter":False, "heldKeys": events["heldKeys"]}
+    
 def supplyEvent(event:pygame.event.Event):
     """
     Gives pygame events to gregium 
@@ -549,6 +552,10 @@ def supplyEvent(event:pygame.event.Event):
         case pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 events["enter"] = True
+            else:
+                events["heldKeys"].append(event.key)
+        case pygame.KEYUP:
+            events["heldKeys"].remove(event.key)
         case pygame.QUIT:
             events["quit"] = True
         case pygame.MOUSEBUTTONDOWN:

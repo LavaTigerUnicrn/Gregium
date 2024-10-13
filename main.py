@@ -1,8 +1,6 @@
 #Use for testing functions
 import gregium,pygame,gregium.editor
 
-gregium.editor.main()
-
 # Open pygame window, initialize gregium
 WINDOW = pygame.display.set_mode([1000,1000],pygame.NOFRAME)
 gregium.init()
@@ -20,6 +18,8 @@ while not gregium.events["quit"]:
     gregium.clearEvent()
     for event in pygame.event.get():
         gregium.supplyEvent(event)
+
+    print(gregium.events["heldKeys"])
 
     # If enter is pressed, detect typing and change the text in the textBox accordingly
     if BOX.render() == "ENTER":
