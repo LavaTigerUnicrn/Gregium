@@ -592,60 +592,84 @@ class ziphandle:
             for file in os.listdir(folder):
                 zip.write(folder+"\\"+file)
 
-# Set up object with events
-events = {"other":{},
-          "quit":False,
-          "mouseDown":False,
-          "mouseUp":False,
-          "mousePos":(0,0),
-          "keyInput":"",
-          "highlighted":True,
-          "enter":False,
-          "heldKeys": []
-          }
+class EV_Initializer:
+    def __init__(self):
+        """
+        Used only in gregium to set up events, there is no reason to 
+        initialize this class outside of its initialization in gregium
+        """
 
-def clearEvent():
-    """Resets all events to default values (use before event loop)"""
-    global events
-    events = {"other": {}, "quit": False,"mouseDown": False,
-              "mouseUp": False,"mousePos": pygame.mouse.get_pos(),
-              "keyInput" :events["keyInput"],
-              "highlighted": events["highlighted"],
-              "enter":False, "heldKeys": events["heldKeys"]}
-    
-def supplyEvent(event:pygame.event.Event):
-    """
+        # Setup events
+        self.other = {}
+        self.quit = False
+        self.mouseDown = False
+        self.mouseUp = False
+        self.mousePos = (0,0)
+        self.keyInput = ""
+        self.highlighted = True
+        self.enter = False
+        self.heldKeys = []
+
+    def clearEvent(self):
+        """Resets all events to default values (use before event loop)"""
+
+        # Clear all required events & update pygame mouse
+        self.other = {}
+        self.quit = False
+        self.mouseDown = False
+        self.mouseUp = False
+        self.mousePos = pygame.mouse.get_pos()
+        self.enter = False
+
+    def supplyEvent(self,event:pygame.event.Event):
+        """
     Gives pygame events to gregium 
     (events supplied must be from pygame.event.get()
     from each for iteration, to put it simply use 
     <for event in pygame.event.get()> 
     and use this function with event as param)
     """
-    global events,SELECTEDBUTTON
+        
+        global SELECTEDBUTTON
 
-    # Update the global events variable based on the value of "event"
-    match event.type:
-        case pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
-                events["enter"] = True
-            events["heldKeys"].append(event.key)
-        case pygame.KEYUP:
-            events["heldKeys"].remove(event.key)
-        case pygame.QUIT:
-            events["quit"] = True
-        case pygame.MOUSEBUTTONDOWN:
-            if SELECTEDBUTTON != None:
-                events["keyInput"] = ""
-            SELECTEDBUTTON = None
-            events["mouseDown"] = True
-        case pygame.MOUSEBUTTONUP:
-            events["mouseUp"] = True
-        case pygame.WINDOWFOCUSGAINED:
-            events["highlighted"] = True
-        case pygame.WINDOWFOCUSLOST:
-            events["highlighted"] = False
-        case _:
-            events["other"][event.type] = True
+        # Match event to output
+        match event.type:
+            case pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.enter = True
+                self.heldKeys.append(event.key)
+            case pygame.KEYUP:
+                self.heldKeys.remove(event.key)
+            case pygame.QUIT:
+                self.quit = True
+            case pygame.MOUSEBUTTONDOWN:
+                if SELECTEDBUTTON != None:
+                    self.keyInput = ""
+                SELECTEDBUTTON = None
+                self.mouseDown = True
+            case pygame.MOUSEBUTTONUP:
+                self.mouseUp = True
+            case pygame.WINDOWFOCUSGAINED:
+                self.highlighted = True
+            case pygame.WINDOWFOCUSLOST:
+                self.highlighted = False
+            case _:
+                self.other[event.type] = True
+
+# Initialize Events
+events = EV_Initializer()
+
+def clearEvent():
+    """
+    clearEvent has been depricated, instead use events.clearEvent
+    """
+    raise DeprecationWarning("clearEvent has been depricated, instead use events.clearEvent")
+    
+def supplyEvent(event:pygame.event.Event):
+    """
+    supplyEvent has been depricated, instead use events.supplyEvent
+    """
+    raise DeprecationWarning("supplyEvent has been depricated, instead use events.supplyEvent")
 
 def on_press(key):
     """
@@ -654,17 +678,17 @@ def on_press(key):
     global events
 
     # Adds character if screen is highlighted
-    if events["highlighted"]:
+    if events.highlighted:
         try:
-            events["keyInput"] += key.char
+            events.keyInput += key.char
 
         # If it is a special character (backspace/space) that isn't a 
         # <char> then do respective action (backspace/space)
         except AttributeError:
             if key == keyboard.Key.backspace:
-                events["keyInput"] = events["keyInput"][:-1]
+                events.keyInput = events.keyInput[:-1]
             elif key == keyboard.Key.space:
-                events["keyInput"] += " "
+                events.keyInput += " "
 
 def keyHandler():
     """
@@ -745,11 +769,11 @@ rounding: follows general rules of pygame rect rounding, higher values yield mor
         rtrn = 0
         rectPos = alignPos(self.pos,self.align)
         self.rect.x,self.rect.y = rectPos[0],rectPos[1]
-        self.coll = self.rect.collidepoint(events["mousePos"][0],events["mousePos"][1])
+        self.coll = self.rect.collidepoint(events.mousePos[0],events.mousePos[1])
 
         # Check if mouse is simply hovering over the react
         if self.coll and not self.hasClicked:
-            if events["mouseDown"]:
+            if events.mouseDown:
                 self.hasClicked = True
             
             rtrn = 1
@@ -759,10 +783,10 @@ rounding: follows general rules of pygame rect rounding, higher values yield mor
             rtrn = 3
 
             # Check if the click is completed (mouse is pressed and released)
-            if self.coll and events["mouseUp"]:
+            if self.coll and events.mouseUp:
                 rtrn = 2
                 self.hasClicked = False
-            elif events["mouseUp"] or not self.coll:
+            elif events.mouseUp or not self.coll:
                 self.hasClicked = False
         
         # Render Button
@@ -844,11 +868,11 @@ class textBox:
 
             # Set the global selected button to this button when clicked
             SELECTEDBUTTON = self
-            events["keyInput"] = self.text
+            events.keyInput = self.text
 
         if isSelected:
-            self.text = events["keyInput"]
-            if events["enter"]:
+            self.text = events.keyInput
+            if events.enter:
                 return "ENTER"
 
 class alertBox:

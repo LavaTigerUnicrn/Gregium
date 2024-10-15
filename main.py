@@ -20,15 +20,15 @@ SPRITEOBJ.updateImage()
 CLOCK = pygame.Clock()
 
 # Main loop
-while not gregium.events["quit"]:
+while not gregium.events.quit:
 
     # Fill the canvas with black
     WINDOW.fill((50,50,50))
 
     # Update gregium events
-    gregium.clearEvent()
+    gregium.events.clearEvent()
     for event in pygame.event.get():
-        gregium.supplyEvent(event)
+        gregium.events.supplyEvent(event)
 
     # Render SPRITESHEETOBJ
     SPRITESHEETOBJ.updateSheet()
@@ -36,13 +36,13 @@ while not gregium.events["quit"]:
     SPRITESHEETOBJ.blit(WINDOW,(0,0))
 
     # Render SPRITEOBJ
-    SPRITEOBJ.blit_center(WINDOW,gregium.events["mousePos"])
+    SPRITEOBJ.blit_center(WINDOW,gregium.events.mousePos)
 
     if SPRITESHEETOBJ.testColl(SPRITEOBJ):
         gregium.SPACEMONO.blit_center("Colliding",gregium.alignPos((0,200),"center"))
 
     # Render KeysPressed
-    gregium.SPACEMONO.blit_center(str(gregium.events["heldKeys"]),gregium.alignPos((0,100),"center"))
+    gregium.SPACEMONO.blit_center(str(gregium.events.heldKeys),gregium.alignPos((0,100),"center"))
 
     # If enter is pressed, detect typing and change the text in the textBox accordingly
     if BOX.render() == "ENTER":

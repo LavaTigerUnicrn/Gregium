@@ -92,9 +92,11 @@ recent position blitted by the sprite as the position
 #### zipFolder(folder:str,zipPath:str) -> None
 Zips a folder given by the path of zipPath without using recursion.
 
-clearEvent
+### events
+A class storing all the events, call gregium.events.[event name here] to get an event
+#### clearEvent()
 Resets all events to default values (use before event loop)
-supplyEvent(event:pygame.event.Event)
+#### supplyEvent(event:pygame.event.Event)
 Updates gregium’s event object with pygame events. Events supplied must be from elements returned by pygame.event.get(). For instance, simply use <for event in pygame.event.get()> and call this function with <event> as an argument.
 onPress(key)
 Module only function, binds all keypresses and events to a respective value
