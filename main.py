@@ -8,6 +8,11 @@ gregium.init()
 # Initialize a gregium Font and textBox
 BOX = gregium.textBox((-500,-50),size=(1000,100),text="yay!",align="center",rounding=15)
 
+SPRITESHEETOBJ = gregium.Sprite(gregium.PATH+"/gregiumAnimHD.png",(6,3))
+SPRITESHEETOBJ.width,SPRITESHEETOBJ.height,SPRITESHEETOBJ.sheetAnimTicks = 300,300,5
+
+CLOCK = pygame.Clock()
+
 # Main loop
 while not gregium.events["quit"]:
 
@@ -19,7 +24,10 @@ while not gregium.events["quit"]:
     for event in pygame.event.get():
         gregium.supplyEvent(event)
 
-    print(gregium.events["heldKeys"])
+    # Render SPRITESHEETOBJ
+    SPRITESHEETOBJ.updateSheet()
+    SPRITESHEETOBJ.updateImage()
+    SPRITESHEETOBJ.blit(WINDOW,(1,1))
 
     # If enter is pressed, detect typing and change the text in the textBox accordingly
     if BOX.render() == "ENTER":
@@ -27,6 +35,7 @@ while not gregium.events["quit"]:
 
     # Update the window
     pygame.display.flip()
+    CLOCK.tick(60)
 
 # Stops gregium on quit
 gregium.stop()

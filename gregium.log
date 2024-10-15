@@ -1,104 +1,6 @@
 DEBUG:root:Logger created
 INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
-INFO:root:Font Created
-INFO:root:KeyHandler Loaded
-INFO:root:Gregium Fully Prepared
-DEBUG:root:Logger created (Editor)
-INFO:root:Editor Window Created
-INFO:root:Init Ran: Surface Defined
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Editor Starting
-DEBUG:root:Logger created
-INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
-INFO:root:Font Created
-INFO:root:KeyHandler Loaded
-INFO:root:Gregium Fully Prepared
-DEBUG:root:Logger created (Editor)
-INFO:root:Editor Window Created
-INFO:root:Init Ran: Surface Defined
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Editor Starting
-DEBUG:root:Logger created
-INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
-INFO:root:Font Created
-INFO:root:KeyHandler Loaded
-INFO:root:Gregium Fully Prepared
-DEBUG:root:Logger created (Editor)
-INFO:root:Editor Window Created
-INFO:root:Init Ran: Surface Defined
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Editor Starting
-DEBUG:root:Logger created
-INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
-INFO:root:Font Created
-INFO:root:KeyHandler Loaded
-INFO:root:Gregium Fully Prepared
-DEBUG:root:Logger created (Editor)
-INFO:root:Editor Window Created
-INFO:root:Init Ran: Surface Defined
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Editor Starting
-DEBUG:root:Logger created
-INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
-INFO:root:Font Created
-INFO:root:KeyHandler Loaded
-INFO:root:Gregium Fully Prepared
-DEBUG:root:Logger created (Editor)
-INFO:root:Editor Window Created
-INFO:root:Init Ran: Surface Defined
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Editor Starting
-DEBUG:root:Logger created
-INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
-INFO:root:Font Created
-INFO:root:KeyHandler Loaded
-INFO:root:Gregium Fully Prepared
-DEBUG:root:Logger created (Editor)
-INFO:root:Editor Window Created
-INFO:root:Init Ran: Surface Defined
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Editor Starting
-DEBUG:root:Logger created
-INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
-INFO:root:Font Created
-INFO:root:KeyHandler Loaded
-INFO:root:Gregium Fully Prepared
-DEBUG:root:Logger created (Editor)
-INFO:root:Editor Window Created
-INFO:root:Init Ran: Surface Defined
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Generating AlertBox
-INFO:root:Generating Button
-INFO:root:Editor Starting
-DEBUG:root:Logger created
-INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
 INFO:root:Font Created
 INFO:root:KeyHandler Loaded
 INFO:root:Gregium Fully Prepared
@@ -106,9 +8,11 @@ DEBUG:root:Logger created (Editor)
 INFO:root:Init Ran: Surface Defined
 INFO:root:Generating Textbox
 INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\/gregiumHD.png
+ERROR:root:No such file or directory: 'D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\/gregiumHD.png'.
 DEBUG:root:Logger created
 INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
 INFO:root:Font Created
 INFO:root:KeyHandler Loaded
 INFO:root:Gregium Fully Prepared
@@ -116,9 +20,11 @@ DEBUG:root:Logger created (Editor)
 INFO:root:Init Ran: Surface Defined
 INFO:root:Generating Textbox
 INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\/gregiumHD.png
+ERROR:root:No such file or directory: 'D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\/gregiumHD.png'.
 DEBUG:root:Logger created
 INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
 INFO:root:Font Created
 INFO:root:KeyHandler Loaded
 INFO:root:Gregium Fully Prepared
@@ -126,9 +32,11 @@ DEBUG:root:Logger created (Editor)
 INFO:root:Init Ran: Surface Defined
 INFO:root:Generating Textbox
 INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\/gregiumHD.png
+ERROR:root:No such file or directory: 'D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\/gregiumHD.png'.
 DEBUG:root:Logger created
 INFO:root:Globals declared
-INFO:root:Generating Font From File FP: c:\Users\videe\Desktop\Not Desktop\Code\tsa\2024\Gregium\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
 INFO:root:Font Created
 INFO:root:KeyHandler Loaded
 INFO:root:Gregium Fully Prepared
@@ -136,3 +44,186 @@ DEBUG:root:Logger created (Editor)
 INFO:root:Init Ran: Surface Defined
 INFO:root:Generating Textbox
 INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\gregiumHD.png
+ERROR:root:No such file or directory: 'D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\gregiumHD.png'.
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregiumgregiumHD.png
+ERROR:root:No such file or directory: 'D:\Nolans\Coding\gregium\Gregium-1\gregiumgregiumHD.png'.
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: d:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: d:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Gregium Stopped
+
+
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumAnimHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumAnimHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumAnimHD.png
+DEBUG:root:Logger created
+INFO:root:Globals declared
+INFO:root:Generating Font From File FP: D:\Nolans\Coding\gregium\Gregium-1\gregium\editor\SpaceMono-Regular.ttf
+INFO:root:Font Created
+INFO:root:KeyHandler Loaded
+INFO:root:Gregium Fully Prepared
+DEBUG:root:Logger created (Editor)
+INFO:root:Init Ran: Surface Defined
+INFO:root:Generating Textbox
+INFO:root:Generating Button
+INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumAnimHD.png

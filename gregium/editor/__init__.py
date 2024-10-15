@@ -89,7 +89,7 @@ def main():
                         pygame.display.flip()
             gregium.supplyEvent(event)
         
-        pygame.mouse.set_system_cursor(0)
+        pygame.mouse.set_cursor(0)
 
         pygame.display.flip()
 

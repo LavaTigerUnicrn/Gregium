@@ -56,7 +56,7 @@ Will generate a sprite with the image located at filePath, and with a size (in p
 
 *For memory reasons, it is recommended to almost always set hasOneImage to True. 
 ### Sprite(filePath:str,sheetSize:tuple[int,int]=None)
-Creates a basic sprite for rendering, with a sprite image or sprite sheet loaded from the provided file path. If the sprite has an animation sheet, set the sheetSize parameter to the (rows, columns) of the sprite sheet.
+Creates a basic sprite for rendering, with a sprite image or sprite sheet loaded from the provided file path. If the sprite has an animation sheet, set the sheetSize argument to the (rows, columns) of the sprite sheet.
 #### updateImage(self)
 Redraws the sprite’s image and updates its position and orientation.
 #### tint_add(self,rgb:tuple[int,int,int])
@@ -73,7 +73,12 @@ Blits the targeted sprite onto the given surface. The center of the sprite will 
 Blits the targeted sprite onto the given surface. The center of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). The sprite will be rotated around the coordinate point of the “pivot” argument by **COUNTERCLOCKWISE** by the number of degrees represented by the “angle” argument.
 
 #### updateSheet(self)
-Updates the active sprite in the spritesheet. This function should be used in the game loop and, in most cases, should be updated every frame.
+Updates the active sprite in the spritesheet. This function should be used in the game loop and, in most cases, should be updated every frame. By changing the “sheetAnimTicks” value it will change how long (in ticks) it takes for each frame of the sprite to update
+
+#### testColl(self,*otherSprites) -> bool
+Tests to see if the sprite collides with any other sprite (must be gregium.sprite type)
+#### testCollR(self,*otherRects) -> bool
+Tests to see if the sprite collides with any other rects (must be pygame.Rect type)
 
 ### ziphandle
 #### zipFolder(folder:str,zipPath:str) -> None

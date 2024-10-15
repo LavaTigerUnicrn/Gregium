@@ -26,6 +26,7 @@ import logging
 
 # Declaring Globals
 LOGGER = logging.getLogger(__name__)
+os.remove(os.getcwd()+"\\gregium.log")
 logging.basicConfig(filename='gregium.log', level=logging.DEBUG)
 logging.debug("Logger created")
 PATH = str(Path(__file__).parent.absolute())
@@ -358,7 +359,10 @@ class Sprite:
     def __init__(self,filePath:str,sheetSize:tuple[int,int]=None):
         logging.info(f"Sprite Loading FP: {filePath}")
         """
-        Create a basic sprite for rendering
+        Creates a basic sprite for rendering, with a sprite 
+        image or sprite sheet loaded from the provided file path.
+        If the sprite has an animation sheet, set the sheetSize 
+        argument to the (rows, columns) of the sprite sheet.
         """
 
         try:
@@ -402,7 +406,7 @@ class Sprite:
         if self.origImage == None:
             return -1
         
-        # ????????
+        # Fix the image for rendering
         self.imageBlit = pygame.Surface((self.width,self.height),pygame.SRCALPHA)
 
         # If spritesheets are enabled, display the next sprite
@@ -437,14 +441,15 @@ class Sprite:
         self.imageBlit.fill(rgb,special_flags=pygame.BLEND_RGB_ADD)
 
     def tint_mult(self,rgb:tuple[int,int,int]):
-        """??????"""
+        """
+        Multiplies each pixel on sprite by rgb tint
+        """
 
         # Return with a failed exit code if there is no image
         if self.origImage == None:
             return -1
         
-        # ??????? idk difference between the tint single and mult
-        # Also nolan should ther be a return 1 here
+        # Tints the sprite by multiplication
         self.imageBlit.fill(rgb,special_flags=pygame.BLEND_RGB_MULT)
 
         return 1
@@ -456,7 +461,7 @@ class Sprite:
             return -1
         
         # Blits the sprite using existing class variables and arguments
-        window.blit(self.imageBlit,xy[0]+SCRLX,xy[1]+SCRLY)
+        window.blit(self.imageBlit,(xy[0]+SCRLX,xy[1]+SCRLY))
 
         return 1
     
@@ -480,28 +485,57 @@ class Sprite:
         if self.origImage == None:
             return -1
         
-        # ????????? idk difference with this p
+        # Blit the image at the center, but changed around the pivot point
         newPoint = rotate(pivot,xy,angle)
         window.blit(self.imageBlit,((newPoint[0]-self.imageBlitRect.w/2)+SCRLX,
                                     (newPoint[1]-self.imageBlitRect.h/2))+SCRLY)
-
+        
         return 1
+        
+    def testColl(self,*otherSprites) -> bool:
+        """
+        Tests to see if the sprite collides with any other sprite (must be gregium.sprite type)
+        """
+        for sprite in otherSprites:
+            if self.imageBlitRect.colliderect(sprite.imageBlitRect):
+                return True
+        return False
+    
+    def testCollR(self,*otherRects) -> bool:
+        """
+        Tests to see if the sprite collides with any other rects (must be pygame.Rect type)
+        """
+        for sprite in otherRects:
+            if self.imageBlitRect.colliderect(sprite):
+                return True
+        return False
     
     def updateSheet(self):
         """
-            Updates the active sprite in the spritesheet
+        Updates the active sprite in the spritesheet. 
+        This function should be used in the game loop and, 
+        in most cases, should be updated every frame. 
+        By changing the “sheetAnimTicks” value it will change 
+        how long (in ticks) it takes for each frame of the sprite to update
         """
 
-        # ?????????? NEeds commenting i sorta get it but not fuly
+        # If the sheet is due for updating update it
         if self.sheetTick >= self.sheetAnimTicks:
             self.sheetTick = 0
+
+            # Move the position of the pointer
             self.imageRect.x += self.width
+
+            # If pointer is
             if self.imageRect.x >= self.width*self.sheetSize[0]:
                 self.imageRect.x = 0
                 self.imageRect.y += self.height
 
+            # If pointer rect is below bottom of image reset it
             if self.imageRect.y >= self.height*self.sheetSize[1]:
                 self.imageRect.y = 0
+
+        # Increment Tick
         self.sheetTick += 1
 
 #### ---- ZIP HANDLER ---- ####
