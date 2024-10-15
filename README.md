@@ -75,10 +75,18 @@ Blits the targeted sprite onto the given surface. The center of the sprite will 
 #### updateSheet(self)
 Updates the active sprite in the spritesheet. This function should be used in the game loop and, in most cases, should be updated every frame. By changing the “sheetAnimTicks” value it will change how long (in ticks) it takes for each frame of the sprite to update
 
-#### testColl(self,*otherSprites) -> bool
-Tests to see if the sprite collides with any other sprite (must be gregium.sprite type)
-#### testCollR(self,*otherRects) -> bool
-Tests to see if the sprite collides with any other rects (must be pygame.Rect type)
+#### testColl(self,otherSprite,pos:tuple[int,int]=None,otherSpritePos:tuple[int,int]=None) -> bool
+Tests to see if the sprite collides with another sprite 
+(must be gregium.sprite type),
+if either pos argument is not supplied it will use the most 
+recent position blitted by the sprite as the position 
+(scroll is taken into account)
+#### testCollR(self,*otherRects:pygame.Rect,pos:tuple[int,int]=None) -> bool
+Tests to see if the sprite collides with any other rects 
+(must be pygame.Rect type)
+if the pos argument is not supplied it will use the most 
+recent position blitted by the sprite as the position 
+(scroll is taken into account)
 
 ### ziphandle
 #### zipFolder(folder:str,zipPath:str) -> None

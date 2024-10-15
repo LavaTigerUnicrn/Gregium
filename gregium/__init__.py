@@ -372,6 +372,7 @@ class Sprite:
             self.height = self.origImage.get_height()
             self.rotation = 0
             self.inverted = False
+            self.mostRecentPos = pygame.Rect(0,0,0,0) # Is placeholder value since its updated in self.updateImage() line
 
             # Sets up spritesheets for animation as specified by the user
             if sheetSize != None:
@@ -408,6 +409,9 @@ class Sprite:
         
         # Fix the image for rendering
         self.imageBlit = pygame.Surface((self.width,self.height),pygame.SRCALPHA)
+
+        # Fix the size of self.mostRecentPos
+        self.mostRecentPos.width,self.mostRecentPos.height = self.width,self.height
 
         # If spritesheets are enabled, display the next sprite
         if self.is_sheet:
@@ -461,6 +465,7 @@ class Sprite:
             return -1
         
         # Blits the sprite using existing class variables and arguments
+        self.mostRecentPos.x,self.mostRecentPos.y = xy[0]+SCRLX,xy[1]+SCRLY
         window.blit(self.imageBlit,(xy[0]+SCRLX,xy[1]+SCRLY))
 
         return 1
@@ -472,6 +477,8 @@ class Sprite:
             return -1
         
         # Blits the sprite's center at the given coordinates
+        self.mostRecentPos.x = (xy[0]-self.imageBlitRect.w/2)+SCRLX
+        self.mostRecentPos.y = (xy[1]-self.imageBlitRect.h/2)+SCRLY
         window.blit(self.imageBlit,((xy[0]-self.imageBlitRect.w/2)+SCRLX,
                                     (xy[1]-self.imageBlitRect.h/2)+SCRLY))
 
@@ -487,27 +494,62 @@ class Sprite:
         
         # Blit the image at the center, but changed around the pivot point
         newPoint = rotate(pivot,xy,angle)
+        self.mostRecentPos.x = (newPoint[0]-self.imageBlitRect.w/2)+SCRLX
+        self.mostRecentPos.y = (newPoint[1]-self.imageBlitRect.h/2)+SCRLY
         window.blit(self.imageBlit,((newPoint[0]-self.imageBlitRect.w/2)+SCRLX,
-                                    (newPoint[1]-self.imageBlitRect.h/2))+SCRLY)
+                                    (newPoint[1]-self.imageBlitRect.h/2)+SCRLY))
+        
         
         return 1
         
-    def testColl(self,*otherSprites) -> bool:
+    def testColl(self,otherSprite,
+                 pos:tuple[int,int]=None,
+                 otherSpritePos:tuple[int,int]=None) -> bool:
         """
-        Tests to see if the sprite collides with any other sprite (must be gregium.sprite type)
+        Tests to see if the sprite collides with another sprite 
+        (must be gregium.sprite type),
+        if either pos argument is not supplied it will use the most 
+        recent position blitted by the sprite as the position 
+        (scroll is taken into account)
         """
-        for sprite in otherSprites:
-            if self.imageBlitRect.colliderect(sprite.imageBlitRect):
-                return True
+
+        # Set pos values if none is given
+        if pos != None:
+            self.mostRecentPos.x,self.mostRecentPos.y = pos
+
+        if otherSpritePos != None:
+            otherSprite.mostRecentPos.x = otherSpritePos[0]
+            otherSprite.mostRecentPos.y = otherSpritePos[1]
+
+        # Run the test on each sprites rect
+        if self.mostRecentPos.colliderect(otherSprite.mostRecentPos):
+
+            return True
+        
+        # If the test fail (doesn't return true), return false instead
         return False
     
-    def testCollR(self,*otherRects) -> bool:
+    def testCollR(self,*otherRects:pygame.Rect,
+                  pos:tuple[int,int]=None) -> bool:
         """
-        Tests to see if the sprite collides with any other rects (must be pygame.Rect type)
+        Tests to see if the sprite collides with any other rects 
+        (must be pygame.Rect type)
+        if the pos argument is not supplied it will use the most 
+        recent position blitted by the sprite as the position 
+        (scroll is taken into account)
         """
+        # Set pos value if none is given
+        if pos != None:
+            self.mostRecentPos.x,self.mostRecentPos.y = pos
+
+        # Do test on each rect
         for sprite in otherRects:
-            if self.imageBlitRect.colliderect(sprite):
+
+            if self.mostRecentPos.colliderect(sprite):
+
                 return True
+            
+        # If all tests fail (never returns true), return false instead
         return False
     
     def updateSheet(self):
@@ -586,8 +628,7 @@ def supplyEvent(event:pygame.event.Event):
         case pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 events["enter"] = True
-            else:
-                events["heldKeys"].append(event.key)
+            events["heldKeys"].append(event.key)
         case pygame.KEYUP:
             events["heldKeys"].remove(event.key)
         case pygame.QUIT:
