@@ -37,23 +37,25 @@ WINDOW = None
 SELECTEDBUTTON = None
 SCRLX = 0
 SCRLY = 0
+MAINCLOCK = None
 logging.info("Globals declared")
 
 # Initializing Pygame
 pygame.init()
 
-def init():
-    logging.info("Init Ran: Surface Defined")
+def init(clock:pygame.Clock):
+    logging.info("Init Ran")
     """
-    Will define the global WINDOW variable to the current 
+    Will define the global WINDOW (an other) variables to the current 
     working window, required for many functions to run
 
     *pygame.display.set_mode() must be run first to create the window
     """
 
     # Redefines global "WINDOW" to be the current working surface
-    global WINDOW
+    global WINDOW,MAINCLOCK
     WINDOW = pygame.display.get_surface()
+    MAINCLOCK = clock
 
 def alignPos(pos:tuple[float,float], 
              align:str="topLeft") -> tuple[float,float]:
@@ -376,16 +378,18 @@ class Sprite:
             self.rotation = 0
             self.inverted = False
             self.mostRecentPos = pygame.Rect(0,0,0,0) # Is placeholder value since its updated in self.updateImage() line
+            self.origScale = (self.width,self.height)
 
             # Sets up spritesheets for animation as specified by the user
             if sheetSize != None:
                 self.is_sheet = True
                 self.sheetSize = sheetSize
-                self.sheetAnimTicks = 0
+                self.sheetAnimMS = 0
                 self.sheetTick = 0
-                self.imageRect = pygame.Rect(0,0,self.width,self.height)
                 self.width /= self.sheetSize[0]
                 self.height /= self.sheetSize[1]
+                self.imageRect = pygame.Rect(0,0,self.width,self.height)
+                self.origScaleM = (self.width,self.height)
 
             # Disables sprite sheets and animation
             else:
@@ -409,32 +413,23 @@ class Sprite:
         # Return with a failed exit code if there is no image
         if self.origImage == None:
             return -1
-        
-        # Fix the image for rendering
-        self.imageBlit = pygame.Surface((self.width,self.height),pygame.SRCALPHA)
 
         # Fix the size of self.mostRecentPos
         self.mostRecentPos.width,self.mostRecentPos.height = self.width,self.height
 
         # If spritesheets are enabled, display the next sprite
         if self.is_sheet:
-            self.imageRect.w = self.width
-            self.imageRect.h = self.height
-            self.imageRectF = pygame.Rect(self.imageRect.x,self.imageRect.y,self.width,self.height)
-            self.imageRectF.x = self.imageRect.x*self.width
-            self.imageRectF.y = self.imageRect.y*self.height
-            self.imageBlit.blit(
-                pygame.transform.scale(self.origImage,
-                                        (self.width*self.sheetSize[0],
-                                        self.height*self.sheetSize[1])),(0,0),
-                                        self.imageRectF)
+            self.imageBlit = pygame.transform.scale(
+                self.origImage.subsurface(self.imageRect),
+                                                    (self.width,
+                                                    self.height))
         
         # Otherwise, redisplay the sprite
         else:
-            self.imageBlit.blit(
-                pygame.transform.scale(self.origImage,
-                                        (self.width*self.sheetSize[0],
-                                        self.height*self.sheetSize[1])),(0,0))
+            self.imageBlit = pygame.transform.scale(
+                self.origImage,
+                (self.width,
+                self.height))
 
         # Reposition the sprite and reset the sprite's Rect value
         self.imageBlit = pygame.transform.rotate(self.imageBlit,self.rotation)
@@ -471,8 +466,9 @@ class Sprite:
             return -1
         
         # Blits the sprite using existing class variables and arguments
-        self.mostRecentPos.x,self.mostRecentPos.y = xy[0]+SCRLX,xy[1]+SCRLY
-        window.blit(self.imageBlit,(xy[0]+SCRLX,xy[1]+SCRLY))
+        newXy = (xy[0]+SCRLX,xy[1]+SCRLY)
+        self.mostRecentPos.x,self.mostRecentPos.y = newXy
+        window.blit(self.imageBlit,newXy)
 
         return 1
     
@@ -483,10 +479,10 @@ class Sprite:
             return -1
         
         # Blits the sprite's center at the given coordinates
-        self.mostRecentPos.x = (xy[0]-self.imageBlitRect.w/2)+SCRLX
-        self.mostRecentPos.y = (xy[1]-self.imageBlitRect.h/2)+SCRLY
-        window.blit(self.imageBlit,((xy[0]-self.imageBlitRect.w/2)+SCRLX,
-                                    (xy[1]-self.imageBlitRect.h/2)+SCRLY))
+        newXy = ((xy[0]-self.imageBlitRect.w/2)+SCRLX,
+                                (xy[1]-self.imageBlitRect.h/2)+SCRLY)
+        self.mostRecentPos.x,self.mostRecentPos.y = newXy
+        window.blit(self.imageBlit,newXy)
 
         return 1
     
@@ -500,10 +496,10 @@ class Sprite:
         
         # Blit the image at the center, but changed around the pivot point
         newPoint = rotate(pivot,xy,angle)
-        self.mostRecentPos.x = (newPoint[0]-self.imageBlitRect.w/2)+SCRLX
-        self.mostRecentPos.y = (newPoint[1]-self.imageBlitRect.h/2)+SCRLY
-        window.blit(self.imageBlit,((newPoint[0]-self.imageBlitRect.w/2)+SCRLX,
-                                    (newPoint[1]-self.imageBlitRect.h/2)+SCRLY))
+        newXy = ((newPoint[0]-self.imageBlitRect.w/2)+SCRLX,
+                 (newPoint[1]-self.imageBlitRect.h/2)+SCRLY)
+        self.mostRecentPos.x,self.mostRecentPos.y = newXy
+        window.blit(self.imageBlit,newXy)
         
         
         return 1
@@ -563,30 +559,30 @@ class Sprite:
         Updates the active sprite in the spritesheet. 
         This function should be used in the game loop and, 
         in most cases, should be updated every frame. 
-        By changing the “sheetAnimTicks” value it will change 
-        how long (in ticks) it takes for each frame of the sprite to update
+        By changing the “sheetAnimMS” value it will change 
+        how long (in ms) it takes for each frame of the sprite to update
         """
 
         # If the sheet is due for updating update it
-        if self.sheetTick >= self.sheetAnimTicks:
-            self.sheetTick = 0
+        while self.sheetTick >= self.sheetAnimMS:
+            self.sheetTick -= self.sheetAnimMS
 
             # Move the position of the pointer
-            self.imageRect.x += 1
+            self.imageRect.x += self.origScaleM[0]
 
             # If pointer is
-            if self.imageRect.x >= self.sheetSize[0]:
+            if self.imageRect.x >= self.origScale[0]:
                 self.imageRect.x = 0
-                self.imageRect.y += 1
+                self.imageRect.y += self.origScaleM[1]
 
             # If pointer rect is below bottom of image reset it
-            if self.imageRect.y >= self.sheetSize[1]:
+            if self.imageRect.y >= self.origScale[1]:
                 self.imageRect.y = 0
 
         # Increment Tick
-        self.sheetTick += 1
+        self.sheetTick += events.clockTime
 
-    def scale(self,scale:int=None,width:int=None,height:int=None):
+    def scale(self,scale:float=None,width:float=None,height:float=None):
         """
         Scales the sprite by scale argument factor, 
         there should be only 1 input unless you 
@@ -616,6 +612,11 @@ class Sprite:
         elif width != None and height != None:
             self.width = width
             self.height = height
+
+        else:
+
+            logging.error(f"No mode specified for {self}.scale method")
+            return -1
 
         # Return success
         return 1
@@ -651,6 +652,7 @@ class EV_Initializer:
         self.highlighted = True
         self.enter = False
         self.heldKeys = []
+        self.clockTime = 0
 
     def clearEvent(self):
         """Resets all events to default values (use before event loop)"""
@@ -662,6 +664,7 @@ class EV_Initializer:
         self.mouseUp = False
         self.mousePos = pygame.mouse.get_pos()
         self.enter = False
+        self.clockTime = MAINCLOCK.get_time()
 
     def supplyEvent(self,event:pygame.event.Event):
         """
@@ -700,18 +703,6 @@ class EV_Initializer:
 
 # Initialize Events
 events = EV_Initializer()
-
-def clearEvent():
-    """
-    clearEvent has been depricated, instead use events.clearEvent
-    """
-    raise DeprecationWarning("clearEvent has been depricated, instead use events.clearEvent")
-    
-def supplyEvent(event:pygame.event.Event):
-    """
-    supplyEvent has been depricated, instead use events.supplyEvent
-    """
-    raise DeprecationWarning("supplyEvent has been depricated, instead use events.supplyEvent")
 
 def on_press(key):
     """

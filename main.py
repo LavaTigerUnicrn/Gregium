@@ -1,23 +1,25 @@
 #Use for testing functions
-import gregium,pygame,gregium.editor
+import gregium,pygame
 
 # Open pygame window, initialize gregium
 WINDOW = pygame.display.set_mode([1000,1000],pygame.NOFRAME)
-gregium.init()
+CLOCK = pygame.Clock()
+
+gregium.init(CLOCK)
 
 # Initialize a gregium Font and textBox
 BOX = gregium.textBox((-500,-50),size=(1000,100),text="yay!",align="center",rounding=15)
 
 # Generate SPRITESHEETOBJ
 SPRITESHEETOBJ = gregium.Sprite(gregium.PATH+"/gregiumAnimHD.png",(6,3))
-SPRITESHEETOBJ.width,SPRITESHEETOBJ.height,SPRITESHEETOBJ.sheetAnimTicks = 300,300,5
+SPRITESHEETOBJ.width,SPRITESHEETOBJ.height,SPRITESHEETOBJ.sheetAnimMS = 300,300,50
 
 # Generate SPRITEOBJ
 SPRITEOBJ = gregium.Sprite(gregium.PATH+"/gregiumHD.png")
-SPRITEOBJ.width,SPRITEOBJ.height = 300,300
+SPRITEOBJ.width,SPRITEOBJ.height = 50,50
 SPRITEOBJ.updateImage()
 
-CLOCK = pygame.Clock()
+pygame.mouse.set_visible(False)
 
 # Main loop
 while not gregium.events.quit:
@@ -32,12 +34,8 @@ while not gregium.events.quit:
 
     # Render SPRITESHEETOBJ
     SPRITESHEETOBJ.updateSheet()
-    SPRITESHEETOBJ.scale(width=max(gregium.events.mousePos[0],1))
     SPRITESHEETOBJ.updateImage()
     SPRITESHEETOBJ.blit(WINDOW,(0,0))
-
-    # Render SPRITEOBJ
-    SPRITEOBJ.blit_center(WINDOW,gregium.events.mousePos)
 
     if SPRITESHEETOBJ.testColl(SPRITEOBJ):
         gregium.SPACEMONO.blit_center("Colliding",gregium.alignPos((0,200),"center"))
@@ -50,9 +48,13 @@ while not gregium.events.quit:
     if BOX.render() == "ENTER":
         print(f"enter hit! text: {BOX.text}")
 
+    # Render SPRITEOBJ
+    SPRITEOBJ.blit_center(WINDOW,gregium.events.mousePos)
+
+
     # Update the window
     pygame.display.flip()
-    CLOCK.tick(60)
+    CLOCK.tick(120)
 
 # Stops gregium on quit
 gregium.stop()

@@ -2,8 +2,8 @@
 
 ## Documentation
 
-### init()
-Will define the global **WINDOW** variable to the current working window, required for many functions to run
+### init(clock:pygame.Clock)
+Will define the global **WINDOW** (and other) variables to the current working window, required for many functions to run
 
 *pygame.display.set_mode() must be run first to create the window
 ### alignPos(pos:tuple[float,float],align:str=”topLeft”) -> tuple[float,float]:
@@ -73,7 +73,7 @@ Blits the targeted sprite onto the given surface. The center of the sprite will 
 Blits the targeted sprite onto the given surface. The center of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). The sprite will be rotated around the coordinate point of the “pivot” argument by **COUNTERCLOCKWISE** by the number of degrees represented by the “angle” argument.
 
 #### updateSheet(self)
-Updates the active sprite in the spritesheet. This function should be used in the game loop and, in most cases, should be updated every frame. By changing the “sheetAnimTicks” value it will change how long (in ticks) it takes for each frame of the sprite to update
+Updates the active sprite in the spritesheet. This function should be used in the game loop and, in most cases, should be updated every frame. By changing the “sheetAnimMS” value it will change how long (in ms) it takes for each frame of the sprite to update
 
 #### testColl(self,otherSprite,pos:tuple[int,int]=None,otherSpritePos:tuple[int,int]=None) -> bool
 Tests to see if the sprite collides with another sprite 
@@ -88,7 +88,7 @@ if the pos argument is not supplied it will use the most
 recent position blitted by the sprite as the position 
 (scroll is taken into account)
 
-#### scale(self,scale:int=None,width:int=None,height:int=None)
+#### scale(self,scale:float=None,width:float=None,height:float=None) -> 1
 Scales the sprite by scale argument factor, there should be only 1 input unless you are changing both width and height (don't do scale & width or scale & height it will not work correctly) If either width or height is blank it is assumed to use automatic and will scale based on the other changed value
 
 ### ziphandle
