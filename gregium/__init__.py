@@ -26,7 +26,10 @@ import logging
 
 # Declaring Globals
 LOGGER = logging.getLogger(__name__)
-os.remove(os.getcwd()+"\\gregium.log")
+try:
+    os.remove(os.getcwd()+"\\gregium.log")
+except:
+    pass
 logging.basicConfig(filename='gregium.log', level=logging.DEBUG)
 logging.debug("Logger created")
 PATH = str(Path(__file__).parent.absolute())
@@ -417,11 +420,14 @@ class Sprite:
         if self.is_sheet:
             self.imageRect.w = self.width
             self.imageRect.h = self.height
+            self.imageRectF = pygame.Rect(self.imageRect.x,self.imageRect.y,self.width,self.height)
+            self.imageRectF.x = self.imageRect.x*self.width
+            self.imageRectF.y = self.imageRect.y*self.height
             self.imageBlit.blit(
                 pygame.transform.scale(self.origImage,
                                         (self.width*self.sheetSize[0],
                                         self.height*self.sheetSize[1])),(0,0),
-                                        self.imageRect)
+                                        self.imageRectF)
         
         # Otherwise, redisplay the sprite
         else:
@@ -566,19 +572,55 @@ class Sprite:
             self.sheetTick = 0
 
             # Move the position of the pointer
-            self.imageRect.x += self.width
+            self.imageRect.x += 1
 
             # If pointer is
-            if self.imageRect.x >= self.width*self.sheetSize[0]:
+            if self.imageRect.x >= self.sheetSize[0]:
                 self.imageRect.x = 0
-                self.imageRect.y += self.height
+                self.imageRect.y += 1
 
             # If pointer rect is below bottom of image reset it
-            if self.imageRect.y >= self.height*self.sheetSize[1]:
+            if self.imageRect.y >= self.sheetSize[1]:
                 self.imageRect.y = 0
 
         # Increment Tick
         self.sheetTick += 1
+
+    def scale(self,scale:int=None,width:int=None,height:int=None):
+        """
+        Scales the sprite by scale argument factor, 
+        there should be only 1 input unless you 
+        are changing both width and height 
+        (don't do scale & width or scale & height it will not work correctly)
+        If either width or height is blank it is assumed to use automatic
+        and will scale based on the other changed value
+        """
+
+        # If scale factor is set multiple width & height by it
+        if scale != None:
+            self.width *= scale
+            self.height *= scale
+
+        # If only one of the width/height values are added 
+        # calculate the value that should be multiplied 
+        # to yield auto scaling
+        elif (width == None) ^ (height == None):
+            if width == None:
+                self.width *= height/self.height
+                self.height = height
+            if height == None:
+                self.height *= width/self.width
+                self.width = width
+
+        # If both values are given set each
+        elif width != None and height != None:
+            self.width = width
+            self.height = height
+
+        # Return success
+        return 1
+        
+        
 
 #### ---- ZIP HANDLER ---- ####
 class ziphandle:

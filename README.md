@@ -88,6 +88,9 @@ if the pos argument is not supplied it will use the most
 recent position blitted by the sprite as the position 
 (scroll is taken into account)
 
+#### scale(self,scale:int=None,width:int=None,height:int=None)
+Scales the sprite by scale argument factor, there should be only 1 input unless you are changing both width and height (don't do scale & width or scale & height it will not work correctly) If either width or height is blank it is assumed to use automatic and will scale based on the other changed value
+
 ### ziphandle
 #### zipFolder(folder:str,zipPath:str) -> None
 Zips a folder given by the path of zipPath without using recursion.

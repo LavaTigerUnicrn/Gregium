@@ -32,6 +32,7 @@ while not gregium.events.quit:
 
     # Render SPRITESHEETOBJ
     SPRITESHEETOBJ.updateSheet()
+    SPRITESHEETOBJ.scale(width=max(gregium.events.mousePos[0],1))
     SPRITESHEETOBJ.updateImage()
     SPRITESHEETOBJ.blit(WINDOW,(0,0))
 
@@ -43,6 +44,7 @@ while not gregium.events.quit:
 
     # Render KeysPressed
     gregium.SPACEMONO.blit_center(str(gregium.events.heldKeys),gregium.alignPos((0,100),"center"))
+    gregium.SPACEMONO.blit_center(str(CLOCK.get_fps()),gregium.alignPos((0,300),"center"))
 
     # If enter is pressed, detect typing and change the text in the textBox accordingly
     if BOX.render() == "ENTER":

@@ -21,7 +21,6 @@ setup(name="gregium",version="0.1.6",
 
     'License :: OSI Approved :: MIT License',
 
-    'Programming Language :: Python :: 3.11',
-    'Programming Language :: Python :: 3.12',],
+    'Programming Language :: Python :: 3'],
     long_description_content_type="text/markdown"
     )
