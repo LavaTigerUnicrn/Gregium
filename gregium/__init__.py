@@ -379,6 +379,7 @@ class Sprite:
             self.inverted = False
             self.origScale = (self.width,self.height)
             self.scrollModif = 1
+            self.imageBlitRect = pygame.Rect(0,0,1,1)
 
             # Sets up spritesheets for animation as specified by the user
             if sheetSize != None:
@@ -431,7 +432,8 @@ class Sprite:
         # Reposition the sprite and reset the sprite's Rect value
         if self.rotation != 0:
             self.imageBlit = pygame.transform.rotate(self.imageBlit,self.rotation)
-        self.imageBlitRect = self.imageBlit.get_rect()
+
+        self.imageBlitRect.w,self.imageBlitRect.h = self.imageBlit.get_width(),self.imageBlit.get_height()
 
         return 1
 
