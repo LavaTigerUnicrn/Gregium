@@ -1,6 +1,6 @@
 """
 The core of Gregium
-v0.2
+v0.1.7
 
 See docs at: 
 https://docs.google.com/document/d/1KtBRR3mXbcjt4zKhA5wF2QNwm-vt10tR8TIWEoapXyA/edit?usp=sharing
@@ -377,8 +377,8 @@ class Sprite:
             self.height = self.origImage.get_height()
             self.rotation = 0
             self.inverted = False
-            self.mostRecentPos = pygame.Rect(0,0,0,0) # Is placeholder value since its updated in self.updateImage() line
             self.origScale = (self.width,self.height)
+            self.scrollModif = 1
 
             # Sets up spritesheets for animation as specified by the user
             if sheetSize != None:
@@ -409,13 +409,10 @@ class Sprite:
         """
         Updates the image for animation/movement
         """
-
+            
         # Return with a failed exit code if there is no image
         if self.origImage == None:
             return -1
-
-        # Fix the size of self.mostRecentPos
-        self.mostRecentPos.width,self.mostRecentPos.height = self.width,self.height
 
         # If spritesheets are enabled, display the next sprite
         if self.is_sheet:
@@ -432,8 +429,11 @@ class Sprite:
                 self.height))
 
         # Reposition the sprite and reset the sprite's Rect value
-        self.imageBlit = pygame.transform.rotate(self.imageBlit,self.rotation)
+        if self.rotation != 0:
+            self.imageBlit = pygame.transform.rotate(self.imageBlit,self.rotation)
         self.imageBlitRect = self.imageBlit.get_rect()
+
+        return 1
 
     def tint_add(self,rgb:tuple[int,int,int]):
         """Tint the sprite with the given color"""
@@ -466,8 +466,9 @@ class Sprite:
             return -1
         
         # Blits the sprite using existing class variables and arguments
-        newXy = (xy[0]+SCRLX,xy[1]+SCRLY)
-        self.mostRecentPos.x,self.mostRecentPos.y = newXy
+        newXy = (xy[0]+(SCRLX*self.scrollModif),
+                 xy[1]+(SCRLY*self.scrollModif))
+        self.imageBlitRect.x,self.imageBlitRect.y = newXy
         window.blit(self.imageBlit,newXy)
 
         return 1
@@ -479,9 +480,9 @@ class Sprite:
             return -1
         
         # Blits the sprite's center at the given coordinates
-        newXy = ((xy[0]-self.imageBlitRect.w/2)+SCRLX,
-                                (xy[1]-self.imageBlitRect.h/2)+SCRLY)
-        self.mostRecentPos.x,self.mostRecentPos.y = newXy
+        newXy = ((xy[0]-self.imageBlitRect.w/2)+(SCRLX*self.scrollModif),
+                                (xy[1]-self.imageBlitRect.h/2)+(SCRLY*self.scrollModif))
+        self.imageBlitRect.x,self.imageBlitRect.y = newXy
         window.blit(self.imageBlit,newXy)
 
         return 1
@@ -496,11 +497,10 @@ class Sprite:
         
         # Blit the image at the center, but changed around the pivot point
         newPoint = rotate(pivot,xy,angle)
-        newXy = ((newPoint[0]-self.imageBlitRect.w/2)+SCRLX,
-                 (newPoint[1]-self.imageBlitRect.h/2)+SCRLY)
-        self.mostRecentPos.x,self.mostRecentPos.y = newXy
+        newXy = ((newPoint[0]-self.imageBlitRect.w/2)+(SCRLX*self.scrollModif),
+                 (newPoint[1]-self.imageBlitRect.h/2)+(SCRLY*self.scrollModif))
+        self.imageBlitRect.x,self.imageBlitRect.y = newXy
         window.blit(self.imageBlit,newXy)
-        
         
         return 1
         
@@ -517,14 +517,14 @@ class Sprite:
 
         # Set pos values if none is given
         if pos != None:
-            self.mostRecentPos.x,self.mostRecentPos.y = pos
+            self.imageBlitRect.x,self.imageBlitRect.y = pos
 
         if otherSpritePos != None:
-            otherSprite.mostRecentPos.x = otherSpritePos[0]
-            otherSprite.mostRecentPos.y = otherSpritePos[1]
+            otherSprite.imageBlitRect.x = otherSpritePos[0]
+            otherSprite.imageBlitRect.y = otherSpritePos[1]
 
         # Run the test on each sprites rect
-        if self.mostRecentPos.colliderect(otherSprite.mostRecentPos):
+        if self.imageBlitRect.colliderect(otherSprite.imageBlitRect):
 
             return True
         
@@ -540,14 +540,15 @@ class Sprite:
         recent position blitted by the sprite as the position 
         (scroll is taken into account)
         """
+
         # Set pos value if none is given
         if pos != None:
-            self.mostRecentPos.x,self.mostRecentPos.y = pos
+            self.imageBlitRect.x,self.imageBlitRect.y = pos
 
         # Do test on each rect
         for sprite in otherRects:
 
-            if self.mostRecentPos.colliderect(sprite):
+            if self.imageBlitRect.colliderect(sprite):
 
                 return True
             

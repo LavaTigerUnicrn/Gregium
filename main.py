@@ -18,7 +18,9 @@ SPRITESHEETOBJ.width,SPRITESHEETOBJ.height,SPRITESHEETOBJ.sheetAnimMS = 300,300,
 SPRITEOBJ = gregium.Sprite(gregium.PATH+"/gregiumHD.png")
 SPRITEOBJ.width,SPRITEOBJ.height = 50,50
 SPRITEOBJ.updateImage()
+SPRITEOBJ.scrollModif = 0
 
+bignum = 0
 pygame.mouse.set_visible(False)
 
 # Main loop
@@ -32,17 +34,29 @@ while not gregium.events.quit:
     for event in pygame.event.get():
         gregium.events.supplyEvent(event)
 
-    # Render SPRITESHEETOBJ
-    SPRITESHEETOBJ.updateSheet()
-    SPRITESHEETOBJ.updateImage()
-    SPRITESHEETOBJ.blit(WINDOW,(0,0))
+    # Scroll bye bye
+    gregium.SCRLX += 1
 
     if SPRITESHEETOBJ.testColl(SPRITEOBJ):
-        gregium.SPACEMONO.blit_center("Colliding",gregium.alignPos((0,200),"center"))
+        coll = (0,255,0)
+    else:
+        coll = (255,0,0)
+    # Render SPRITESHEETOBJ
+    SPRITESHEETOBJ.rotation += 0.01*CLOCK.get_time()
+    SPRITESHEETOBJ.updateSheet()
+    SPRITESHEETOBJ.updateImage()
+    SPRITESHEETOBJ.blit_center(WINDOW,(SPRITESHEETOBJ.width/2,SPRITESHEETOBJ.height/2))
+
+    # Render SPRITEOBJ
+    SPRITEOBJ.blit_center(WINDOW,gregium.events.mousePos)
+
+    pygame.draw.rect(WINDOW,coll,SPRITESHEETOBJ.imageBlitRect,5)
+    pygame.draw.rect(WINDOW,coll,SPRITEOBJ.imageBlitRect,5)
 
     # Render KeysPressed
     gregium.SPACEMONO.blit_center(str(gregium.events.heldKeys),gregium.alignPos((0,100),"center"))
-    gregium.SPACEMONO.blit_center(str(CLOCK.get_fps()),gregium.alignPos((0,300),"center"))
+    bignum = max(bignum,CLOCK.get_fps())
+    gregium.SPACEMONO.blit_center(str(bignum),gregium.alignPos((0,300),"center"))
 
     # If enter is pressed, detect typing and change the text in the textBox accordingly
     if BOX.render() == "ENTER":
@@ -51,10 +65,9 @@ while not gregium.events.quit:
     # Render SPRITEOBJ
     SPRITEOBJ.blit_center(WINDOW,gregium.events.mousePos)
 
-
     # Update the window
     pygame.display.flip()
-    CLOCK.tick(120)
+    CLOCK.tick(60)
 
 # Stops gregium on quit
 gregium.stop()

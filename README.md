@@ -1,4 +1,4 @@
-# Gregium v0.1.6
+# Gregium v0.1.7
 
 ## Documentation
 

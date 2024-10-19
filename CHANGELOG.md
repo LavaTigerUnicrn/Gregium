@@ -7,3 +7,4 @@
 - Added clock requirement to init (also slightly changed) sprite.sheetAnimMS
 - Added logging
 - And a few more smaller changes!
+- Added "self.scrollModf" property of Sprites to control scroll of them
