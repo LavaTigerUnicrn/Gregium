@@ -45,7 +45,8 @@ while not gregium.events.quit:
     SPRITESHEETOBJ.rotation += 0.01*CLOCK.get_time()
     SPRITESHEETOBJ.updateSheet()
     SPRITESHEETOBJ.updateImage()
-    SPRITESHEETOBJ.blit_center(WINDOW,(SPRITESHEETOBJ.width/2,SPRITESHEETOBJ.height/2))
+    SPRITESHEETOBJ.updateDropShadow()
+    SPRITESHEETOBJ.blit_center(WINDOW,(SPRITESHEETOBJ.width/2,SPRITESHEETOBJ.height/2),(15,15))
 
     # Render SPRITEOBJ
     SPRITEOBJ.blit_center(WINDOW,gregium.events.mousePos)

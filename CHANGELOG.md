@@ -1,5 +1,5 @@
 # Gregium
-## 0.1.7
+#### 0.1.7
 - Improved FPS with all sprites
 - Added "scale" method to sprites
 - Added "testColl" & "testCollR" methods to sprites
@@ -8,3 +8,8 @@
 - Added logging
 - And a few more smaller changes!
 - Added "self.scrollModf" property of Sprites to control scroll of them
+
+#### 0.1.8
+- Fixed bugs with sprite collisions
+- Added sprite dropshadow
+- Added gregium.setup for setting up files easily

@@ -12,6 +12,9 @@ The default position is topLeft and running alignPos with topLeft returns the sa
 
 *Will raise an error if gregium.init() is not run first
 
+### animRGB(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list
+Makes a list of all rgb values in order to transition from originalRGB to newRGB
+
 ### rotate(origin:tuple[float,float], point:tuple[float,float], angle:float) -> tuple[float,float]
 Will rotate a point counterclockwise around a given origin, new point position is based on original distance to the origin, angle must be given in degree form for function to work properly.
 
@@ -59,18 +62,29 @@ Will generate a sprite with the image located at filePath, and with a size (in p
 Creates a basic sprite for rendering, with a sprite image or sprite sheet loaded from the provided file path. If the sprite has an animation sheet, set the sheetSize argument to the (rows, columns) of the sprite sheet.
 #### updateImage(self)
 Redraws the sprite’s image and updates its position and orientation.
+
+* The order should **always** be 
+#1 updateImage() 
+#2 updateDropShadow() only if applicable
+#3 tint_add/tint_mult
+#4 blit/blit_center/blit_pivot_center
+#5 testColl/testCollR **unless you define the "pos" argument**
+#### updateDropShadow(self)
+Generates a drop shadow for the current frame of the sprite
+
+* Required for any drop shadow to render at all and run every frame of drop shadow before blit
 #### tint_add(self,rgb:tuple[int,int,int])
 Tints the targeted sprite with a given RGB color.
 #### tint_mult(self,rgb:tuple[int,int,int])
 Multiplies each pixel on sprite by rgb tint
 
 **For the following three methods, SCRLX and SCRLY represent variables that track the current scroll offset - e.g., scrolling 3px right means SCRLX += 3.
-#### blit(self,window:pygame.Surface,xy:tuple[int,int])
-Blits the targeted sprite onto the given surface. The top left of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY).
-#### blit_center(self,window:pygame.Surface,xy:tuple[int,int])
-Blits the targeted sprite onto the given surface. The center of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY).
-#### blit_pivot_center(self,window:pygame.Surface,xy:tuple[int,int],pivot:tuple[int,int],angle:float)
-Blits the targeted sprite onto the given surface. The center of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). The sprite will be rotated around the coordinate point of the “pivot” argument by **COUNTERCLOCKWISE** by the number of degrees represented by the “angle” argument.
+#### blit(self,window:pygame.Surface,xy:tuple[int,int],dropShadow:tuple[int,int]=(0,0))
+Blits the targeted sprite onto the given surface. The top left of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
+#### blit_center(self,window:pygame.Surface,xy:tuple[int,int],dropShadow:tuple[int,int]=(0,0))
+Blits the targeted sprite onto the given surface. The center of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
+#### blit_pivot_center(self,window:pygame.Surface,xy:tuple[int,int],pivot:tuple[int,int],angle:float,dropShadow:tuple[int,int]=(0,0))
+Blits the targeted sprite onto the given surface. The center of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). The sprite will be rotated around the coordinate point of the “pivot” argument by **COUNTERCLOCKWISE** by the number of degrees represented by the “angle” argument. Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
 
 #### updateSheet(self)
 Updates the active sprite in the spritesheet. This function should be used in the game loop and, in most cases, should be updated every frame. By changing the “sheetAnimMS” value it will change how long (in ms) it takes for each frame of the sprite to update

@@ -2,8 +2,7 @@
 The core of Gregium
 v0.1.7
 
-See docs at: 
-https://docs.google.com/document/d/1KtBRR3mXbcjt4zKhA5wF2QNwm-vt10tR8TIWEoapXyA/edit?usp=sharing
+See documentation in README.md file
 """
 
 # Pygame Imports
@@ -108,6 +107,26 @@ def alignPos(pos:tuple[float,float],
     # If the window isn't loaded, throw an informational error
     else:
         raise Exception("Must run init first")
+
+def animRGB(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int):
+    """
+    Makes a list of all rgb values in order to transition from originalRGB to newRGB
+    """
+
+    # Get the modifiers
+    rModif = (originalRGB[0]-newRGB[0])/steps
+    gModif = (originalRGB[1]-newRGB[1])/steps
+    bModif = (originalRGB[2]-newRGB[2])/steps
+
+    # Generate a new list
+    rgbList = []
+    for step in range(steps-1):
+        rgbList.append((originalRGB[0]-(rModif*step),originalRGB[1]-(gModif*step),originalRGB[2]-(bModif*step)))
+
+    rgbList.append(newRGB)
+
+    # Return the final list
+    return rgbList
 
 def rotate(origin:tuple[float,float], point:tuple[float,float], 
            angle:float) -> tuple[float,float]:
@@ -380,6 +399,7 @@ class Sprite:
             self.origScale = (self.width,self.height)
             self.scrollModif = 1
             self.imageBlitRect = pygame.Rect(0,0,1,1)
+            self.dropshadow = pygame.Surface((5,5))
 
             # Sets up spritesheets for animation as specified by the user
             if sheetSize != None:
@@ -409,6 +429,14 @@ class Sprite:
     def updateImage(self):
         """
         Updates the image for animation/movement
+
+        
+        * The order should always be 
+        #1 updateImage() 
+        #2 updateDropShadow() only if applicable
+        #3 tint_add/tint_mult
+        #4 blit/blit_center/blit_pivot_center
+        #5 testColl/testCollR unless you define the "pos" argument
         """
             
         # Return with a failed exit code if there is no image
@@ -436,6 +464,17 @@ class Sprite:
         self.imageBlitRect.w,self.imageBlitRect.h = self.imageBlit.get_width(),self.imageBlit.get_height()
 
         return 1
+    def updateDropShadow(self):
+        """
+        Generates a drop shadow for the current frame of the sprite
+
+        *Required for any drop shadow to render at all and run every frame of drop shadow before blit
+        """
+
+        # Get copy of current image but grayscaled
+        self.dropshadow = pygame.transform.grayscale(self.imageBlit)
+        self.dropshadow.fill((0,0,0),special_flags=pygame.BLEND_MIN)
+        self.dropshadow.set_alpha(128)
 
     def tint_add(self,rgb:tuple[int,int,int]):
         """Tint the sprite with the given color"""
@@ -461,7 +500,13 @@ class Sprite:
 
         return 1
 
-    def blit(self,window:pygame.Surface,xy:tuple[int,int]):
+    def blit(self,window:pygame.Surface,xy:tuple[int,int],dropShadow:tuple[int,int]=(0,0)):
+        """
+        Blits the targeted sprite onto the given surface. 
+        The top left of the sprite will be positioned at the provided coordinate 
+        pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY).
+        Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
+        """
 
         # Return with a failed exit code if there is no image
         if self.origImage == None:
@@ -471,11 +516,23 @@ class Sprite:
         newXy = (xy[0]+(SCRLX*self.scrollModif),
                  xy[1]+(SCRLY*self.scrollModif))
         self.imageBlitRect.x,self.imageBlitRect.y = newXy
+
+        # Blit drop shadow before main Blit if required
+        if dropShadow != (0,0):
+            window.blit(self.dropshadow,(newXy[0]+dropShadow[0],newXy[1]+dropShadow[1]))
+
         window.blit(self.imageBlit,newXy)
 
         return 1
     
-    def blit_center(self,window:pygame.Surface,xy:tuple[int,int]):
+    def blit_center(self,window:pygame.Surface,xy:tuple[int,int],
+                    dropShadow:tuple[int,int]=(0,0)):
+        """
+        Blits the targeted sprite onto the given surface. 
+        The center of the sprite will be positioned at the provided 
+        coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY).
+        Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
+        """
 
         # Return with a failed exit code if there is no image
         if self.origImage == None:
@@ -485,13 +542,27 @@ class Sprite:
         newXy = ((xy[0]-self.imageBlitRect.w/2)+(SCRLX*self.scrollModif),
                                 (xy[1]-self.imageBlitRect.h/2)+(SCRLY*self.scrollModif))
         self.imageBlitRect.x,self.imageBlitRect.y = newXy
+
+        # Blit drop shadow before main Blit if required
+        if dropShadow != (0,0):
+            window.blit(self.dropshadow,(newXy[0]+dropShadow[0],newXy[1]+dropShadow[1]))
+
         window.blit(self.imageBlit,newXy)
 
         return 1
     
     def blit_pivot_center(self,window:pygame.Surface,
                           xy:tuple[int,int],
-                          pivot:tuple[int,int],angle:float):
+                          pivot:tuple[int,int],angle:float,
+                          dropShadow:tuple[int,int]=(0,0)):
+        """
+        Blits the targeted sprite onto the given surface. 
+        The center of the sprite will be positioned at the provided coordinate 
+        pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). The sprite 
+        will be rotated around the coordinate point of the “pivot” argument by 
+        COUNTERCLOCKWISE by the number of degrees represented by the “angle” argument.
+        Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
+        """
 
         # Return with a failed exit code if there is no image
         if self.origImage == None:
@@ -502,6 +573,11 @@ class Sprite:
         newXy = ((newPoint[0]-self.imageBlitRect.w/2)+(SCRLX*self.scrollModif),
                  (newPoint[1]-self.imageBlitRect.h/2)+(SCRLY*self.scrollModif))
         self.imageBlitRect.x,self.imageBlitRect.y = newXy
+
+        # Blit drop shadow before main Blit if required
+        if dropShadow != (0,0):
+            window.blit(self.dropshadow,(newXy[0]+dropShadow[0],newXy[1]+dropShadow[1]))
+
         window.blit(self.imageBlit,newXy)
         
         return 1
@@ -646,7 +722,7 @@ class EV_Initializer:
         """
 
         # Setup events
-        self.other = {}
+        self.other = []
         self.quit = False
         self.mouseDown = False
         self.mouseUp = False
@@ -661,7 +737,7 @@ class EV_Initializer:
         """Resets all events to default values (use before event loop)"""
 
         # Clear all required events & update pygame mouse
-        self.other = {}
+        self.other = []
         self.quit = False
         self.mouseDown = False
         self.mouseUp = False
@@ -702,7 +778,7 @@ class EV_Initializer:
             case pygame.WINDOWFOCUSLOST:
                 self.highlighted = False
             case _:
-                self.other[event.type] = True
+                self.other.append(event.type)
 
 # Initialize Events
 events = EV_Initializer()
