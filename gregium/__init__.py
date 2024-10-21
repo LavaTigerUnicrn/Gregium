@@ -1,6 +1,5 @@
 """
 The core of Gregium
-v0.1.7
 
 See documentation in README.md file
 """

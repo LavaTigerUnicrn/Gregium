@@ -2,7 +2,7 @@
 import pygame,gregium
 
 # Set up Window and Clock
-WINDOW = pygame.display.set_mode([1920,1080],pygame.RESIZABLE,pygame.DOUBLEBUF)
+WINDOW = pygame.display.set_mode([1920,1080],pygame.RESIZABLE|pygame.DOUBLEBUF)
 CLOCK = pygame.Clock()
 
 # Pass value to gregium
