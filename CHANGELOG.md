@@ -14,3 +14,4 @@
 - Added sprite dropshadow
 - Added gregium.setup for setting up files easily
 - Added gregium.gv for storing globals
+- Added gregium.Sprite.blitfixed

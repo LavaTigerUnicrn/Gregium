@@ -577,19 +577,25 @@ class Sprite:
         if dropShadow != (0,0):
             window.blit(self.dropshadow,(newXy[0]+dropShadow[0],newXy[1]+dropShadow[1]))
 
-        window.blit(self.imageBlit,newXy)
+        window.blit(self.imageBlit,(newXy[0],newXy[1]))
         
         return 1
 
-    def blitFixed(self, window, dropShadow:tuple[int,int]=(0,0)):
+    def blitFixed(self, window:pygame.Surface, dropShadow:tuple[int,int]=(0,0)):
         """
         Blits the targeted sprite onto the given surface. 
-        The center of the sprite will be positioned at its previous coordinate 
+        The sprite will be positioned at its same previous coordinate 
         pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY).
+        The dropshadow on this blit is instead a relative position to where it last was
         """
 
         # Blit the sprite on the given window at its previous coordinates
-        window.blit(self.imageBlit, (self.imageBlitRect.x, self.imageBlitRect.y))
+        window.blit(self.imageBlit, (self.imageBlitRect.x+(SCRLX*self.scrollModif), self.imageBlitRect.y+(SCRLY*self.scrollModif)))
+
+        # Blit dropshadow
+        if dropShadow != (0,0):
+            window.blit(self.dropshadow, (self.imageBlitRect.x+(SCRLX*self.scrollModif),self.imageBlitRect.y+(SCRLY*self.scrollModif)))
+
         return 1
         
     def testColl(self,otherSprite,

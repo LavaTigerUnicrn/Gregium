@@ -85,7 +85,8 @@ Blits the targeted sprite onto the given surface. The top left of the sprite wil
 Blits the targeted sprite onto the given surface. The center of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
 #### blit_pivot_center(self,window:pygame.Surface,xy:tuple[int,int],pivot:tuple[int,int],angle:float,dropShadow:tuple[int,int]=(0,0))
 Blits the targeted sprite onto the given surface. The center of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). The sprite will be rotated around the coordinate point of the “pivot” argument by **COUNTERCLOCKWISE** by the number of degrees represented by the “angle” argument. Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
-
+#### blitFixed(self, window:pygame.Surface, dropShadow:tuple[int,int]=(0,0))
+Blits the targeted sprite onto the given surface. The sprite will be positioned at its same previous coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). The dropshadow on this blit is instead a relative position to where it last was
 #### updateSheet(self)
 Updates the active sprite in the spritesheet. This function should be used in the game loop and, in most cases, should be updated every frame. By changing the “sheetAnimMS” value it will change how long (in ms) it takes for each frame of the sprite to update
 
