@@ -580,6 +580,17 @@ class Sprite:
         window.blit(self.imageBlit,newXy)
         
         return 1
+
+    def blitFixed(self, window, dropShadow:tuple[int,int]=(0,0)):
+        """
+        Blits the targeted sprite onto the given surface. 
+        The center of the sprite will be positioned at its previous coordinate 
+        pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY).
+        """
+
+        # Blit the sprite on the given window at its previous coordinates
+        window.blit(self.imageBlit, (self.imageBlitRect.x, self.imageBlitRect.y))
+        return 1
         
     def testColl(self,otherSprite,
                  pos:tuple[int,int]=None,
