@@ -54,7 +54,7 @@ possible corners to align to include,
 |centerBottom|+x/2, +y|
 |---|---|
 |center|+x/2, +y/2|
-|---|---|
+
 *X & Y based on total screen width
 each of which scale relative to the size of the window.
 The default position is topLeft and running alignPos with topLeft returns the same value; bottomRight is the opposite corner and will add the total x & y values of the window respectively.
