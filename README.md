@@ -23,19 +23,18 @@ Documentation
 
 ### gregium.init()
 init(clock:pygame.Clock) -> None
-```
+
 Will define the global **WINDOW** (and other) variables to the current working window, required for many functions to run
 
 *pygame.display.set_mode() must be run first to create the window
-```
+
 
 ---
 ### gregium.alignPos()
 (pos:tuple[float,float],align:str=”topLeft”) -> tuple[float,float]
-```
+***
 Aligns a position to a corner of the window,
 possible corners to align to include,
-```
 |Align|Modifier|
 |:-:|:-:|
 |topLeft|no mods|
@@ -47,7 +46,7 @@ possible corners to align to include,
 |centerTop|+x/2
 |centerBottom|+x/2, +y|
 |center|+x/2, +y/2|
-```
+
 *X & Y based on total screen width
 each of which scale relative to the size of the window. 
 The default position is topLeft and running 
@@ -57,7 +56,6 @@ opposite corner and will add the total
 x & y values of the window respectively.
 
 *Will raise an error if gregium.init() is not run first
-```
 ---
 ### gregium.animRGB()
 (originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list[tuple,tuple,tuple]
