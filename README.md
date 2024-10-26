@@ -1,8 +1,8 @@
-![gregiumNameHD](https://github.com/user-attachments/assets/85e58d56-f9a1-463e-8f3d-4595ec398512)
+![gregiumNameHD](https://github.com/user-attachments/assets/bf3c96d2-e1aa-4117-91cb-93d896145211)
 
 <a href="https://pypi.org/project/gregium"><img src="https://img.shields.io/badge/pypi-v0.1.7-%233775A9?style=for-the-badge&logo=pypi&logoColor=white" /></a>
 <a href="https://github.com/LavaTigerUnicrn/Gregium"><img src="https://img.shields.io/badge/github-0.1.7.2-%23181717?style=for-the-badge&logo=github&logoColor=white" /></a>
-<a href="https://opensource.org/license/MIT"><img src="https://img.shields.io/badge/license-OSI-%233DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white" /></a>
+<a href="https://opensource.org/license/MIT"><img src="https://img.shields.io/badge/license-MIT-%233DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white" /></a>
 
 Dependecies
 ---
@@ -21,6 +21,16 @@ Documentation
 * [animRGB()](#gregiumanimrgb)
 * [rotate()](#gregiumrotate)
 * [get_window_center()](#gregiumget_window_center)
+* [position_center()](#gregiumposition_center)
+* [FontType()](#gregiumfonttype)
+* [Font()](#gregiumfont)
+  * [Font.from_sys()](#gregiumfontfrom_sys)
+  * [Font.from_file()](#gregiumfontfrom_file)
+  * [Font.blit()](#gregiumfontblit)
+  * [Font.blit_center()](#gregiumfontblit_center)
+  * [Font.blit_true_center()](#gregiumfontblit_true_center)
+* [gregium.SpriteOnlyImg()](#gregiumspriteonlyimg)
+* [gregium.SpriteOnlyImg()](#gregiumsrite)
 ---
 
 ### gregium.init()
@@ -57,7 +67,7 @@ bottomRight is the
 opposite corner and will add the total 
 x & y values of the window respectively.
 
-*Will raise an error if gregium.init() is not run first
+*Will raise an error if [gregium.init()](#gregiuminit) is not run first
 
 ---
 ### gregium.animRGB()
@@ -79,59 +89,115 @@ Will rotate a point **counterclockwise** around a given origin, new point positi
 
 Returns the center of the current working window.
 
-*Will raise error if gregium.init() is not run first
+*Will raise an error if [gregium.init()](#gregiuminit) is not run first
 
 ---
-### position_center(original:tuple[float,float],size:tuple[float,float]) -> tuple[float,float]
+### gregium.position_center()
+*(original:tuple[float,float],size:tuple[float,float]) -> tuple[float,float]*
+
 Will return the coordinates required (assuming shape is blitted from top-left corner) in which the center of the object will be at original for given size.
 
 *Not the same as get_center()
-### get_center(original:tuple[float,float],size:tuple[float,float]) -> tuple[float,float]
+
+---
+
+### gregium.get_center()
+*(original:tuple[float,float],size:tuple[float,float]) -> tuple[float,float]*
+
 Will return the center of the shape assuming the original is in the top left of the given size.
 
 *Not the same as position_center()
-### get_rect_center(rect:pygame.Rect) -> tuple[float,float]
+
+---
+### gregium,get_rect_center()
+*(rect:pygame.Rect) -> tuple[float,float]*
+
 Returns the center coordinates of the given pygame.Rect element based on its x, y coordinates and its width/height.
-### FontType()
-Only used in Font.from_sys() and Font.from_file() so that autocomplete extensions such as pylance will work correctly when working with the alternate methods.
-### Font(fontInst:pygame.freetype.Font)
+
+---
+### gregium.FontType()
+*() -> FontType*
+
+Only used in Font.from_sys() and Font.from_file() so that autocomplete extensions will work correctly when working with the alternate initialization methods.
+
+---
+
+### gregium.Font()
+*(fontInst:pygame.freetype.Font) -> Font*
+
 Defines a font instance from a pygame.freetype.font. Font must have been initialized using pygame.freetype.font, unless the Font.from_sys() or Font.from_file() methods are used. gregium Font allows easier blitting and modification of fonts, which vanilla pygame is unable to replicate.
-#### Font.from_sys(fontName:str) -> Font
+
+---
+#### gregium.Font.from_sys()
+*(fontName:str) -> Font*
+
 Will initialize the same font as the gregium. Font method but instead from a system font using the pygame.freetype.SysFont method.
-#### Font.from_file(filePath:str) -> Font:
+
+---
+#### gregium.Font.from_file()
+*(filePath:str) -> Font*
+
 Will initialize the same font as the gregium. Font method but instead uses a font file path the same way the main gregium. Font is initialized via the pygame.freetype.Font method.
 The following 3 methods will only work after font initialization.
-#### blit(text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None)
+
+---
+#### gregium.Font.blit()
+*(text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None) -> None*
+
 Will blit text to the main working window at point pos unless altWindow is specified. all parameters are the same as pygame’s pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully left-aligned based on the pos parameter.
 
-*Will raise an error if gregium.init() is not run first
-### blit_center(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None)
+*Will raise an error if [gregium.init()](#gregiuminit) is not run first
+
+---
+#### gregium.Font.blit_center()
+*(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None) -> None*
+
 Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully left-aligned based on the pos parameter.
 
-*Will raise an error if gregium.init() is not run first
-### blit_true_center(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None)
-Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully center-aligned based on the pos parameter.
+*Will raise an error if [gregium.init()](#gregiuminit) is not run first
 
-*Will raise an error if gregium.init() is not run first
-### SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,rotation:int=0,hasOneImage:bool=False) -> tuple[pygame.Surface,pygame.Surface]
+---
+#### gregium.Font.blit_true_center()
+*(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None) -> None*
+
+Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will have every line be center-aligned based on the pos parameter.
+
+*Will raise an error if [gregium.init()](#gregiuminit) is not run first
+
+---
+### gregium.SpriteOnlyImg()
+*filePath:str,size:tuple[int,int]=None,rotation:int=0,hasOneImage:bool=True) -> tuple[pygame.Surface,pygame.Surface]*
+
 Will generate a sprite with the image located at filePath, and with a size (in pixels) equivalent to the size parameter. (leaving blank will result in no change in size), image will also be rotated clockwise by the number of degrees specified. The returned tuple will be in the form of (original image, modified image) unless hasOneImage is specified as True; in that case, only the modified image is sent.
 
 *For memory reasons, it is recommended to almost always set hasOneImage to True. 
-### Sprite(filePath:str,sheetSize:tuple[int,int]=None)
+
+---
+### gregium.Sprite()
+*(filePath:str,sheetSize:tuple[int,int]=None)*
+
 Creates a basic sprite for rendering, with a sprite image or sprite sheet loaded from the provided file path. If the sprite has an animation sheet, set the sheetSize argument to the (rows, columns) of the sprite sheet.
-#### updateImage(self)
+
+---
+#### gregium.updateImage()
+*() -> 1 or -1*
+
 Redraws the sprite’s image and updates its position and orientation.
 
-* The order should **always** be 
-#1 updateImage() 
-#2 updateDropShadow() only if applicable
-#3 tint_add/tint_mult
-#4 blit/blit_center/blit_pivot_center
-#5 testColl/testCollR **unless you define the "pos" argument**
+*The order should **always** be
+1. updateImage() 
+2. updateDropShadow() only if applicable
+3. tint_add/tint_mult
+4. blit/blit_center/blit_pivot_center
+5. testColl/testCollR **unless you define the "pos" argument**
+
+---
 #### updateDropShadow(self)
 Generates a drop shadow for the current frame of the sprite
 
-* Required for any drop shadow to render at all and run every frame of drop shadow before blit
+*Required for any drop shadow to render at all and run every frame of drop shadow before blit
+
+---
 #### tint_add(self,rgb:tuple[int,int,int])
 Tints the targeted sprite with a given RGB color.
 #### tint_mult(self,rgb:tuple[int,int,int])
