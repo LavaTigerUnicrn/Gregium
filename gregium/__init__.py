@@ -342,7 +342,7 @@ def SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,
                   rotation:int=0,
                   hasOneImage:bool=True) -> tuple[pygame.Surface,pygame.Surface]:
     """
-    Generates an Image-Only sprite without class information
+    Generates a pygame.Surface without class information
     First Surface is original image (for repeat changing)
     Second Surface is modified image to current settings, 
     if nothing is applied both surfaces will be the same
@@ -483,6 +483,8 @@ class Sprite:
         
         # Tints the sprite with the rgb color
         self.imageBlit.fill(rgb,special_flags=pygame.BLEND_RGB_ADD)
+
+        return 1
 
     def tint_mult(self,rgb:tuple[int,int,int]):
         """

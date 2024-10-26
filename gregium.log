@@ -5,7 +5,6 @@ INFO:root:Font Created
 INFO:root:KeyHandler Loaded
 INFO:root:Gregium Fully Prepared
 INFO:root:Init Ran
-INFO:root:Generating Textbox
-INFO:root:Generating Button
-INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumAnimHD.png
-INFO:root:Sprite Loading FP: D:\Nolans\Coding\gregium\Gregium-1\gregium/gregiumHD.png
+DEBUG:root:Gregium Stopped
+
+

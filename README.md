@@ -4,6 +4,60 @@
 <a href="https://github.com/LavaTigerUnicrn/Gregium"><img src="https://img.shields.io/badge/github-0.1.7.2-%23181717?style=for-the-badge&logo=github&logoColor=white" /></a>
 <a href="https://opensource.org/license/MIT"><img src="https://img.shields.io/badge/license-MIT-%233DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white" /></a>
 
+Table of Contents
+---
+- [Table of Contents](#table-of-contents)
+- [Dependecies](#dependecies)
+- [Documentation](#documentation)
+  - [gregium.init()](#gregiuminit)
+  - [gregium.alignPos()](#gregiumalignpos)
+  - [gregium.animRGB()](#gregiumanimrgb)
+  - [gregium.rotate()](#gregiumrotate)
+  - [gregium.get\_window\_center()](#gregiumget_window_center)
+  - [gregium.position\_center()](#gregiumposition_center)
+  - [gregium.get\_center()](#gregiumget_center)
+  - [gregium,get\_rect\_center()](#gregiumget_rect_center)
+  - [gregium.FontType()](#gregiumfonttype)
+  - [gregium.Font()](#gregiumfont)
+    - [gregium.Font.from\_sys()](#gregiumfontfrom_sys)
+    - [gregium.Font.from\_file()](#gregiumfontfrom_file)
+    - [gregium.Font.blit()](#gregiumfontblit)
+    - [gregium.Font.blit\_center()](#gregiumfontblit_center)
+    - [gregium.Font.blit\_true\_center()](#gregiumfontblit_true_center)
+  - [gregium.SpriteOnlyImg()](#gregiumspriteonlyimg)
+  - [gregium.Sprite()](#gregiumsprite)
+    - [gregium.Sprite.updateImage()](#gregiumspriteupdateimage)
+    - [gregium.Sprite.updateDropShadow()](#gregiumspriteupdatedropshadow)
+    - [gregium.Sprite.tint\_add()](#gregiumspritetint_add)
+    - [gregium.Sprite.tint\_mult()](#gregiumspritetint_mult)
+- [\*\*For the following four methods, SCRLX and SCRLY represent variables that track the current scroll offset - e.g., scrolling 3px right means SCRLX += 3.](#for-the-following-four-methods-scrlx-and-scrly-represent-variables-that-track-the-current-scroll-offset---eg-scrolling-3px-right-means-scrlx--3)
+    - [gregium.Sprite.blit()](#gregiumspriteblit)
+    - [gregium.Sprite.blit\_center()](#gregiumspriteblit_center)
+    - [gregium.Sprite.blit\_pivot\_center()](#gregiumspriteblit_pivot_center)
+    - [gregium.Sprite.blitFixed()](#gregiumspriteblitfixed)
+    - [gregium.Sprite.updateSheet()](#gregiumspriteupdatesheet)
+    - [gregium.Sprite.testColl()](#gregiumspritetestcoll)
+    - [gregium.Sprite.testCollR()](#gregiumspritetestcollr)
+    - [gregium.Sprite.scale()](#gregiumspritescale)
+  - [ziphandle](#ziphandle)
+    - [zipFolder(folder:str,zipPath:str) -\> None](#zipfolderfolderstrzippathstr---none)
+  - [events](#events)
+    - [clearEvent()](#clearevent)
+    - [supplyEvent(event:pygame.event.Event)](#supplyeventeventpygameeventevent)
+  - [button(pos:tuple\[float,float\],size:tuple\[float,float\],color:tuple\[int,int,int\]=(255,255,255),outline:tuple\[int,int,int\]=(0,0,0),outlineThick:int=5,suppliedFont:Font=None,text:str="",textCol:tuple\[int,int,int\]=(0,0,0),textSize:int=25,colorHighlight:tuple\[int,int,int\]=(200,200,200),outlineHighlight:tuple\[int,int,int\]=(55,55,55),align:str="topLeft",rounding:int=0)](#buttonpostuplefloatfloatsizetuplefloatfloatcolortupleintintint255255255outlinetupleintintint000outlinethickint5suppliedfontfontnonetextstrtextcoltupleintintint000textsizeint25colorhighlighttupleintintint200200200outlinehighlighttupleintintint555555alignstrtopleftroundingint0)
+    - [render(self)](#renderself)
+  - [defaultButtonRender(self:button):](#defaultbuttonrenderselfbutton)
+  - [textBox(self,pos:tuple\[float,float\],size:tuple\[float,float\],color:tuple\[int,int,int\]=(255,255,255),outline:tuple\[int,int,int\]=(0,0,0),outlineThick:int=5,suppliedFont:Font=SPACEMONO,text:str="",textCol:tuple\[int,int,int\]=(0,0,0),textSize:int=25,colorHighlight:tuple\[int,int,int\]=(200,200,200),outlineHighlight:tuple\[int,int,int\]=(55,55,55),align:str="topLeft",maxTextLength:int=-1,rounding:int=0)](#textboxselfpostuplefloatfloatsizetuplefloatfloatcolortupleintintint255255255outlinetupleintintint000outlinethickint5suppliedfontfontspacemonotextstrtextcoltupleintintint000textsizeint25colorhighlighttupleintintint200200200outlinehighlighttupleintintint555555alignstrtopleftmaxtextlengthint-1roundingint0)
+    - [render(self)](#renderself-1)
+  - [alertBox(suppliedFont:Font,buttons:tuple=("ok",),title:str=None,color:tuple\[int,int,int\]=(0,0,0),outline:tuple\[int,int,int\]=(255,255,255),textCol:tuple\[int,int,int\]=(255,255,255))](#alertboxsuppliedfontfontbuttonstupleoktitlestrnonecolortupleintintint000outlinetupleintintint255255255textcoltupleintintint255255255)
+    - [render(self)](#renderself-2)
+  - [cmdParseSeg(segment:str,requestedType:str,min="N/A",max="N/A")](#cmdparsesegsegmentstrrequestedtypestrminnamaxna)
+  - [gregium.CLI()](#gregiumcli)
+    - [addCmd(self,commandDict:dict)](#addcmdselfcommanddictdict)
+    - [helpcmd(self,\*args)](#helpcmdselfargs)
+    - [run(self,cmd:str) -\> tuple\[int,str\]](#runselfcmdstr---tupleintstr)
+
+
 Dependecies
 ---
 |Library|Version*|
@@ -16,29 +70,12 @@ Dependecies
 Documentation
 ---
 
-* [init()](#gregiuminit)
-* [alignPos()](#gregiumalignpos)
-* [animRGB()](#gregiumanimrgb)
-* [rotate()](#gregiumrotate)
-* [get_window_center()](#gregiumget_window_center)
-* [position_center()](#gregiumposition_center)
-* [FontType()](#gregiumfonttype)
-* [Font()](#gregiumfont)
-  * [Font.from_sys()](#gregiumfontfrom_sys)
-  * [Font.from_file()](#gregiumfontfrom_file)
-  * [Font.blit()](#gregiumfontblit)
-  * [Font.blit_center()](#gregiumfontblit_center)
-  * [Font.blit_true_center()](#gregiumfontblit_true_center)
-* [gregium.SpriteOnlyImg()](#gregiumspriteonlyimg)
-* [gregium.Sprite()](#gregiumsprite)
----
-
 ### gregium.init()
 *init(clock:pygame.Clock) -> None*
 
 Will define the global **WINDOW** (and other) variables to the current working window, required for many functions to run
 
-*pygame.display.set_mode() must be run first to create the window
+  [pygame.display.set_mode()](https://www.pygame.org/docs/ref/display.html#pygame.display.set_mode) must be run first to create the window
 
 
 ---
@@ -144,7 +181,7 @@ The following 3 methods will only work after font initialization.
 #### gregium.Font.blit()
 *(text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None) -> None*
 
-Will blit text to the main working window at point pos unless altWindow is specified. all parameters are the same as pygame’s pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully left-aligned based on the pos parameter.
+Will blit text to the main working window at point pos unless altWindow is specified. all parameters are the same as pygame’s [pygame.freetype.Font.render()](https://www.pygame.org/docs/ref/freetype.html#pygame.freetype.Font.render) or [pygame.freetype.Font.render_to()](https://www.pygame.org/docs/ref/freetype.html#pygame.freetype.Font.render_to) parameters; font will be fully left-aligned based on the pos parameter.
 
 *Will raise an error if [gregium.init()](#gregiuminit) is not run first
 
@@ -152,7 +189,7 @@ Will blit text to the main working window at point pos unless altWindow is speci
 #### gregium.Font.blit_center()
 *(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None) -> None*
 
-Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will be fully left-aligned based on the pos parameter.
+Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal [pygame.freetype.Font.render()](https://www.pygame.org/docs/ref/freetype.html#pygame.freetype.Font.render) or [pygame.freetype.Font.render_to()](https://www.pygame.org/docs/ref/freetype.html#pygame.freetype.Font.render_to) parameters; font will be fully left-aligned based on the pos parameter.
 
 *Will raise an error if [gregium.init()](#gregiuminit) is not run first
 
@@ -160,15 +197,19 @@ Will blit text to the main working window with center located at point pos unles
 #### gregium.Font.blit_true_center()
 *(self,text:str,pos:tuple[int,int],size:int=20,fgcolor:tuple[int,int,int]=(255,255,255),bgcolor:tuple[int,int,int]=None,angle:int=0,altWindow:pygame.Surface=None) -> None*
 
-Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal pygame.freetype.Font.render() or pygame.freetype.Font.render_to() parameters; font will have every line be center-aligned based on the pos parameter.
+Will blit text to the main working window with center located at point pos unless altWindow is specified, all parameters are the same as normal [pygame.freetype.Font.render()](https://www.pygame.org/docs/ref/freetype.html#pygame.freetype.Font.render) or [pygame.freetype.Font.render_to()](https://www.pygame.org/docs/ref/freetype.html#pygame.freetype.Font.render_to) parameters; font will have every line be center-aligned based on the pos parameter.
 
 *Will raise an error if [gregium.init()](#gregiuminit) is not run first
 
 ---
 ### gregium.SpriteOnlyImg()
-*filePath:str,size:tuple[int,int]=None,rotation:int=0,hasOneImage:bool=True) -> tuple[pygame.Surface,pygame.Surface]*
+*(filePath:str,size:tuple[int,int]=None,rotation:int=0,hasOneImage:bool=True) -> tuple[pygame.Surface,pygame.Surface]*
 
-Will generate a sprite with the image located at filePath, and with a size (in pixels) equivalent to the size parameter. (leaving blank will result in no change in size), image will also be rotated clockwise by the number of degrees specified. The returned tuple will be in the form of (original image, modified image) unless hasOneImage is specified as True; in that case, only the modified image is sent.
+Generates a [pygame.Surface](https://www.pygame.org/docs/ref/surface.html#pygame.Surface) without class information
+* First Surface is original image (for repeat changing)
+* Second Surface is modified image to current settings
+
+if nothing is applied both surfaces will be the same; If image load fails, empty surface will be  returned as well as having a warning
 
 *For memory reasons, it is recommended to almost always set hasOneImage to True. 
 
@@ -179,7 +220,7 @@ Will generate a sprite with the image located at filePath, and with a size (in p
 Creates a basic sprite for rendering, with a sprite image or sprite sheet loaded from the provided file path. If the sprite has an animation sheet, set the sheetSize argument to the (rows, columns) of the sprite sheet.
 
 ---
-#### gregium.updateImage()
+#### gregium.Sprite.updateImage()
 *() -> 1 or -1*
 
 Redraws the sprite’s image and updates its position and orientation.
@@ -192,45 +233,75 @@ Redraws the sprite’s image and updates its position and orientation.
 5. testColl/testCollR **unless you define the "pos" argument**
 
 ---
-#### updateDropShadow(self)
+#### gregium.Sprite.updateDropShadow()
+*() -> None*
 Generates a drop shadow for the current frame of the sprite
 
 *Required for any drop shadow to render at all and run every frame of drop shadow before blit
 
 ---
-#### tint_add(self,rgb:tuple[int,int,int])
+#### gregium.Sprite.tint_add()
+*(self,rgb:tuple[int,int,int]) -> 1 or -1*
+
 Tints the targeted sprite with a given RGB color.
-#### tint_mult(self,rgb:tuple[int,int,int])
+#### gregium.Sprite.tint_mult()
+*(self,rgb:tuple[int,int,int]) -> 1 or -1*
 Multiplies each pixel on sprite by rgb tint
 
-**For the following three methods, SCRLX and SCRLY represent variables that track the current scroll offset - e.g., scrolling 3px right means SCRLX += 3.
-#### blit(self,window:pygame.Surface,xy:tuple[int,int],dropShadow:tuple[int,int]=(0,0))
+---
+**For the following four methods, SCRLX and SCRLY represent variables that track the current scroll offset - e.g., scrolling 3px right means SCRLX += 3.
+---
+#### gregium.Sprite.blit()
+*(self,window:pygame.Surface,xy:tuple[int,int],dropShadow:tuple[int,int]=(0,0))*
 Blits the targeted sprite onto the given surface. The top left of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
-#### blit_center(self,window:pygame.Surface,xy:tuple[int,int],dropShadow:tuple[int,int]=(0,0))
+#### gregium.Sprite.blit_center()
+*(self,window:pygame.Surface,xy:tuple[int,int],dropShadow:tuple[int,int]=(0,0))*
+
 Blits the targeted sprite onto the given surface. The center of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
-#### blit_pivot_center(self,window:pygame.Surface,xy:tuple[int,int],pivot:tuple[int,int],angle:float,dropShadow:tuple[int,int]=(0,0))
+
+---
+#### gregium.Sprite.blit_pivot_center()
+*(window:pygame.Surface,xy:tuple[int,int],pivot:tuple[int,int],angle:float,dropShadow:tuple[int,int]=(0,0)) -> 1 or -1*
+
 Blits the targeted sprite onto the given surface. The center of the sprite will be positioned at the provided coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). The sprite will be rotated around the coordinate point of the “pivot” argument by **COUNTERCLOCKWISE** by the number of degrees represented by the “angle” argument. Dropshadow argument controls the x and y offset of the dropshadow (0,0 does not render)
-#### blitFixed(self, window:pygame.Surface, dropShadow:tuple[int,int]=(0,0))
+#### gregium.Sprite.blitFixed()
+*(window:pygame.Surface, dropShadow:tuple[int,int]=(0,0)) -> 1 or -1*
+
 Blits the targeted sprite onto the given surface. The sprite will be positioned at its same previous coordinate pair PLUS the current SCRLX and SCRLY (x + SCRLX, y + SCRLY). The dropshadow on this blit is instead a relative position to where it last was
-#### updateSheet(self)
+
+---
+#### gregium.Sprite.updateSheet()
+*() -> None*
+
 Updates the active sprite in the spritesheet. This function should be used in the game loop and, in most cases, should be updated every frame. By changing the “sheetAnimMS” value it will change how long (in ms) it takes for each frame of the sprite to update
 
-#### testColl(self,otherSprite,pos:tuple[int,int]=None,otherSpritePos:tuple[int,int]=None) -> bool
+---
+#### gregium.Sprite.testColl()
+*(self,otherSprite,pos:tuple[int,int]=None,otherSpritePos:tuple[int,int]=None) -> bool*
+
 Tests to see if the sprite collides with another sprite 
 (must be gregium.sprite type),
 if either pos argument is not supplied it will use the most 
 recent position blitted by the sprite as the position 
 (scroll is taken into account)
-#### testCollR(self,*otherRects:pygame.Rect,pos:tuple[int,int]=None) -> bool
+
+---
+#### gregium.Sprite.testCollR()
+*(self,otherRects:pygame.Rect,pos:tuple[int,int]=None) -> bool*
+
 Tests to see if the sprite collides with any other rects 
 (must be pygame.Rect type)
 if the pos argument is not supplied it will use the most 
 recent position blitted by the sprite as the position 
 (scroll is taken into account)
 
-#### scale(self,scale:float=None,width:float=None,height:float=None) -> 1
+---
+#### gregium.Sprite.scale()
+*(self,scale:float=None,width:float=None,height:float=None) -> 1 or -1*
+
 Scales the sprite by scale argument factor, there should be only 1 input unless you are changing both width and height (don't do scale & width or scale & height it will not work correctly) If either width or height is blank it is assumed to use automatic and will scale based on the other changed value
 
+---
 ### ziphandle
 #### zipFolder(folder:str,zipPath:str) -> None
 Zips a folder given by the path of zipPath without using recursion.
@@ -307,7 +378,9 @@ In the case of a string, the function removes double-quotes.
 In the case of an int or float, the function makes sure that the value is within the interval [min, max].
 In the case of JSON, the function converts the JSON into a usable python object.
 
-### CLI(tree:dict={})
+### gregium.CLI()
+*(tree:dict={}) -> gregium.CLI*
+
 Make easy command-line interpreters that can be used outside or inside the terminal.
 
 #### addCmd(self,commandDict:dict)
