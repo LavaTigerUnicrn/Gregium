@@ -16,8 +16,9 @@ Dependecies
 Documentation
 ---
 
-### [init()](#init)
-
+### [init()](#gregium.init)
+### [alignPos()](#gregium.alignpos)
+### [animRGB()](#gregium.animRGB)
 ---
 
 ### gregium.init()
@@ -35,15 +36,38 @@ Will define the global **WINDOW** (and other) variables to the current working w
 Aligns a position to a corner of the window,
 possible corners to align to include,
 # Make into a table
-topRight, topLeft, bottomRight, bottomLeft, centerRight, centerLeft, centerTop, centerBottom, and center, each of which scale relative to the size of the window.
+
+|topLeft|no mods|
+|---|---|
+|topRight|+x|
+|---|---|
+|bottomRight|+x, +y|
+|---|---|
+|bottomLeft|+y|
+|---|---|
+|centerRight|+x, +y/2|
+|---|---|
+|centerLeft|+y/2|
+|---|---|
+|centerTop|+x/2
+|---|---|
+|centerBottom|+x/2, +y|
+|---|---|
+|center|+x/2, +y/2|
+|---|---|
+*X & Y based on total screen width
+each of which scale relative to the size of the window.
 The default position is topLeft and running alignPos with topLeft returns the same value; bottomRight is the opposite corner and will add the total x & y values of the window respectively.
 
 *Will raise an error if gregium.init() is not run first
 ```
 ---
-### animRGB(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list
+gregium.animRGB()
+(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list[tuple,tuple,tuple]
+```
 Makes a list of all rgb values in order to transition from originalRGB to newRGB
-
+```
+---
 ### rotate(origin:tuple[float,float], point:tuple[float,float], angle:float) -> tuple[float,float]
 Will rotate a point counterclockwise around a given origin, new point position is based on original distance to the origin, angle must be given in degree form for function to work properly.
 
