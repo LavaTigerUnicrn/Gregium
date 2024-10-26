@@ -340,7 +340,7 @@ SPACEMONO = Font.from_file(PATH+"\\editor\\SpaceMono-Regular.ttf")
 #### ---- SPRITE HANDLER ---- ####
 def SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,
                   rotation:int=0,
-                  hasOneImage:bool=False) -> tuple[pygame.Surface,pygame.Surface]:
+                  hasOneImage:bool=True) -> tuple[pygame.Surface,pygame.Surface]:
     """
     Generates an Image-Only sprite without class information
     First Surface is original image (for repeat changing)
@@ -349,8 +349,7 @@ def SpriteOnlyImg(filePath:str,size:tuple[int,int]=None,
     If image load fails, empty surface will be 
     returned as well as having a warning
 
-    If you wish for only 1 image (being the edited) 
-    set the 'hasOneImage' tag to true
+    *For memory reasons, it is recommended to almost always set hasOneImage to True. 
     """
     logging.info(f"Sprite Image Loading FP: {filePath}")
 
