@@ -35,8 +35,7 @@ Will define the global **WINDOW** (and other) variables to the current working w
 ```
 Aligns a position to a corner of the window,
 possible corners to align to include,
-# Make into a table
-
+```
 |topLeft|no mods|
 |---|---|
 |topRight|+x|
@@ -54,10 +53,14 @@ possible corners to align to include,
 |centerBottom|+x/2, +y|
 |---|---|
 |center|+x/2, +y/2|
-
+```
 *X & Y based on total screen width
-each of which scale relative to the size of the window.
-The default position is topLeft and running alignPos with topLeft returns the same value; bottomRight is the opposite corner and will add the total x & y values of the window respectively.
+each of which scale relative to the size of the window. 
+The default position is topLeft and running 
+alignPos with topLeft returns the same value;
+bottomRight is the 
+opposite corner and will add the total 
+x & y values of the window respectively.
 
 *Will raise an error if gregium.init() is not run first
 ```
