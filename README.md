@@ -31,9 +31,8 @@ Will define the global **WINDOW** (and other) variables to the current working w
 
 ---
 ### gregium.alignPos()
-```python3
-(pos:tuple[float,float],align:str=”topLeft”) -> tuple[float,float]
-```
+***(pos:tuple[float,float],align:str=”topLeft”) -> tuple[float,float]***
+
 Aligns a position to a corner of the window,
 possible corners to align to include,
 |Align|Modifier|
