@@ -30,7 +30,7 @@ Documentation
   * [Font.blit_center()](#gregiumfontblit_center)
   * [Font.blit_true_center()](#gregiumfontblit_true_center)
 * [gregium.SpriteOnlyImg()](#gregiumspriteonlyimg)
-* [gregium.SpriteOnlyImg()](#gregiumsrite)
+* [gregium.Sprite()](#gregiumsprite)
 ---
 
 ### gregium.init()
