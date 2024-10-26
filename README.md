@@ -16,9 +16,9 @@ Dependecies
 Documentation
 ---
 
-### [init()](#gregium.init)
-### [alignPos()](#gregium.alignpos)
-### [animRGB()](#gregium.animRGB)
+* [init()](#gregiuminit)
+* [alignPos()](#gregiumalignpos)
+* [animRGB()](#gregiumanimRGB)
 ---
 
 ### gregium.init()
