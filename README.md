@@ -20,7 +20,7 @@ Documentation
 * [alignPos()](#gregiumalignpos)
 * [animRGB()](#gregiumanimrgb)
 * [rotate()](#gregiumrotate)
-* [get_window_center()](#gregiumgetwindowcenter)
+* [get_window_center()](#gregiumget_window_center)
 ---
 
 ### gregium.init()
@@ -62,12 +62,13 @@ x & y values of the window respectively.
 ---
 ### gregium.animRGB()
 *(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list[tuple,tuple,tuple]*
-```
+
 Makes a list of all rgb values in order to transition from originalRGB to newRGB
-```
+
 ---
 ### gregium.rotate()
 *(origin:tuple[float,float], point:tuple[float,float], angle:float) -> tuple[float,float]*
+
 Will rotate a point **counterclockwise** around a given origin, new point position is based on original distance to the origin, angle must be given in degree form for function to work properly.
 
 *May have small rounding errors
@@ -75,6 +76,7 @@ Will rotate a point **counterclockwise** around a given origin, new point positi
 ---
 ### gregium.get_window_center()
 *() -> tuple[float,float]*
+
 Returns the center of the current working window.
 
 *Will raise error if gregium.init() is not run first
