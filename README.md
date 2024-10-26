@@ -38,6 +38,7 @@ possible corners to align to include,
 ```
 |---|---|
 |topLeft|no mods|
+|---|---|
 |topRight|+x|
 |bottomRight|+x, +y|
 |bottomLeft|+y|
