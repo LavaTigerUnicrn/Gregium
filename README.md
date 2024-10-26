@@ -36,7 +36,6 @@ Will define the global **WINDOW** (and other) variables to the current working w
 Aligns a position to a corner of the window,
 possible corners to align to include,
 ```
-|---|---|
 |topLeft|no mods|
 |---|---|
 |topRight|+x|
@@ -47,7 +46,6 @@ possible corners to align to include,
 |centerTop|+x/2
 |centerBottom|+x/2, +y|
 |center|+x/2, +y/2|
-|---|---|
 ```
 *X & Y based on total screen width
 each of which scale relative to the size of the window. 
