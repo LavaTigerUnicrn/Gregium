@@ -1,17 +1,46 @@
-# Gregium v0.1.7
+![gregiumNameHD](https://github.com/user-attachments/assets/85e58d56-f9a1-463e-8f3d-4595ec398512)
 
-## Documentation
+<a href="https://pypi.org/project/gregium"><img src="https://img.shields.io/badge/pypi-v0.1.7-%233775A9?style=for-the-badge&logo=pypi&logoColor=white" /></a>
+<a href="https://github.com/LavaTigerUnicrn/Gregium"><img src="https://img.shields.io/badge/github-0.1.7.2-%23181717?style=for-the-badge&logo=github&logoColor=white" /></a>
+<a href="https://opensource.org/license/MIT"><img src="https://img.shields.io/badge/license-OSI-%233DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white" /></a>
 
-### init(clock:pygame.Clock)
+Dependecies
+---
+
+ |pygame/pygame-ce|2.6.1/2.5.1|
+ |---|---|
+ |pynput|1.7.7|
+ 
+ *Other versions *may* work but could cause bugs
+
+Documentation
+---
+
+### [init()](#init)
+
+---
+
+### gregium.init()
+init(clock:pygame.Clock) -> None
+```
 Will define the global **WINDOW** (and other) variables to the current working window, required for many functions to run
 
 *pygame.display.set_mode() must be run first to create the window
-### alignPos(pos:tuple[float,float],align:str=”topLeft”) -> tuple[float,float]:
-Aligns a position to a corner of the window, possible corners to align to include, topRight, topLeft, bottomRight, bottomLeft, centerRight, centerLeft, centerTop, centerBottom, and center, each of which scale relative to the size of the window.
+```
+
+---
+### gregium.alignPos()
+(pos:tuple[float,float],align:str=”topLeft”) -> tuple[float,float]
+```
+Aligns a position to a corner of the window,
+possible corners to align to include,
+# Make into a table
+topRight, topLeft, bottomRight, bottomLeft, centerRight, centerLeft, centerTop, centerBottom, and center, each of which scale relative to the size of the window.
 The default position is topLeft and running alignPos with topLeft returns the same value; bottomRight is the opposite corner and will add the total x & y values of the window respectively.
 
 *Will raise an error if gregium.init() is not run first
-
+```
+---
 ### animRGB(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list
 Makes a list of all rgb values in order to transition from originalRGB to newRGB
 
