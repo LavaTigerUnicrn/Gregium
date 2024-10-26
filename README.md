@@ -30,7 +30,6 @@ Table of Contents
     - [gregium.Sprite.updateDropShadow()](#gregiumspriteupdatedropshadow)
     - [gregium.Sprite.tint\_add()](#gregiumspritetint_add)
     - [gregium.Sprite.tint\_mult()](#gregiumspritetint_mult)
-- [\*\*For the following four methods, SCRLX and SCRLY represent variables that track the current scroll offset - e.g., scrolling 3px right means SCRLX += 3.](#for-the-following-four-methods-scrlx-and-scrly-represent-variables-that-track-the-current-scroll-offset---eg-scrolling-3px-right-means-scrlx--3)
     - [gregium.Sprite.blit()](#gregiumspriteblit)
     - [gregium.Sprite.blit\_center()](#gregiumspriteblit_center)
     - [gregium.Sprite.blit\_pivot\_center()](#gregiumspriteblit_pivot_center)
@@ -249,7 +248,8 @@ Tints the targeted sprite with a given RGB color.
 Multiplies each pixel on sprite by rgb tint
 
 ---
-**For the following four methods, SCRLX and SCRLY represent variables that track the current scroll offset - e.g., scrolling 3px right means SCRLX += 3.
+**For the following four methods, SCRLX and SCRLY represent variables that track the current scroll offset - e.g., scrolling 3px right means SCRLX += 3.**
+
 ---
 #### gregium.Sprite.blit()
 *(self,window:pygame.Surface,xy:tuple[int,int],dropShadow:tuple[int,int]=(0,0))*
