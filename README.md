@@ -58,7 +58,7 @@ x & y values of the window respectively.
 *Will raise an error if gregium.init() is not run first
 ```
 ---
-gregium.animRGB()
+### gregium.animRGB()
 (originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list[tuple,tuple,tuple]
 ```
 Makes a list of all rgb values in order to transition from originalRGB to newRGB
