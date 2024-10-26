@@ -18,7 +18,7 @@ Documentation
 
 * [init()](#gregiuminit)
 * [alignPos()](#gregiumalignpos)
-* [animRGB()](#gregiumanimRGB)
+* [animRGB()](#gregiumanimrgb)
 ---
 
 ### gregium.init()
