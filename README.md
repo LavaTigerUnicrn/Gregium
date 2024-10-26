@@ -6,9 +6,10 @@
 
 Dependecies
 ---
-
+|Library|Version*|
+|:-:|:-:|
  |pygame/pygame-ce|2.6.1/2.5.1|
- |---|---|
+ 
  |pynput|1.7.7|
  
  *Other versions *may* work but could cause bugs
@@ -36,8 +37,9 @@ Will define the global **WINDOW** (and other) variables to the current working w
 Aligns a position to a corner of the window,
 possible corners to align to include,
 ```
+|Align|Modifier|
+|:-:|:-:|
 |topLeft|no mods|
-|---|---|
 |topRight|+x|
 |bottomRight|+x, +y|
 |bottomLeft|+y|
