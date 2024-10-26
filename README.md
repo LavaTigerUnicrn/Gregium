@@ -1,28 +1,87 @@
-# Gregium v0.1.7
+![gregiumNameHD](https://github.com/user-attachments/assets/85e58d56-f9a1-463e-8f3d-4595ec398512)
 
-## Documentation
+<a href="https://pypi.org/project/gregium"><img src="https://img.shields.io/badge/pypi-v0.1.7-%233775A9?style=for-the-badge&logo=pypi&logoColor=white" /></a>
+<a href="https://github.com/LavaTigerUnicrn/Gregium"><img src="https://img.shields.io/badge/github-0.1.7.2-%23181717?style=for-the-badge&logo=github&logoColor=white" /></a>
+<a href="https://opensource.org/license/MIT"><img src="https://img.shields.io/badge/license-OSI-%233DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white" /></a>
 
-### init(clock:pygame.Clock)
+Dependecies
+---
+|Library|Version*|
+|:-:|:-:|
+ |pygame/pygame-ce|2.6.1/2.5.1|
+ |pynput|1.7.7|
+ 
+ *Other versions *may* work but could cause bugs
+
+Documentation
+---
+
+* [init()](#gregiuminit)
+* [alignPos()](#gregiumalignpos)
+* [animRGB()](#gregiumanimrgb)
+* [rotate()](#gregiumrotate)
+* [get_window_center()](#gregiumget_window_center)
+---
+
+### gregium.init()
+*init(clock:pygame.Clock) -> None*
+
 Will define the global **WINDOW** (and other) variables to the current working window, required for many functions to run
 
 *pygame.display.set_mode() must be run first to create the window
-### alignPos(pos:tuple[float,float],align:str=”topLeft”) -> tuple[float,float]:
-Aligns a position to a corner of the window, possible corners to align to include, topRight, topLeft, bottomRight, bottomLeft, centerRight, centerLeft, centerTop, centerBottom, and center, each of which scale relative to the size of the window.
-The default position is topLeft and running alignPos with topLeft returns the same value; bottomRight is the opposite corner and will add the total x & y values of the window respectively.
+
+
+---
+### gregium.alignPos()
+*(pos:tuple[float,float],align:str=”topLeft”) -> tuple[float,float]*
+
+Aligns a position to a corner of the window,
+possible corners to align to include,
+|Align|Modifier|
+|:-:|:-:|
+|topLeft|no mods|
+|topRight|+x|
+|bottomRight|+x, +y|
+|bottomLeft|+y|
+|centerRight|+x, +y/2|
+|centerLeft|+y/2|
+|centerTop|+x/2
+|centerBottom|+x/2, +y|
+|center|+x/2, +y/2|
+
+*X & Y based on total screen width
+each of which scale relative to the size of the window. 
+The default position is topLeft and running 
+alignPos with topLeft returns the same value;
+bottomRight is the 
+opposite corner and will add the total 
+x & y values of the window respectively.
 
 *Will raise an error if gregium.init() is not run first
 
-### animRGB(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list
+---
+### gregium.animRGB()
+*(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list[tuple,tuple,tuple]*
+
 Makes a list of all rgb values in order to transition from originalRGB to newRGB
 
-### rotate(origin:tuple[float,float], point:tuple[float,float], angle:float) -> tuple[float,float]
-Will rotate a point counterclockwise around a given origin, new point position is based on original distance to the origin, angle must be given in degree form for function to work properly.
+---
+### gregium.rotate()
+*(origin:tuple[float,float], point:tuple[float,float], angle:float) -> tuple[float,float]*
+
+Will rotate a point **counterclockwise** around a given origin, new point position is based on original distance to the origin, angle must be given in degree form for function to work properly.
 
 *May have small rounding errors
-### get_window_center() -> tuple[float,float]
+
+---
+### gregium.get_window_center()
+*() -> tuple[float,float]*
+
 Returns the center of the current working window.
 
 *Will raise error if gregium.init() is not run first
+
+---
 ### position_center(original:tuple[float,float],size:tuple[float,float]) -> tuple[float,float]
 Will return the coordinates required (assuming shape is blitted from top-left corner) in which the center of the object will be at original for given size.
 
