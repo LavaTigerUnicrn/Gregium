@@ -19,6 +19,8 @@ Documentation
 * [init()](#gregiuminit)
 * [alignPos()](#gregiumalignpos)
 * [animRGB()](#gregiumanimrgb)
+* [rotate()](#gregiumrotate)
+* [get_window_center()](#gregiumgetwindowcenter)
 ---
 
 ### gregium.init()
@@ -56,6 +58,7 @@ opposite corner and will add the total
 x & y values of the window respectively.
 
 *Will raise an error if gregium.init() is not run first
+
 ---
 ### gregium.animRGB()
 *(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list[tuple,tuple,tuple]*
@@ -63,14 +66,20 @@ x & y values of the window respectively.
 Makes a list of all rgb values in order to transition from originalRGB to newRGB
 ```
 ---
-### rotate(origin:tuple[float,float], point:tuple[float,float], angle:float) -> tuple[float,float]
-Will rotate a point counterclockwise around a given origin, new point position is based on original distance to the origin, angle must be given in degree form for function to work properly.
+### gregium.rotate()
+*(origin:tuple[float,float], point:tuple[float,float], angle:float) -> tuple[float,float]*
+Will rotate a point **counterclockwise** around a given origin, new point position is based on original distance to the origin, angle must be given in degree form for function to work properly.
 
 *May have small rounding errors
-### get_window_center() -> tuple[float,float]
+
+---
+### gregium.get_window_center()
+*() -> tuple[float,float]*
 Returns the center of the current working window.
 
 *Will raise error if gregium.init() is not run first
+
+---
 ### position_center(original:tuple[float,float],size:tuple[float,float]) -> tuple[float,float]
 Will return the coordinates required (assuming shape is blitted from top-left corner) in which the center of the object will be at original for given size.
 
