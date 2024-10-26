@@ -22,7 +22,7 @@ Documentation
 ---
 
 ### gregium.init()
-init(clock:pygame.Clock) -> None
+*init(clock:pygame.Clock) -> None*
 
 Will define the global **WINDOW** (and other) variables to the current working window, required for many functions to run
 
@@ -31,7 +31,7 @@ Will define the global **WINDOW** (and other) variables to the current working w
 
 ---
 ### gregium.alignPos()
-***(pos:tuple[float,float],align:str=”topLeft”) -> tuple[float,float]***
+*(pos:tuple[float,float],align:str=”topLeft”) -> tuple[float,float]*
 
 Aligns a position to a corner of the window,
 possible corners to align to include,
@@ -58,7 +58,7 @@ x & y values of the window respectively.
 *Will raise an error if gregium.init() is not run first
 ---
 ### gregium.animRGB()
-(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list[tuple,tuple,tuple]
+*(originalRGB:tuple[int,int,int],newRGB:tuple[int,int,int],steps:int) -> list[tuple,tuple,tuple]*
 ```
 Makes a list of all rgb values in order to transition from originalRGB to newRGB
 ```
