@@ -37,21 +37,13 @@ Aligns a position to a corner of the window,
 possible corners to align to include,
 ```
 |topLeft|no mods|
-|---|---|
 |topRight|+x|
-|---|---|
 |bottomRight|+x, +y|
-|---|---|
 |bottomLeft|+y|
-|---|---|
 |centerRight|+x, +y/2|
-|---|---|
 |centerLeft|+y/2|
-|---|---|
 |centerTop|+x/2
-|---|---|
 |centerBottom|+x/2, +y|
-|---|---|
 |center|+x/2, +y/2|
 ```
 *X & Y based on total screen width
