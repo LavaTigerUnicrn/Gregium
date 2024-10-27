@@ -9,7 +9,6 @@ import pygame, pygame.freetype, pygame.image
 
 # Other Required Imports
 import math
-import warnings
 import zipfile
 import os
 import threading
@@ -29,7 +28,7 @@ try:
 except:
     pass
 logging.basicConfig(filename='gregium.log', level=logging.DEBUG)
-logging.debug("Logger created")
+logging.debug(f"Logger created {time.ctime(time.time())}")
 PATH = str(Path(__file__).parent.absolute())
 WINDOW = None
 SELECTEDBUTTON = None
