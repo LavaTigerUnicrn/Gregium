@@ -398,6 +398,7 @@ class Sprite:
             self.scrollModif = 1
             self.imageBlitRect = pygame.Rect(0,0,1,1)
             self.dropshadow = pygame.Surface((5,5))
+            self.fp = filePath
 
             # Sets up spritesheets for animation as specified by the user
             if sheetSize != None:
@@ -716,7 +717,28 @@ class Sprite:
 
         # Return success
         return 1
-        
+    
+    def setFp(self,fp):
+        self.fp = fp
+
+        # Updates & loads new Fp
+        try:
+            self.origImage = pygame.image.load(self.fp).convert_alpha()
+            self.width = self.origImage.get_width()
+            self.height = self.origImage.get_height()
+            self.rotation = 0
+            self.inverted = False
+            self.origScale = (self.width,self.height)
+
+        except Exception as e:
+            logging.error(f"{e}")
+            self.origImage = None
+            self.is_sheet = False
+
+    def getFp(self):
+        return self.fp
+
+    filePath = property(getFp,setFp)
         
 
 #### ---- ZIP HANDLER ---- ####
