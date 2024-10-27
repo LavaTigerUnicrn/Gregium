@@ -61,7 +61,7 @@ Dependecies
 ---
 |Library|Version*|
 |:-:|:-:|
- |pygame/pygame-ce|2.6.1/2.5.1|
+ |pygame-ce|2.5.1|
  |pynput|1.7.7|
  
  *Other versions *may* work but could cause bugs
