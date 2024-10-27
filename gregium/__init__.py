@@ -404,7 +404,7 @@ class Sprite:
             if sheetSize != None:
                 self.is_sheet = True
                 self.sheetSize = sheetSize
-                self.sheetAnimMS = 0
+                self.sheetAnimMS = 1000
                 self.sheetTick = 0
                 self.width /= self.sheetSize[0]
                 self.height /= self.sheetSize[1]
