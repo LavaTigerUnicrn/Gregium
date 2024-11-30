@@ -9,8 +9,8 @@ setup(name="gregium",version=f"{gregium.VERSION["major"]}.{gregium.VERSION["mino
                  author="LavaTigerUnicrn",
                  author_email="nolanlance711@gmail.com",
                  url="https://github.com/LavaTigerUnicrn/Gregium",
-                 packages=["gregium","gregium.env","gregium.editor"],
-                 package_data={"gregium.editor": ["*.grg","*.ttf"], "gregium": ["*png"]},
+                 packages=["gregium","gregium.buttons","gregium.camera","gregium.commandSystem","gregium.gamblecore","gregium.env","gregium.terminalLogging","gregium.old","gregium.old.env","gregium.old.editor","gregium.old.gv","gregium.old.setup","gregium.old.env"],
+                 package_data={"gregium.old.editor": ["*.grg","*.ttf"], "gregium.old": ["*png"]},
                 install_requires=
                 ["pygame-ce","pynput"],
                 classifiers=[
