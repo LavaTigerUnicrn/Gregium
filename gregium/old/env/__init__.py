@@ -1,8 +1,6 @@
 """
-The original module for loading an saving .grg (ENV) files
+A simple module for loading an saving .grg (ENV) files
 Call gregenv.load() first and then env data is stored in gregenv.ENV as a dict
-
-Revamp is pending
 """
 
 # Importing necessary libraries
@@ -14,7 +12,10 @@ from pathlib import Path
 # Set up the ENV variable for storing .grg file data
 ENV = {"ENV NOT INITIALIZED":None}
 
-def _parseEnv(parse:str):
+def parseEnv(parse:str):
+    """
+    MODULE FUNCTION (DO NOT RUN)
+    """
     parseDict = {}
 
     # Loop through the input to be parsed
@@ -88,7 +89,10 @@ def _parseEnv(parse:str):
         
     return parseDict
 
-def _reparseEnv(parse:dict):
+def reparseEnv(parse:dict):
+    """
+    MODULE FUNCTION (DO NOT RUN)
+    """
     parsed = ""
 
     # Stringify the given python object, converting it to what would be its form before parsing
@@ -108,13 +112,13 @@ def load(fileName:str=None,loadAllEnv:bool=False,ignoreCWD:bool=False):
         # Set global variable ENV to the parsed data in the file specified by only the path given
         if ignoreCWD:
             with open(fileName,"r") as env:
-                ENV = _parseEnv(env.read())
+                ENV = parseEnv(env.read())
 
         # Set global variable ENV to the parsed data in the file specified by the
         # current working directory plus the path given
         else:
             with open(os.getcwd()+"/"+fileName,"r") as env:
-                ENV = _parseEnv(env.read())
+                ENV = parseEnv(env.read())
     
     # If a file path is not given, try to find a .grg in the current working directory
     else:
@@ -159,7 +163,7 @@ def save(fileName:str=None):
     # If a valid file name is given, write a serialized version of ENV in that file
     if fileName != None or not fileName in os.listdir(os.getcwd()):
         with open(os.getcwd()+"/"+fileName,"w") as env:
-            env.write(_reparseEnv(ENV))
+            env.write(reparseEnv(ENV))
 
     # If no file is given, look for .grg files in the current working directory
     else:
