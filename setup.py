@@ -1,8 +1,9 @@
 from setuptools import setup
+import gregium
 
 with open("README.md","r",encoding="utf-8") as r:
     longdesc = r.read()
-setup(name="gregium",version="0.1.8",
+setup(name="gregium",version=f"{gregium.VERSION["major"]}.{gregium.VERSION["minor"]}.{gregium.VERSION["patch"]}",
                  description="A simple package with easy features for using pygame",
                  long_description=longdesc,
                  author="LavaTigerUnicrn",
