@@ -1,9 +1,12 @@
-# Safe imports
-import gregium.terminalLogging
-import gregium.buttons
-import gregium.camera
-import gregium.gamblecore
-import gregium.commandSystem
-import gregium.env
+def init():
+    """
+    Preloads all gregium modules
+    """
+    from . import env
+    from . import commandSystem
+    from . import gamblecore
+    from . import camera
+    from . import buttons
+    from . import terminalLogging
 
 VERSION = {"major":0,"minor":1,"patch":9}

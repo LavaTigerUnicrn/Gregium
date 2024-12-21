@@ -50,7 +50,7 @@ class PushButtonRect(pyglet.gui.WidgetBase):
         self._label.batch = batch
         self._label.group = fg_group
         self._label.multiline = True
-        self._label.x,self._label.y,self._label.width,self._label.height = x+width/2,y+height/2,width,height
+        self._label.x,self._label.y,self._label.width = x+width/2,y+height/2,width
         self._rect = pyglet.shapes.BorderedRectangle(x=x,y=y,width=width,height=height,color=depressed,group=bg_group,batch=batch,border_color=(0,0,0,255),border=5)
 
         self._is_pressed = False
