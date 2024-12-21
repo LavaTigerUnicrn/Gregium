@@ -15,7 +15,7 @@ class PushButtonRect(pyglet.gui.WidgetBase):
                  label:pyglet.text.Label | None = None, 
                  batch:pyglet.graphics.Batch | None =None, 
                  group: Group | None = None) -> None:
-        """Create a push button based on a rect.
+        """Instance of a push button based on a rect.
 
         Args:
             x:
@@ -121,7 +121,7 @@ PushButtonRect.register_event_type('on_press')
 PushButtonRect.register_event_type('on_release')
 
 class ToggleButtonRect(PushButtonRect):
-    """Instance of a toggle button.
+    """Instance of a toggle button based on a rect.
 
     Triggers the event 'on_toggle' when the mouse is pressed or released.
     """

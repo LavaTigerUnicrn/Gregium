@@ -8,10 +8,13 @@ Revamp is pending
 # Importing necessary libraries
 import os
 import json
-import warnings
 from pathlib import Path
+import terminalLogging
 
-# Set up the ENV variable for storing .grg file data
+# Setup logger
+LOGGER = terminalLogging.PRIMARY
+
+# Setup the ENV variable for storing .grg file data
 ENV = {"ENV NOT INITIALIZED":None}
 
 def _parseEnv(parse:str):
@@ -49,11 +52,11 @@ def _parseEnv(parse:str):
                     # If there are spaces in the variable, warn the user
                     if not lSpace and foundSpace > 0 and not hasWarned:
                         hasWarned = True
-                        warnings.warn(f"Many spaces found in variable of line {n+1}, variable names will have spaces removed")
+                        LOGGER.warn(f"Many spaces found in variable of line {n+1}, variable names will have spaces removed")
                     
                     # Informs the user that the variable name was changed
                     if hasWarned:
-                        print(f"Var name converted to: {varNComp}")
+                        LOGGER.info(f"Var name converted to: {varNComp}")
                     continue
                 
                 lSpace = False
@@ -68,7 +71,7 @@ def _parseEnv(parse:str):
                     lSpace = True
                 if foundSpace > 1 and not hasWarned:
                     hasWarned = True
-                    warnings.warn(f"Many spaces found in variable of line {n+1}, variable names will have spaces removed")
+                    LOGGER.warn(f"Many spaces found in variable of line {n+1}, variable names will have spaces removed")
             else:
                 # If the variable assignment reaches the right side of the
                 # equation, add the current character to the variable value
@@ -137,7 +140,7 @@ def load(fileName:str=None,loadAllEnv:bool=False,ignoreCWD:bool=False):
         elif loadAllEnv:
             for envN in posEnv:
                 with open(os.getcwd()+"/"+envN,"r") as env:
-                    envA = parseEnv(env.read())
+                    envA = _parseEnv(env.read())
                     for envK in envA:
                         ENV[envK] = envA[envK]
 
@@ -145,7 +148,7 @@ def load(fileName:str=None,loadAllEnv:bool=False,ignoreCWD:bool=False):
         # set ENV to its parsed contents
         else:
             with open(os.getcwd()+"/"+posEnv[0],"r") as env:
-                ENV = parseEnv(env.read())
+                ENV = _parseEnv(env.read())
                 
 def save(fileName:str=None):
     """
@@ -180,4 +183,4 @@ def save(fileName:str=None):
         # write a serialized version of ENV in that file
         else:
             with open(os.getcwd()+"/"+posEnv[0],"w") as env:
-                env.write(reparseEnv(ENV))
+                env.write(_reparseEnv(ENV))

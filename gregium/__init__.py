@@ -4,7 +4,7 @@ def init():
     """
     from . import env
     from . import commandSystem
-    from . import gamblecore
+    from . import gambleCore
     from . import camera
     from . import buttons
     from . import terminalLogging

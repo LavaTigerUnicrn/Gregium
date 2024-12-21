@@ -114,6 +114,9 @@ class Casino:
 class BlackjackInst(GameInst):
 
     def __init__(self,parent:GameBase,player:Gambler,bet:int):
+        """
+        Created by BlackJack table
+        """
 
         self._state = {"dealer":random.randint(2,11),
                        "dealerInvis":random.randint(1,10),
@@ -212,6 +215,9 @@ class BlackjackInst(GameInst):
 class Blackjack(GameBase):
 
     def __init__(self):
+        """
+        A Blackjack table for gambling
+        """
 
         super().__init__()
 

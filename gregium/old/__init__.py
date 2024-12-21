@@ -1,5 +1,5 @@
 """
-The core of Gregium
+The (original) core of Gregium
 
 See documentation in README.md file
 """
