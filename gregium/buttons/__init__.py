@@ -2,19 +2,27 @@
 Adds extra buttons not found in pyglet, such as push buttons from rects and text entry with borders
 """
 
-import pyglet,math
+import pyglet
+import math
 from pyglet.graphics import Group
+
 
 class PushButtonRect(pyglet.gui.WidgetBase):
     """The base of all widgets."""
-    def __init__(self, x: int, y: int, 
-                 width: int, height: int, 
-                 pressed:tuple[int,int,int], 
-                 depressed:tuple[int,int,int], 
-                 hover:tuple[int,int,int] | None = None , 
-                 label:pyglet.text.Label | None = None, 
-                 batch:pyglet.graphics.Batch | None =None, 
-                 group: Group | None = None) -> None:
+
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        pressed: tuple[int, int, int],
+        depressed: tuple[int, int, int],
+        hover: tuple[int, int, int] | None = None,
+        label: pyglet.text.Label | None = None,
+        batch: pyglet.graphics.Batch | None = None,
+        group: Group | None = None,
+    ) -> None:
         """Instance of a push button based on a rect.
 
         Args:
@@ -35,10 +43,10 @@ class PushButtonRect(pyglet.gui.WidgetBase):
             group:
                 Optional parent group of the push button.
         """
-        super().__init__(x=x,y=y,width=width,height=height)
+        super().__init__(x=x, y=y, width=width, height=height)
         self._pressed = pressed
         self._depressed = depressed
-        self._hover = hover or depressed 
+        self._hover = hover or depressed
         self._batch = batch or pyglet.graphics.Batch()
         bg_group = Group(order=0, parent=group)
         fg_group = Group(order=1, parent=group)
@@ -46,30 +54,47 @@ class PushButtonRect(pyglet.gui.WidgetBase):
 
         self._label = label
         self.text = label.text
-        
+
         self._label.batch = batch
         self._label.group = fg_group
         self._label.multiline = True
-        self._label.x,self._label.y,self._label.width = x+width/2,y+height/2,width
-        self._rect = pyglet.shapes.BorderedRectangle(x=x,y=y,width=width,height=height,color=depressed,group=bg_group,batch=batch,border_color=(0,0,0,255),border=5)
+        self._label.x, self._label.y, self._label.width = (
+            x + width / 2,
+            y + height / 2,
+            width,
+        )
+        self._rect = pyglet.shapes.BorderedRectangle(
+            x=x,
+            y=y,
+            width=width,
+            height=height,
+            color=depressed,
+            group=bg_group,
+            batch=batch,
+            border_color=(0, 0, 0, 255),
+            border=5,
+        )
 
         self._is_pressed = False
-    
+
     @property
     def text(self) -> str:
         return self._text
-    
+
     @text.setter
-    def text(self, value:str) -> None:
+    def text(self, value: str) -> None:
         assert type(value) is str, "This Widget's text must be a string."
         self._text = value
         self._label.text = self._text
-        self._label.height = self._label.get_line_count()*self._label.font_size*1.5+((self._label.get_line_count()-1)*self._label.font_size*(1/4))
-    
+        self._label.height = (
+            self._label.get_line_count() * self._label.font_size * 1.5
+            + ((self._label.get_line_count() - 1) * self._label.font_size * (1 / 4))
+        )
+
     @property
     def value(self) -> bool:
         return self._is_pressed
-    
+
     @value.setter
     def value(self, value: bool) -> None:
         assert type(value) is bool, "This Widget's value must be True or False."
@@ -85,28 +110,30 @@ class PushButtonRect(pyglet.gui.WidgetBase):
             return
         self._rect.color = self._pressed
         self._is_pressed = True
-        self.dispatch_event('on_press')
+        self.dispatch_event("on_press")
 
     def on_mouse_release(self, x: int, y: int, buttons: int, modifiers: int) -> None:
         if not self.enabled or not self._is_pressed:
             return
         self._rect.color = self._hover if self._check_hit(x, y) else self._depressed
         self._is_pressed = False
-        self.dispatch_event('on_release')
+        self.dispatch_event("on_release")
 
     def on_mouse_leave(self, x: int, y: int) -> None:
         if not self.enabled or not self._is_pressed:
             return
         self._rect.color = self._depressed
         self._is_pressed = False
-        self.dispatch_event('on_release')
+        self.dispatch_event("on_release")
 
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
         if not self.enabled or self._is_pressed:
             return
         self._rect.color = self._hover if self._check_hit(x, y) else self._depressed
 
-    def on_mouse_drag(self, x: int, y: int, dx: int, dy: int, buttons: int, modifiers: int) -> None:
+    def on_mouse_drag(
+        self, x: int, y: int, dx: int, dy: int, buttons: int, modifiers: int
+    ) -> None:
         if not self.enabled or self._is_pressed:
             return
         self._rect.color = self._hover if self._check_hit(x, y) else self._depressed
@@ -116,9 +143,11 @@ class PushButtonRect(pyglet.gui.WidgetBase):
 
     def on_release(self) -> None:
         """Event: Dispatched when the button is released."""
-    
-PushButtonRect.register_event_type('on_press')
-PushButtonRect.register_event_type('on_release')
+
+
+PushButtonRect.register_event_type("on_press")
+PushButtonRect.register_event_type("on_release")
+
 
 class ToggleButtonRect(PushButtonRect):
     """Instance of a toggle button based on a rect.
@@ -126,15 +155,17 @@ class ToggleButtonRect(PushButtonRect):
     Triggers the event 'on_toggle' when the mouse is pressed or released.
     """
 
-    def _get_release_color(self, x: int, y: int) -> tuple[int,int,int]:
+    def _get_release_color(self, x: int, y: int) -> tuple[int, int, int]:
         return self._hover if self._check_hit(x, y) else self._depressed
 
     def on_mouse_press(self, x: int, y: int, buttons: int, modifiers: int) -> None:
         if not self.enabled or not self._check_hit(x, y):
             return
         self._is_pressed = not self._is_pressed
-        self._rect.color = self._pressed if self._is_pressed else self._get_release_color(x, y)
-        self.dispatch_event('on_toggle', self._is_pressed)
+        self._rect.color = (
+            self._pressed if self._is_pressed else self._get_release_color(x, y)
+        )
+        self.dispatch_event("on_toggle", self._is_pressed)
 
     def on_mouse_release(self, x: int, y: int, buttons: int, modifiers: int) -> None:
         if not self.enabled or self._is_pressed:
@@ -144,7 +175,9 @@ class ToggleButtonRect(PushButtonRect):
     def on_toggle(self, value: bool) -> None:
         """Event: returns True or False to indicate the current state."""
 
-ToggleButtonRect.register_event_type('on_toggle')
+
+ToggleButtonRect.register_event_type("on_toggle")
+
 
 class SliderRect(pyglet.gui.WidgetBase):
     """Instance of a slider made of a base and a knob rect.
@@ -154,11 +187,16 @@ class SliderRect(pyglet.gui.WidgetBase):
     scrolling the mouse wheel.
     """
 
-    def __init__(self, x: int, y: int,
-                 base: pyglet.shapes.BorderedRectangle, knob: pyglet.shapes.BorderedRectangle,
-                 edge: int = 0,
-                 batch: pyglet.graphics.Batch | None = None,
-                 group: Group | None = None) -> None:
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        base: pyglet.shapes.BorderedRectangle,
+        knob: pyglet.shapes.BorderedRectangle,
+        edge: int = 0,
+        batch: pyglet.graphics.Batch | None = None,
+        group: Group | None = None,
+    ) -> None:
         """Create a slider.
 
         Args:
@@ -192,17 +230,31 @@ class SliderRect(pyglet.gui.WidgetBase):
         self._user_group = group
         bg_group = Group(order=0, parent=group)
         fg_group = Group(order=1, parent=group)
-        self._base_rect.anchor_y = base.height/2
-        self._base_rect.x,self._base_rect.y,self._base_rect.batch,self._base_rect.group = x, y, batch, bg_group
-        self._knob_rect.anchor_y = knob.height/2
-        self._knob_rect.x,self._knob_rect.y,self._knob_rect.batch,self._knob_rect.group = x + edge, y, batch, fg_group
-    
+        self._base_rect.anchor_y = base.height / 2
+        (
+            self._base_rect.x,
+            self._base_rect.y,
+            self._base_rect.batch,
+            self._base_rect.group,
+        ) = x, y, batch, bg_group
+        self._knob_rect.anchor_y = knob.height / 2
+        (
+            self._knob_rect.x,
+            self._knob_rect.y,
+            self._knob_rect.batch,
+            self._knob_rect.group,
+        ) = x + edge, y, batch, fg_group
+
         self._value = 0
         self._in_update = False
 
     def _update_position(self) -> None:
         self._base_rect.position = self._x, self._y, 0
-        self._knob_rect.position = self._x + self._edge, self._y + self._base_rect.height / 2, 0
+        self._knob_rect.position = (
+            self._x + self._edge,
+            self._y + self._base_rect.height / 2,
+            0,
+        )
 
     @property
     def value(self) -> float:
@@ -210,10 +262,19 @@ class SliderRect(pyglet.gui.WidgetBase):
 
     @value.setter
     def value(self, value: float) -> None:
-        assert type(value) in (int, float), "This Widget's value must be an int or float."
+        assert type(value) in (
+            int,
+            float,
+        ), "This Widget's value must be an int or float."
         self._value = value
-        x = (self._max_knob_x - self._min_knob_x) * value / 100 + self._min_knob_x + self._half_knob_width
-        self._knob_rect.x = max(self._min_knob_x, min(x - self._half_knob_width, self._max_knob_x))
+        x = (
+            (self._max_knob_x - self._min_knob_x) * value / 100
+            + self._min_knob_x
+            + self._half_knob_width
+        )
+        self._knob_rect.x = max(
+            self._min_knob_x, min(x - self._half_knob_width, self._max_knob_x)
+        )
 
     def update_groups(self, order: int) -> None:
         self._base_rect.group = Group(order=order + 1, parent=self._user_group)
@@ -239,9 +300,14 @@ class SliderRect(pyglet.gui.WidgetBase):
         return self._min_x < x < self._max_x and self._min_y < y < self._max_y
 
     def _update_knob(self, x: int) -> None:
-        self._knob_rect.x = max(self._min_knob_x, min(x - self._half_knob_width, self._max_knob_x))
-        self._value = abs(((self._knob_rect.x - self._min_knob_x) * 100) / (self._min_knob_x - self._max_knob_x))
-        self.dispatch_event('on_change', self._value)
+        self._knob_rect.x = max(
+            self._min_knob_x, min(x - self._half_knob_width, self._max_knob_x)
+        )
+        self._value = abs(
+            ((self._knob_rect.x - self._min_knob_x) * 100)
+            / (self._min_knob_x - self._max_knob_x)
+        )
+        self.dispatch_event("on_change", self._value)
 
     def on_mouse_press(self, x: int, y: int, buttons: int, modifiers: int) -> None:
         if not self.enabled:
@@ -250,7 +316,9 @@ class SliderRect(pyglet.gui.WidgetBase):
             self._in_update = True
             self._update_knob(x)
 
-    def on_mouse_drag(self, x: int, y: int, dx: int, dy: int, buttons: int, modifiers: int) -> None:
+    def on_mouse_drag(
+        self, x: int, y: int, dx: int, dy: int, buttons: int, modifiers: int
+    ) -> None:
         if not self.enabled:
             return
         if self._in_update:
@@ -271,7 +339,8 @@ class SliderRect(pyglet.gui.WidgetBase):
         """Event: Returns the current value when the slider is changed."""
 
 
-SliderRect.register_event_type('on_change')
+SliderRect.register_event_type("on_change")
+
 
 class BorderedTextEntry(pyglet.gui.TextEntry):
     """Instance of a text entry widget. Allows the user to enter and submit text.
@@ -280,15 +349,20 @@ class BorderedTextEntry(pyglet.gui.TextEntry):
     The current text string is passed along with the event.
     """
 
-    def __init__(self, text: str,
-                 x: int, y: int, width: int,
-                 color: tuple[int, int, int, int] = (255, 255, 255, 255),
-                 text_color: tuple[int, int, int, int] = (0, 0, 0, 255),
-                 caret_color: tuple[int, int, int, int] = (0, 0, 0, 255),
-                 border: int = 2,
-                 border_color: tuple[int,int,int,int] = (0,0,0,255),
-                 batch: pyglet.graphics.Batch | None = None,
-                 group: Group | None = None) -> None:
+    def __init__(
+        self,
+        text: str,
+        x: int,
+        y: int,
+        width: int,
+        color: tuple[int, int, int, int] = (255, 255, 255, 255),
+        text_color: tuple[int, int, int, int] = (0, 0, 0, 255),
+        caret_color: tuple[int, int, int, int] = (0, 0, 0, 255),
+        border: int = 2,
+        border_color: tuple[int, int, int, int] = (0, 0, 0, 255),
+        batch: pyglet.graphics.Batch | None = None,
+        group: Group | None = None,
+    ) -> None:
         """Create a text entry widget.
 
         Args:
@@ -315,16 +389,36 @@ class BorderedTextEntry(pyglet.gui.TextEntry):
             group:
                 Optional parent group of text entry widget.
         """
-        super().__init__(text=text,x=x,y=y,width=width,color=color,text_color=text_color,caret_color=caret_color,batch=batch,group=group)
+        super().__init__(
+            text=text,
+            x=x,
+            y=y,
+            width=width,
+            color=color,
+            text_color=text_color,
+            caret_color=caret_color,
+            batch=batch,
+            group=group,
+        )
         font = self._doc.get_font()
         height = font.ascent - font.descent
         bg_group = Group(order=0, parent=group)
         p = 2
-        self._outline = pyglet.shapes.BorderedRectangle(x=x-p, y=y-p, width=width+p+p, height=height+p+p, color=color, batch=batch, group=bg_group, border=border, border_color=border_color)
+        self._outline = pyglet.shapes.BorderedRectangle(
+            x=x - p,
+            y=y - p,
+            width=width + p + p,
+            height=height + p + p,
+            color=color,
+            batch=batch,
+            group=bg_group,
+            border=border,
+            border_color=border_color,
+        )
+
 
 class MouseDistanceDetector(pyglet.gui.WidgetBase):
     def __init__(self, x: int, y: int):
-
         """Creates a widget that detects the mouse distance at any given position;
         it is reccomended to not have this in a frame so it's able to detect distance no matter what
 
@@ -338,24 +432,24 @@ class MouseDistanceDetector(pyglet.gui.WidgetBase):
 
         """
 
-        super().__init__(x=x,y=y,width=0,height=0)
+        super().__init__(x=x, y=y, width=0, height=0)
 
         self._value = 0
 
     @property
     def value(self):
         return self._value
-    
+
     @value.setter
-    def value(self,value:float):
+    def value(self, value: float):
         self._value = value
 
     def on_mouse_motion(self, x, y, dx, dy):
-        
-        self._value = math.sqrt((self._x-x)**2 + (self._y-y)**2)
-        self.dispatch_event('on_change',self._value)
+        self._value = math.sqrt((self._x - x) ** 2 + (self._y - y) ** 2)
+        self.dispatch_event("on_change", self._value)
 
     def on_change(self, value: float) -> None:
         """Event: Returns the mouse distance when it is moved."""
 
-MouseDistanceDetector.register_event_type('on_change')
+
+MouseDistanceDetector.register_event_type("on_change")

@@ -1,4 +1,5 @@
-import sys
-sys.dont_write_bytecode = True
+import gregium.terminalLogging
 
-import gregium
+gregium.terminalLogging.PRIMARY.info("hi",__name__)
+gregium.terminalLogging.PRIMARY.warn("hi",__name__)
+gregium.terminalLogging.PRIMARY.error("hi",__name__)

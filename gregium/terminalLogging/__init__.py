@@ -2,11 +2,13 @@
 An easy terminal logger capable of also saving to a file and timestamping
 """
 
-import sys,_io,time,colorama
+import sys
+import _io
+import time
 
-WHITE = colorama.Fore.WHITE
-YELLOW = colorama.Fore.YELLOW
-RED = colorama.Fore.RED
+WHITE = "\x1b[37m"
+YELLOW = "\x1b[33m"
+RED = "\x1b[31m"
 
 class Logger:
 
@@ -40,7 +42,7 @@ class Logger:
     
     @filepath.setter
     def filepath(self,value:str):
-        assert self._filepath == None, f"To overwrite current filepath ({self._filepath}) instead use force_filepath_change()"
+        assert self._filepath is None, f"To overwrite current filepath ({self._filepath}) instead use force_filepath_change()"
 
         self._filepath = value
         if value:
@@ -50,7 +52,7 @@ class Logger:
         """
         Will change the current filepath even if one is already loaded"""
 
-        if self._filepath != None:
+        if self._filepath is not None:
             self._filepathInstance.close()
 
         self._filepath = filepath
@@ -84,7 +86,7 @@ class Logger:
         
             if self._enabled_file:
 
-                if self._filepath != None:
+                if self._filepath is not None:
                     self._filepathInstance.write(formattedMessage)
                     self._filepathInstance.flush()
 
@@ -101,7 +103,7 @@ class Logger:
                 If sys.stdout should be flushed once message is given
         """
 
-        self.base_log(f'INFO',message=message,source=source,flush=flush,colorKey=WHITE)
+        self.base_log('INFO',message=message,source=source,flush=flush,colorKey=WHITE)
 
     def warn(self,message:str,source:str,flush:bool=True):
         """
@@ -116,7 +118,7 @@ class Logger:
                 If sys.stdout should be flushed once message is given
         """
 
-        self.base_log(f'WARN',message=message,source=source,flush=flush,colorKey=YELLOW)
+        self.base_log('WARN',message=message,source=source,flush=flush,colorKey=YELLOW)
 
     def error(self,message:str,source:str,flush:bool=True):
         """
@@ -131,6 +133,6 @@ class Logger:
                 If sys.stdout should be flushed once message is given
         """
 
-        self.base_log(f'ERROR',message=message,source=source,flush=flush,colorKey=RED)
+        self.base_log('ERROR',message=message,source=source,flush=flush,colorKey=RED)
 
 PRIMARY = Logger()

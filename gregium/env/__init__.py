@@ -8,7 +8,6 @@ Revamp is pending
 # Importing necessary libraries
 import os
 import json
-from pathlib import Path
 import terminalLogging
 
 # Setup logger
@@ -21,10 +20,10 @@ def _parseEnv(parse:str):
     parseDict = {}
 
     # Loop through the input to be parsed
-    for n, l in enumerate(parse.split("\n")):
+    for n, line in enumerate(parse.split("\n")):
 
         # Skip the current iteration if it is empty
-        if len(l) == 0:
+        if len(line) == 0:
             continue
             
         # Initialize function variables
@@ -37,7 +36,7 @@ def _parseEnv(parse:str):
         hasWarned = False
 
         # Loop through each character of each section of the input
-        for ltr in l:
+        for ltr in line:
 
             # Skip the current line if a comment is present
             if ltr == "#":
@@ -106,7 +105,7 @@ def load(fileName:str=None,loadAllEnv:bool=False,ignoreCWD:bool=False):
     global ENV
     ENV = {}
     
-    if fileName != None:
+    if fileName is None:
 
         # Set global variable ENV to the parsed data in the file specified by only the path given
         if ignoreCWD:
@@ -160,7 +159,7 @@ def save(fileName:str=None):
         raise Exception("ENV NOT INITIALIZED")
     
     # If a valid file name is given, write a serialized version of ENV in that file
-    if fileName != None or not fileName in os.listdir(os.getcwd()):
+    if fileName is not None or fileName not in os.listdir(os.getcwd()):
         with open(os.getcwd()+"/"+fileName,"w") as env:
             env.write(_reparseEnv(ENV))
 
