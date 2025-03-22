@@ -65,7 +65,7 @@ setup(
     url="https://github.com/LavaTigerUnicrn/Gregium",
     packages=pkgs,
     package_data=pkgdata,
-    install_requires=["pygame-ce", "pynput", "pyglet"],
+    install_requires=["pygame-ce", "pynput", "pyglet", "colorama"],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",

@@ -14,4 +14,4 @@ def init():
     return __all__
 
 
-VERSION = {"major": 0, "minor": 1, "patch": 9}
+VERSION = {"major": 0, "minor": 1, "patch": 10}
