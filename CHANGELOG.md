@@ -13,3 +13,4 @@
 ## 0.1.11
 
 - Added easing module
+- Corrected readme to say "objects" and not "classes"

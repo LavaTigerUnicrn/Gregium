@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/license-MIT-%233DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/license/MIT)
 [![License](https://img.shields.io/badge/code%20style-black-%23181717?style=for-the-badge)](https://github.com/psf/black)
 
-> Basic readme of the Gregium library, for detail instructions see help of modules or classes
+> Basic readme of the Gregium library, for detailed instructions see help of modules or objects with python help()
 
 ## Table of Contents
 
@@ -18,12 +18,13 @@
 - [imports](#imports)
 - [old](#old)
 - [terminalLogging](#terminallogging)
+- [easing](#easing)
 
 ## buttons
 
 > Adds extra buttons not found in pyglet, such as push buttons from rects and text entry with borders
 
-**Classes**  
+**Objects**  
 
 - **PushButtonRect** - Istance of a push button based on a rect.
 - **ToggleButtonRect** - Instance of a toggle button based on a rect.
@@ -35,7 +36,7 @@
 
 > Camera class for easy scrolling and zooming.
 
-**Classes**  
+**Objects**  
 
 - **Camera** - A simple 2D camera that contains the speed and offset.
 - **CenteredCamera** - A simple 2D camera class. 0, 0 will be the center of the screen, as opposed to the bottom left.
@@ -46,7 +47,7 @@
 
 > The original 'CLI' class in gregium
 
-**Classes**  
+**Objects**  
 
 - **CommmandSystem** - Make easy command interpreters that can be used outside, or inside terminal
 
@@ -66,7 +67,7 @@
 
 > Gambling
 
-**Classes**  
+**Objects**  
 
 - **Gambler** - A gambler that can communicate with GameInst's to bet chips on it
 - **GameBase** - Base class for all gambling games
@@ -89,7 +90,7 @@
 
 > The (old) core of Gregium
 
-See gregium.old README for specific guildlines
+See gregium.old README for specific information
 
 ---
 
@@ -97,10 +98,28 @@ See gregium.old README for specific guildlines
 
 > An easy terminal logger capable of also saving to a file and timestamping
 
-**Classes**  
+**Objects**  
 
-- **Logger** -Generates a basic terminal logger
+- **Logger** - Generates a basic terminal logger
 
 **Globals**  
 
 - **PRIMARY** - The primary logger used in other gregium libraries
+
+## easing
+
+> A few easing functions for easing in various applications. All functions must take an input from 0 to 1 and will always output from 0 to 1.
+>
+> *This module can be run for visual tests*
+
+**Functions**  
+
+- **easeInSine** - A sinusoidal easing In
+- **easeOutSine** - A sinusoidal easing Out
+- **easeInOutSine** - A sinusoidal easing In-Out
+- **easeInQuad** - A quadratic easing In
+- **easeOutQuad** - A quadratic easing Out
+- **easeInOutQuad** - A quadratic easing In-Out
+- **easeInMono** - A monomic easing In, (like Quad but has degree {degree})
+- **easeOutMono** - A monomic easing Out, (like Quad but has degree {degree})
+- **easeInOutMono** - A monomic easing In-Out, (like Quad but has degree {degree})
