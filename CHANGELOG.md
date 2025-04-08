@@ -2,15 +2,20 @@
 
 ## 0.1.9
 
-- Permanantly moved original gregium to gregium.old, creating new readme
+- Permanently moved original gregium to gregium.old, creating new readme
 - Ported content of gregium.old to new gregium
-- Recursivley found packages and packagedata in setup
+- Recursively found packages and packagedata in setup
 
 ## 0.1.10
 
-- Resolved Dependecies
+- Resolved Dependencies
 
 ## 0.1.11
 
 - Added easing module
 - Corrected readme to say "objects" and not "classes"
+- Added vertical push button object
+- Added additional options to the pushbuttonrect and togglebuttonrect
+- Changed file organization
+- Fixed awful spelling
+- Used black formatter

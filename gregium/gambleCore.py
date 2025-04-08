@@ -48,7 +48,7 @@ class GameBase:
 
 class GameInst:
     def __init__(self, parent: GameBase, player: Gambler, bet: int):
-        """Base class for allgambling game instances"""
+        """Base class for all gambling game instances"""
 
         self._parent = parent
         self._player = player
@@ -103,12 +103,12 @@ class Casino:
         self._tableId += 1
 
     def __str__(self):
-        rtrn = f"-- Casino --\n Chips: {self._chips}\n- Tables -\n"
+        tempReturn = f"-- Casino --\n Chips: {self._chips}\n- Tables -\n"
         for tableId in self._tables:
             table = self._tables[tableId]
-            rtrn += f" {tableId}: {table["table"].__class__.__name__} - Stats\n  Casino Wins: {table["table"]._wins}\n  Casino Losses: {table["table"]._losses}"
+            tempReturn += f" {tableId}: {table["table"].__class__.__name__} - Stats\n  Casino Wins: {table["table"]._wins}\n  Casino Losses: {table["table"]._losses}"
 
-        return rtrn
+        return tempReturn
 
 
 class BlackjackInst(GameInst):

@@ -8,10 +8,21 @@ def init():
     from . import camera
     from . import buttons
     from . import terminalLogging
+    from . import imports
+    from . import easing
 
-    __all__ = [env, commandSystem, gambleCore, camera, buttons, terminalLogging]
+    __all__ = [
+        env,
+        commandSystem,
+        gambleCore,
+        camera,
+        buttons,
+        terminalLogging,
+        imports,
+        easing,
+    ]
 
     return __all__
 
 
-VERSION = {"major": 0, "minor": 1, "patch": 10}
+VERSION = {"major": 0, "minor": 1, "patch": 11}

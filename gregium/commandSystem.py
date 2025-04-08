@@ -61,7 +61,7 @@ def _cmdParseSeg(segment: str, requestedType: str, min="N/A", max="N/A"):
                 return (8, "Json error: " + e)
 
 
-class CommmandSystem:
+class CommandSystem:
     def __init__(self, tree: dict = {}):
         LOGGER.info("CommandSystem Generated")
         """
@@ -84,7 +84,7 @@ class CommmandSystem:
         for cmd in commandDict:
             self._cmds[cmd] = commandDict[cmd]
 
-    def helpcmd(self, *args):
+    def helpCmd(self, *args):
         """Generate a help message for using commands"""
 
         cmdList = ""
@@ -165,11 +165,11 @@ class CommmandSystem:
             # Run help command with specific command (if applicable)
             if len(cmdRun) > 1:
                 if cmdRun[1] in self._cmds:
-                    return self.helpcmd(cmdRun[1])
+                    return self.helpCmd(cmdRun[1])
                 else:
-                    return self.helpcmd()
+                    return self.helpCmd()
             else:
-                return self.helpcmd()
+                return self.helpCmd()
 
         # Check if command exists
         if cmdRun[0] in self._cmds:

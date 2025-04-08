@@ -1,6 +1,6 @@
 # ![gregiumNameHD](https://github.com/user-attachments/assets/bf3c96d2-e1aa-4117-91cb-93d896145211)
 
-[![Pypi](https://img.shields.io/badge/pypi-v0.1.9-%233775A9?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/gregium)
+[![PyPi](https://img.shields.io/badge/pypi-v0.1.9-%233775A9?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/gregium)
 [![Github](https://img.shields.io/badge/github-0.1.9-%23181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LavaTigerUnicrn/Gregium)
 [![License](https://img.shields.io/badge/license-MIT-%233DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/license/MIT)
 [![License](https://img.shields.io/badge/code%20style-black-%23181717?style=for-the-badge)](https://github.com/psf/black)
@@ -22,15 +22,16 @@
 
 ## buttons
 
-> Adds extra buttons not found in pyglet, such as push buttons from rects and text entry with borders
+> Adds extra buttons & gui not found in pyglet, such as push buttons with a rect and text entry with borders
 
 **Objects**  
 
-- **PushButtonRect** - Istance of a push button based on a rect.
+- **PushButtonRect** - Instance of a push button based on a rect.
 - **ToggleButtonRect** - Instance of a toggle button based on a rect.
 - **SliderRect** - Instance of a slider made of a base and a knob rect.
 - **BorderedTextEntry** - Instance of a text entry widget. Allows the user to enter and submit text.
-- **MouseDistanceDetector** - Creates a widget that detects the mouse distance at any given position; it is reccomended to not have this in a frame so it's able to detect distance no matter what
+- **MouseDistanceDetector** - Creates a widget that detects the mouse distance at any given position; it is recommended to not have this in a frame so it's able to detect distance without distance restrictions
+- **VerticalPushButtons** - Makes given amount of vertical buttons that will stack after one another
 
 ## camera
 
@@ -49,7 +50,7 @@
 
 **Objects**  
 
-- **CommmandSystem** - Make easy command interpreters that can be used outside, or inside terminal
+- **CommandSystem** - Make easy command interpreters that can be used outside, or inside terminal
 
 ---
 
@@ -71,7 +72,7 @@
 
 - **Gambler** - A gambler that can communicate with GameInst's to bet chips on it
 - **GameBase** - Base class for all gambling games
-- **GameInst** - Base class for allgambling game instances
+- **GameInst** - Base class for all gambling game instances
 - **BlackjackInst** - Created by Blackjack table
 - **Blackjack** - A Blackjack table for gambling
 - **Casino** - A casino base capable of monitoring losses per table, dealing out chips, and more
@@ -96,7 +97,7 @@ See gregium.old README for specific information
 
 ## terminalLogging
 
-> An easy terminal logger capable of also saving to a file and timestamping
+> An easy terminal logger capable of also saving to a file and timestamps
 
 **Objects**  
 
@@ -120,6 +121,6 @@ See gregium.old README for specific information
 - **easeInQuad** - A quadratic easing In
 - **easeOutQuad** - A quadratic easing Out
 - **easeInOutQuad** - A quadratic easing In-Out
-- **easeInMono** - A monomic easing In, (like Quad but has degree {degree})
-- **easeOutMono** - A monomic easing Out, (like Quad but has degree {degree})
-- **easeInOutMono** - A monomic easing In-Out, (like Quad but has degree {degree})
+- **easeInMono** - A monic polynomial easing In, (like Quad but has degree {degree})
+- **easeOutMono** - A monic polynomial easing Out, (like Quad but has degree {degree})
+- **easeInOutMono** - A monic polynomial easing In-Out, (like Quad but has degree {degree})

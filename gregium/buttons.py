@@ -1,14 +1,15 @@
 """
-Adds extra buttons not found in pyglet, such as push buttons from rects and text entry with borders
+Adds extra buttons & gui not found in pyglet, such as push buttons with a rect and text entry with borders
 """
 
 import pyglet
 import math
 from pyglet.graphics import Group
+import pyglet.customtypes as customTypes
 
 
 class PushButtonRect(pyglet.gui.WidgetBase):
-    """The base of all widgets."""
+    """The base of all button-type widgets."""
 
     def __init__(
         self,
@@ -21,15 +22,28 @@ class PushButtonRect(pyglet.gui.WidgetBase):
         hover: tuple[int, int, int] | None = None,
         label: pyglet.text.Label | None = None,
         batch: pyglet.graphics.Batch | None = None,
+        anchor_x: customTypes.AnchorX = "center",
+        anchor_y: customTypes.AnchorY = "center",
         group: Group | None = None,
     ) -> None:
         """Instance of a push button based on a rect.
+        Handlers:
+        * on_press
+        * on_release
 
         Args:
             x:
                 X coordinate of the push button.
             y:
                 Y coordinate of the push button.
+            width:
+                Width of the push button
+            height:
+                Height of the push button
+            anchor_x:
+                The X anchor of the button
+            anchor_y:
+                The y anchor of the button
             pressed:
                 Color to display when the button is pressed.
             depressed:
@@ -43,7 +57,6 @@ class PushButtonRect(pyglet.gui.WidgetBase):
             group:
                 Optional parent group of the push button.
         """
-        super().__init__(x=x, y=y, width=width, height=height)
         self._pressed = pressed
         self._depressed = depressed
         self._hover = hover or depressed
@@ -51,18 +64,11 @@ class PushButtonRect(pyglet.gui.WidgetBase):
         bg_group = Group(order=0, parent=group)
         fg_group = Group(order=1, parent=group)
         self._user_group = group
+        self._x = x
+        self._y = y
 
         self._label = label
-        self.text = label.text
 
-        self._label.batch = batch
-        self._label.group = fg_group
-        self._label.multiline = True
-        self._label.x, self._label.y, self._label.width = (
-            x + width / 2,
-            y + height / 2,
-            width,
-        )
         self._rect = pyglet.shapes.BorderedRectangle(
             x=x,
             y=y,
@@ -75,7 +81,79 @@ class PushButtonRect(pyglet.gui.WidgetBase):
             border=5,
         )
 
+        match anchor_x:
+            case "left":
+                self._rect.anchor_x = 0
+            case "center":
+                self._rect.anchor_x = width / 2
+            case "right":
+                self._rect.anchor_x = width
+            case _:
+                self._rect.anchor_y = 0
+
+        match anchor_y:
+            case "top":
+                self._rect.anchor_y = height
+            case "center":
+                self._rect.anchor_y = height / 2
+            case "bottom":
+                self._rect.anchor_y = 0
+            case _:
+                self._rect.anchor_y = 0
+
+        super().__init__(
+            x=x - self._rect.anchor_x,
+            y=y - self._rect.anchor_y,
+            width=width,
+            height=height,
+        )
+
+        if label is not None:
+
+            self.text = label.text
+
+            self._label.batch = batch
+            self._label.group = fg_group
+            self._label.anchor_x = "center"
+            self._label.anchor_y = "center"
+            self._label.x, self._label.y, self._label.width = (
+                x + (width / 2 - self._rect.anchor_x),
+                y + (height / 2 - self._rect.anchor_y),
+                width,
+            )
+            self._label.multiline = True
+
         self._is_pressed = False
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value: int):
+        self._x = value
+        self._label.x = value
+        self._rect.x = value
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, value: int):
+        self._y = value
+        self._label.y = value
+        self._rect.y = value
+
+    @property
+    def position(self) -> tuple[int, int]:
+        return self._x, self._y
+
+    @position.setter
+    def position(self, value: tuple[int, int]):
+        self._x, self._y = value
+        self._rect.x, self._rect.y = value
+        self._label.x, self._label.y = value
 
     @property
     def text(self) -> str:
@@ -144,6 +222,11 @@ class PushButtonRect(pyglet.gui.WidgetBase):
     def on_release(self) -> None:
         """Event: Dispatched when the button is released."""
 
+    def draw(self) -> None:
+        """Debug draw method"""
+        self._rect.draw()
+        self._label.draw()
+
 
 PushButtonRect.register_event_type("on_press")
 PushButtonRect.register_event_type("on_release")
@@ -199,6 +282,9 @@ class SliderRect(pyglet.gui.WidgetBase):
     ) -> None:
         """Create a slider.
 
+        Handlers:
+        * on_change
+
         Args:
             x:
                 X coordinate of the slider.
@@ -236,14 +322,24 @@ class SliderRect(pyglet.gui.WidgetBase):
             self._base_rect.y,
             self._base_rect.batch,
             self._base_rect.group,
-        ) = x, y, batch, bg_group
+        ) = (
+            x,
+            y,
+            batch,
+            bg_group,
+        )
         self._knob_rect.anchor_y = knob.height / 2
         (
             self._knob_rect.x,
             self._knob_rect.y,
             self._knob_rect.batch,
             self._knob_rect.group,
-        ) = x + edge, y, batch, fg_group
+        ) = (
+            x + edge,
+            y,
+            batch,
+            fg_group,
+        )
 
         self._value = 0
         self._in_update = False
@@ -347,6 +443,10 @@ class BorderedTextEntry(pyglet.gui.TextEntry):
 
     Triggers the event 'on_commit', when the user hits the Enter or Return key.
     The current text string is passed along with the event.
+
+    Handlers:
+    * on_commit
+
     """
 
     def __init__(
@@ -420,7 +520,10 @@ class BorderedTextEntry(pyglet.gui.TextEntry):
 class MouseDistanceDetector(pyglet.gui.WidgetBase):
     def __init__(self, x: int, y: int):
         """Creates a widget that detects the mouse distance at any given position;
-        it is reccomended to not have this in a frame so it's able to detect distance no matter what
+        it is recommended to not have this in a frame so it's able to detect distance without range restrictions
+
+        Handlers:
+        * on_change
 
         Args:
             text:
@@ -453,3 +556,140 @@ class MouseDistanceDetector(pyglet.gui.WidgetBase):
 
 
 MouseDistanceDetector.register_event_type("on_change")
+
+
+class VerticalPushButtons:
+    """Makes given amount of vertical buttons that will stack after one another"""
+
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        pressed: tuple[int, int, int],
+        depressed: tuple[int, int, int],
+        label: pyglet.text.Label,
+        buttons: list[str],
+        frame: pyglet.gui.Frame,
+        hover: tuple[int, int, int] | None = None,
+        batch: pyglet.graphics.Batch | None = None,
+        group: Group | None = None,
+    ) -> None:
+        """Uses push button rect to make vertically stacked buttons,
+        use "VerticalPushButtons.pressed" variable;
+        variable is formatted as {"buttonName":"buttonInstance"}
+        to retrieve the value use .buttons["buttonName"].value;
+        returning a true or false, you can also use the pyglet method
+        .buttons["buttonName"].set_handler(function) to run function
+        on event dispatch
+
+        Args:
+            x:
+                X coordinate of the left of the stacked buttons.
+            y:
+                Y coordinate of the top of the stacks buttons.
+            width:
+                The width of each push button
+            height:
+                The height of each push button
+            pressed:
+                Color to display when the button is pressed.
+            depressed:
+                Color to display when the button isn't pressed.
+            label:
+                Required label to have on each of the buttons
+            buttons:
+                A list of the text of each button
+            hover:
+                Color to display when the button is being hovered over.
+            batch:
+                Optional batch to add the push button to.
+            group:
+                Optional parent group of the push button.
+        """
+
+        self.buttons = {}
+
+        runningY = y + (len(buttons) * (height + 5)) - 5
+
+        weight = label.weight
+        font_size = label.font_size
+        font_name = label.font_name
+        color = label.color
+        for button in buttons:
+            runningLabel = pyglet.text.Label(
+                text=button,
+                font_size=font_size,
+                font_name=font_name,
+                color=color,
+                align="center",
+                weight=weight,
+            )
+            btn = PushButtonRect(
+                x=x,
+                y=runningY,
+                width=width,
+                height=height,
+                pressed=pressed,
+                depressed=depressed,
+                label=runningLabel,
+                hover=hover,
+                group=group,
+                batch=batch,
+                anchor_x="left",
+                anchor_y="top",
+            )
+            frame.add_widget(btn)
+            runningY -= height + 5
+            self.buttons[button] = btn
+
+        self._x = x
+        self._y = y
+
+        self._user_group = group
+
+        self._batch = batch
+
+    def update_groups(self, order: int) -> None:
+        for button in self.buttons:
+            self.buttons[button].updateGroup(order=order)
+
+    def draw(self):
+        """Debug draw method"""
+        for button in self.buttons:
+            self.buttons[button].draw()
+
+    def getPressedButton(self):
+        """
+        Binds the pressed button to a func
+        """
+
+        # Check through each button
+        for button in self.buttons:
+
+            # If the button is pressed run the associated function
+            if self.buttons[button].value:
+                self.pressButtonFunc(button)
+
+    def bind_press_function(self, func):
+        """
+        Binds a function to each button in the list on press;
+        the function will receive the button name as its only inputted argument
+
+        (ex
+
+        def new_func(buttonName):
+            do_something()
+        )
+
+        WARNING: THIS OVERWRITES ALL OTHER "on_press" HANDLERS OF THE BUTTONS
+        """
+
+        # Bind new function
+        self.pressButtonFunc = func
+
+        # Set all button press functions
+        for button in self.buttons:
+
+            self.buttons[button].set_handler("on_press", self.getPressedButton)
