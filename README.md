@@ -1,3 +1,4 @@
+# MASSIVE CHANGE TO GREGIUM COMING SOON
 # ![gregiumNameHD](https://github.com/user-attachments/assets/bf3c96d2-e1aa-4117-91cb-93d896145211)
 
 [![PyPi](https://img.shields.io/badge/pypi-v0.1.9-%233775A9?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/gregium)
