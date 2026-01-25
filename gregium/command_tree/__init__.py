@@ -89,10 +89,16 @@ class CommandTree:
                 if argument.startswith("--"):
                     kwarg_name = argument[2:]
                 elif kwarg_name:
-                    kwargs[kwarg_name] = json.loads(argument)
+                    try:
+                        kwargs[kwarg_name] = json.loads(argument)
+                    except:
+                        kwargs[kwarg_name] = argument
                     kwarg_name = None
                 else:
-                    args.append(json.loads(argument))
+                    try:
+                        args.append(json.loads(argument))
+                    except:
+                        args.append(argument)
             except Exception as e:
                 return f"Command failed to parse arguments: {e}"
         if kwarg_name:

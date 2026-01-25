@@ -13,7 +13,7 @@ required_env = ["GOOGLE_API_TOKEN","GOOGLE_SEARCH_ENGINE_TOKEN","HF_TOKEN"]
 for token in required_env:
     if token not in os.environ:
         warn(f"{token} not found in .env",__name__)
-        os.environ["GOOGLE_API_TOKEN"] = ""
+        os.environ[token] = ""
     
 ### SETTINGS
 # Load and fix settings
