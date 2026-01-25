@@ -3,9 +3,7 @@ import os
 from pathlib import Path
 import gregium
 
-
 pkgdata = {}
-
 
 def prune(pkg: list, extension: str):
     rm = pkg.copy()
@@ -51,28 +49,28 @@ with open("README.md", "r", encoding="utf-8") as r:
     longdesc = r.read()
 
 ver = (
-    f"{gregium.VERSION["major"]}.{gregium.VERSION["minor"]}.{gregium.VERSION["patch"]}"
+    gregium.VERSION
 )
 print(f"Gregium V{ver}:\nPackages Found:{pkgs}\nPackage Data Found:{pkgdata}\n\n\n")
 
 setup(
     name="gregium",
     version=ver,
-    description="A simple package with easy features for using pygame",
+    description="A package with a ton of different useful code snippets",
     long_description=longdesc,
     author="LavaTigerUnicrn",
-    author_email="nolanlance711@gmail.com",
+    author_email="lavatigerunicrn@gmail.com",
     url="https://github.com/LavaTigerUnicrn/Gregium",
     packages=pkgs,
     package_data=pkgdata,
-    install_requires=["pygame-ce", "pynput", "pyglet", "colorama"],
+    install_requires=["edge-tts", "ollama", "beautifulsoup4", "pillow", "pygame-ce","realtimestt","realtimetts","requests","dotenv"],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Build Tools",
-        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
     ],
+    license="MIT",
     long_description_content_type="text/markdown",
     project_urls={
         "github": "https://github.com/LavaTigerUnicrn/Gregium",

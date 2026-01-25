@@ -1,28 +1,12 @@
-def init():
-    """
-    Preloads all gregium modules
-    """
-    from . import env
-    from . import commandSystem
-    from . import gambleCore
-    from . import camera
-    from . import buttons
-    from . import terminalLogging
-    from . import imports
-    from . import easing
+"""
+The root of Gregium
 
-    __all__ = [
-        env,
-        commandSystem,
-        gambleCore,
-        camera,
-        buttons,
-        terminalLogging,
-        imports,
-        easing,
-    ]
+Holds some import values
+"""
+import os
 
-    return __all__
+if "temp" not in os.listdir():
+    
+    os.mkdir("temp")
 
-
-VERSION = {"major": 0, "minor": 1, "patch": 11}
+VERSION = "2.0.0"

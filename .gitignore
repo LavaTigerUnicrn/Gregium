@@ -1,5 +1,11 @@
-__pycache__/
-*.py[cod]
-*$py.class
-dist/
-gregium-egg-info/
+__pycache__
+*.pyc
+temp
+.cache
+*.log
+*.pt
+settings.json
+*.env
+*.pt
+gregium.egg-info
+/dist
