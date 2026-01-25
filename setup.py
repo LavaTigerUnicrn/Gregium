@@ -38,7 +38,8 @@ tree = prune(os.listdir("./gregium"), "gregium/")
 pkgs = ["gregium"]
 
 while len(tree) > 0:
-    if "__init__.py" in os.listdir(tree[0]):
+    tree_list = os.listdir(tree[0])
+    if "__init__.py" in tree_list or any([".py" in x for x in tree_list]):
         pkgs.append(tree[0].replace("/", "."))
 
     tree = tree + prune(os.listdir(tree[0]), tree[0] + "/")
