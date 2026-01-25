@@ -77,7 +77,7 @@ def main():
                         case "boolean":
                             
                             # Choose boolean
-                            inp.print("Choose value for {chosen}")
+                            inp.print(f"Choose value for {chosen}")
                             
                             chosen_value = inp.choice([True, False])
                             

@@ -35,7 +35,7 @@ def load_settings():
     except FileNotFoundError:
         with open(path,"w") as w:
             
-            w.write("{}")
+            w.write("{\"$schema\":\"./settings-schema.json\"}")
             
         LOADED_SETTINGS = {}
 

@@ -10,7 +10,7 @@ def prune(pkg: list, extension: str):
 
     for i, item in enumerate(pkg):
         if "." in item:
-            if Path(item).suffix != ".py":
+            if Path(item).suffix != ".py" and Path(item).suffix != ".pyc":
                 if extension.replace("/", ".")[:-1] not in pkgdata:
                     pkgdata[extension.replace("/", ".")[:-1]] = []
 

@@ -32,7 +32,7 @@
             "description": "All relating settings to AI",
             "properties": {
                 "default_model": {
-                    "default":"granite3.3",
+                    "default":"",
                     "type":"string",
                     "add_type":"llama_model",
                     "description": "The default Ollama model to use (use Ollama list to see installed)"
@@ -44,7 +44,7 @@
             "description": "All relating settings to Terminal",
             "properties": {
                 "help_enabled": {
-                    "default": false,
+                    "default": true,
                     "type":"boolean",
                     "description": "If help text should be shown by default on terminal choice"
                 },
