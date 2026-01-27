@@ -45,6 +45,11 @@ class CommandTree:
             command: The command to get help on
         """
         
+        # Give help if command is none
+        if command is None:
+            
+            command = self.help
+        
         # Get command
         if command not in self.commands:
             return f"Unknown command: {command}"

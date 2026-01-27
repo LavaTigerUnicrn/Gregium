@@ -136,7 +136,7 @@ def choice(options:list[str],optionsName:list[str]|None=None,optionsDesc:list[st
         print(f"\x1b[{1*int(help)+n+1}F",end="")
         
 def input(text:str) -> str:
-    print(text)
+    print(text,end="")
     return input_single_line()
 
 def ctrl_backspace(text:str) -> tuple[int,str]:
