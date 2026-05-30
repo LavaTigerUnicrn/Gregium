@@ -14,19 +14,6 @@ from ...settings import CUSTOM_SEARCH_API_KEY,CUSTOM_SEARCH_ENGINE_ID
 API_KEY = CUSTOM_SEARCH_API_KEY
 ENGINE_ID = CUSTOM_SEARCH_ENGINE_ID
 
-def get_weather(city:str) -> str:
-    """
-    Gets the weather in a given city
-    
-    Args:
-        city: The city to get the weather in
-        
-    Returns:
-        str: The weather in the given city
-    """
-    
-    return "cloudy" if city == "New York City" else "rainy"
-
 def google_search(search:str):
     """
     Search up something on google and return the search as a json

@@ -1,6 +1,7 @@
 import shlex
 import textwrap
 import json
+import traceback
 
 class CommandTree:
     """
@@ -18,13 +19,15 @@ class CommandTree:
     """
         
     commands:dict
+    use_trace:bool
     
     def __init__(self):
         """
         Generates a new CommandTree
         """
         
-        self.commands = {"help":self.help,"list":self.list_commands}
+        self.commands = {"help":self.help,"list":self.list_commands,"trace":self.trace}
+        use_trace = False
         
     def add_command(self,command):
         """
@@ -40,6 +43,17 @@ class CommandTree:
     def help(self,command:str=None):
         """
         Gives help docstring for command
+    
+   	Uses shell notation of calling
+    	`command arg1 arg2 --kwarg1 kwarg1Value --kwarg2 kwarg2Value`
+    
+    	To call the command tree, call the tree object
+    	`(command_str)`
+    
+    	Default commands:
+    	    list : Shows a list of all commands
+    	    help --command : Shows the help for a specific command
+            trace --enable : Sets the tracing for errors
         
         Arguments:
             command: The command to get help on
@@ -48,7 +62,7 @@ class CommandTree:
         # Give help if command is none
         if command is None:
             
-            command = self.help
+            command = "help"
         
         # Get command
         if command not in self.commands:
@@ -62,6 +76,15 @@ class CommandTree:
         
         # List commands
         return "List of commands on current tree:\n    "+"\n    ".join(self.commands.keys())
+    
+    def trace(self,enable:bool):
+        """
+        Sets if the errors should be traced
+        
+        enable: The state 
+        """
+        
+        self.use_trace = enable
         
     def __call__(self,command_str:str):
         """
@@ -83,7 +106,7 @@ class CommandTree:
         
         # Check if command exists
         if command_name not in self.commands:
-            return f"Unknown command: {command_name}"
+            return f"Unknown command: {command_name} (use help for help on commands)"
         
         # Get args and kwargs
         kwargs = {}
@@ -107,9 +130,10 @@ class CommandTree:
             except Exception as e:
                 return f"Command failed to parse arguments: {e}"
         if kwarg_name:
-            return f"Invalid command parameters, kwarg must have value"
+            return "Invalid command parameters, kwarg must have value"
         
         try:
             return self.commands[command_name](*args,**kwargs)
         except Exception as e:
+            print(traceback.format_exc())
             return f"Command had an error: {e}"

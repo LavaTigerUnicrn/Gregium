@@ -5,8 +5,4 @@ See https://github.com/lavatigerunicrn/gregium
 """
 import os
 
-if "temp" not in os.listdir():
-    
-    os.mkdir("temp")
-
-VERSION = "2.0.4"
+VERSION = "2.1.1"

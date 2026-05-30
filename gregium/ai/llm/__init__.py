@@ -5,7 +5,7 @@ Use `.huggingface` for the huggingface version
 """
 import ollama
 from typing import Literal
-from ...settings import DEFAULT_MODEL
+from ...settings import DEFAULT_MODEL,LOUD_TOOLS
 from ... import settings
 import json
 import requests
@@ -13,23 +13,79 @@ from . import tool_loader
 
 Role = Literal["user","system","assistant","tool"]
 
-class ChatBot:
-    model:str
-    message_history:list[ollama.Message]
-    tools:list
+OLLAMA_URL:str = "http://localhost:11434/api/chat"
+
+def chat_ollama(model:str,messages:list[dict],**kwargs) -> dict:
+    """
+    Sends a direct chat request to Ollama without streaming
     
-    def __init__(self,model:str=DEFAULT_MODEL):
-        """
-        A chatbot using Ollama
+    check `chat_ollama_stream` for streaming enabled
+    
+    Arguments:
+        model:
+            The model name to use (use `ollama.list` for a list of models)
+        messages:
+            The previous messages, should be in dictionary form {"role":"user","content":"Hello, World",...}
+        **kwargs:
+            Any additional arguments: tools, images, thinking, etc. (make sure the model supports it)
+    """ 
         
-        Arguments:
-            model:
-                The Ollama model name
-        """
+    # Get content
+    payload = {"model":model,"messages":messages,"stream":False}
+    
+    payload |= kwargs
+    
+    # Post to Ollama
+    response = requests.post(OLLAMA_URL,json=payload,timeout=60,stream=False)
+    response.raise_for_status()
+    
+    # Get response
+    return response.json()
+
+def chat_ollama_stream(model:str,messages:list[dict],**kwargs):
+    """
+    Sends a direct chat request to Ollama with streaming
+    
+    check `chat_ollama` for streaming disabled
+    
+    If the response should be streamed (in that case will return an iterator instead of raw json, each chunk should be read as normal)
+            
+    Only the final chunk (where the done attribute is true) will have additional attributes
+    
+    Message must be reassembled
+    
+    Arguments:
+        model:
+            The model name to use (use `ollama.list` for a list of models)
+        messages:
+            The previous messages, should be in dictionary form {"role":"user","content":"Hello, World",...}
+        **kwargs:
+            Any additional arguments: tools, images, thinking, etc. (make sure the model supports it)
+    """ 
         
-        self.model = model
-        self.message_history = []
-        self.tools = []
+    # Get content
+    payload = {"model":model,"messages":messages,"stream":True}
+    
+    payload |= kwargs
+    
+    # Post to Ollama
+    response = requests.post(OLLAMA_URL,json=payload,timeout=60,stream=True)
+    response.raise_for_status()
+
+    for chunk in response.iter_lines():
+        if chunk:
+            yield json.loads(chunk.decode("utf-8"))
+        return
+
+class ChatBot:
+    """
+    A generic ChatBot
+    
+    This has no function but has shared base for all other ChatBots
+    """
+    model:str
+    message_history:list
+    tools:list
     
     def clear_history(self) -> None:
         """
@@ -40,7 +96,13 @@ class ChatBot:
         This does not clear tools
         """
         self.message_history = []
+    def __init__(self,model:str):
+        """
+        The base ChatBot
         
+        This does nothing by itself
+        """
+        raise NotImplementedError("Base chatbot may not be instantiated")
     def add_tool(self,tool) -> None:
         """
         Adds a tool to the given bot
@@ -54,7 +116,7 @@ class ChatBot:
                 
         Examples:
             def add_two_numbers(a: int, b: int) -> int:
-            
+            '''
             Add two numbers together.
 
             Args:
@@ -100,43 +162,26 @@ class ChatBot:
         
         # Run the function
         try:
+            if LOUD_TOOLS:
+                print(f"Running tool [{tool_name}] with arguments: {arguments}")
             output = tool_inst(**arguments)
         except Exception as e:
-            print(e)
-            output = "The tool failed to run, perhaps there is a missing or incorrect argument?"
+            if LOUD_TOOLS:
+                print(e)
+            output = f"The tool {tool_name} failed to run\n{e}"
         
         # Return to the AI
-        output = {"content":str(output),"role":"tool"}
-        if tool is not None:
+        output = {"content":str(output),"role":"tool","tool_name":tool_name}
+        if id is not None:
             output["id"] = id
         
         self.message_history.append(output)
-    
-    def tell(self,prompt:str,role:Role="system") -> None:
-        """
-        Tells the chatbot something without expecting any response
-        
-        Arguments:
-            prompt:
-                The prompt to send
-            role: 
-                The role the prompt is coming from (this should almost always be 'system')
-                user - The person chatting
-                assistant - The AI bot
-                system - For setting model attributes (how the model should act) on the current instance, this has the highest power
-                tool - For tool responses
-        """
-        
-        # Format prompt
-        prompt_formatted = ollama.Message(role=role,content=prompt)
-
-        # Add prompt to history
-        self.message_history.append(prompt_formatted)
-    
-    def chat(self,prompt:str,role:Role="user",output_raw:bool=False,skip_send:bool=False) -> str:
+    def chat(self,prompt:str,role:Role="user",output_raw:bool=False,skip_send:bool=False):
         """
         Generates and returns the response from the chatbot
         This will remember all previous responses
+        
+        Tools will be autorun and the response will only be after the tool is run
         
         Arguments:
             prompt:
@@ -155,23 +200,159 @@ class ChatBot:
         Returns:
             The response message content of the AI
         """
+        raise NotImplementedError("Base chatbot may not be called")
+    
+    def tell(self,prompt:str,role:Role="system") -> None:
+        """
+        Adds the prompt to the bots message history without expecting any response
+        
+        Arguments:
+            prompt:
+                The prompt to send
+            role: 
+                The role the prompt is coming from (this should almost always be 'user')
+                user - The person chatting
+                assistant - The AI bot
+                system - For setting model attributes (how the model should act) on the current instance, this has the highest power
+                tool - For tool responses
+        """
+        
+        # Format prompt
+        prompt_formatted = {"role":role,"content":prompt}
+
+        # Add prompt to history
+        self.message_history.append(prompt_formatted)
+
+class OllamaResponseGenerator:
+    """
+    A generator that allows for reassembling **Ollama** responses
+    
+    This **MUST** be iterated through
+    """
+    
+    def __init__(self,ChatBot:ChatBot,response:ollama.ChatResponse,raw:bool):
+        """
+        Instantiate a new Generator
+        
+        You realistically shouldn't do this unless you know what you're doing
+        """
+        self.bot = ChatBot
+        self.response = response
+        self.raw = raw
+        self.completed_message = ""
+        self.prev_message = None
+        
+    def __iter__(self):
+        self.response_iterator = iter(self.response)
+        return self 
+    
+    def __next__(self):
+        
+        response = next(self.response_iterator)
+        message = response["message"]
+        content = message["content"]
+        self.completed_message += content
+        
+        # Special functions for completed chunks
+        if response["done"]:
+        
+            # Add response to history
+            if self.prev_message is None:
+                self.prev_message = message
+            self.bot.message_history.append(dict(self.prev_message)|{"role":"assistant","content":self.completed_message})
+            
+            # If response calls a tool, use that tool
+            if "tool_calls" in self.prev_message and self.prev_message["tool_calls"] is not None:
+                
+                # Get all the tools
+                tool_calls = self.prev_message["tool_calls"]
+                
+                # Run each tool
+                for call in tool_calls:
+                    
+                    # Get a response from the final tool call
+                    self.bot.run_tool(call["function"]["name"],call["function"]["arguments"])
+        
+        self.prev_message = message
+        if self.raw:     
+            return response
+        return content
+            
+
+class Ollama_ChatBot(ChatBot):
+    model:str
+    message_history:list[ollama.Message]
+    tools:list
+    
+    def __init__(self,model:str=DEFAULT_MODEL):
+        """
+        A chatbot using Ollama
+        
+        Arguments:
+            model:
+                The Ollama model name
+        """
+        
+        self.model = model
+        self.message_history = []
+        self.tools = []
+    
+    def chat(self,prompt:str,role:Role="user",output_raw:bool=False,skip_send:bool=False,stream:bool=False) -> str|OllamaResponseGenerator:
+        """
+        Generates and returns the response from the chatbot
+        This will remember all previous responses
+
+        Tools will be autorun and the response will only be after the tool is run
+        
+        Arguments:
+            prompt:
+                The prompt to send
+            role: 
+                The role the prompt is coming from (this should almost always be 'user')
+                user - The person chatting
+                assistant - The AI bot
+                system - For setting model attributes (how the model should act) on the current instance, this has the highest power
+                tool - For tool responses
+            output_raw:
+                Will output the full raw data of the output content as opposed to just the message
+            skip_send:
+                Will output using current messages, not new message
+            stream:
+                If the response should be streamed (in that case will return an iterator instead of raw json, each chunk should be read as normal)
+                
+                ::
+                
+                    for chunk in ChatBot.chat():...
+                
+                **Tools WILL be run however the output will not be returned, the program must call `ChatBot.chat("",skip_send=True)` in order to get the final output from tools**
+                
+                *For full control over behavior, use `llm.chat_ollama`
+                
+        Returns:
+            The response message content of the AI
+        """
 
         # Format prompt
-        prompt_formatted = ollama.Message(role=role,content=prompt)
+        prompt_formatted = {"role":role,"content":prompt}
 
         # Add prompt to history
         if not skip_send:
             self.message_history.append(prompt_formatted)
     
         # Get AI response
-        response = ollama.chat(model=self.model,messages=self.message_history,tools=self.tools)
+        response = ollama.chat(model=self.model,messages=self.message_history,tools=self.tools,stream=stream)
+        
+        # Make response generator if streaming
+        if stream:
+            return OllamaResponseGenerator(self,response,output_raw)
+        
         message = response["message"]
         
         # Add response to history
         self.message_history.append(message)
         
         # If response calls a tool, use that tool
-        if "tool_calls" in message:
+        if "tool_calls" in message and message["tool_calls"] is not None:
             
             # Get all the tools
             tool_calls = message["tool_calls"]
@@ -188,7 +369,6 @@ class ChatBot:
         if output_raw:
             return response
         return message["content"]
-    
 
 # Get headers and URL
 API_URL = "https://router.huggingface.co/v1/chat/completions"
@@ -196,13 +376,13 @@ HEADER = {
     "Authorization": f"Bearer {settings.HUGGINGFACE_API_KEY}",
 }
 
-def query(model:str,messages:list[dict],tools:list|None=None):
+def chat_hf(model:str,messages:list[dict],tools:list|None=None):
     """
-    Requests output from huggingface servers
+    Requests output from HuggingFace servers
     
     Arguments:
         model:
-            The API link of the huggingface model
+            The API link of the HuggingFace model
         messages:
             The previous messages in a dictionary
         tools:
@@ -232,25 +412,17 @@ class HF_ChatBot(ChatBot):
     
     def __init__(self,model:str):
         """
-        Makes a new chatbot using Huggingface
+        Makes a new chatbot using HuggingFace
         
         Arguments:
             model:
-                The API link of the huggingface model, for example: Qwen/Qwen3-Coder-30B-A3B-Instruct:scaleway
+                The API link of the HuggingFace model, for example: Qwen/Qwen3-Coder-30B-A3B-Instruct:scaleway
                 This can generally be found on the page under "deploy"
         """
         
         self.model = model
         self.message_history = []
         self.tools = []
-        
-    def tell(self,prompt:str,role:Role="system") -> None:
-        
-        # Format prompt
-        prompt_formatted = {"role":role,"content":prompt}
-
-        # Add prompt to history
-        self.message_history.append(prompt_formatted)
         
     def chat(self,prompt:str,role:Role="user",output_raw:bool=False,skip_send:bool=False) -> str:
 
@@ -262,7 +434,7 @@ class HF_ChatBot(ChatBot):
             self.message_history.append(prompt_formatted)
     
         # Get AI response
-        response = query(model=self.model,messages=self.message_history,tools=self.tools)
+        response = chat_hf(model=self.model,messages=self.message_history,tools=self.tools)
         message = response["choices"][0]["message"]
         
         # Add response to history

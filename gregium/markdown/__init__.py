@@ -1,7 +1,7 @@
 """
 Formats text using Markdown syntax
 
-Uses discord-like syntax
+Uses Discord-like syntax of underscores
 
 Small change(s) from default markdown:
 
@@ -30,7 +30,7 @@ def format(text:str) -> str:
     """
     Formats the text using modified markdown notation
     
-    Uses discord-like syntax
+    Uses Discord-like syntax of underscores
 
     Small change(s) from default markdown:
     

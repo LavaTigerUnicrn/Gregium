@@ -9,3 +9,5 @@ settings.json
 *.pt
 gregium.egg-info
 /dist
+/mypy_cache
+/build

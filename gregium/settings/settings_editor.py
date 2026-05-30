@@ -11,7 +11,7 @@ def confirm() -> bool:
     Quick confirmation
     """
     
-    inp.print("Are you sure?")
+    inp.print("\nAre you sure?")
     
     return inp.choice([True,False],["Yes","No"])
 
@@ -43,8 +43,6 @@ def main():
             
             # Merge value
             chosen = inp.choice(["\u9991",]+settings,["Back",]+[x + " = " + str(setting_section[x]) for x in settings])
-            
-            # TODO: Add additional options like save, repair, reset
             
             # Action
             match chosen:

@@ -218,8 +218,7 @@ def get_settings_types():
             else:
                 assembled_keys[key.replace("properties.","")] = value["type"]
             
-    return assembled_keys
-            
+    return assembled_keys     
             
 def read_dict_from_path(read:dict,path:str):
     """

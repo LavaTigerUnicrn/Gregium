@@ -2,6 +2,7 @@
 nt (windows) terminal inputs
 """
 from .keycodes import *
+from ..logger.basic_logs import *
 
 # Dictionary of keycodes (For faster recall)
 # \x1b streams
@@ -47,6 +48,8 @@ def nt():
             
             # Prevent stream from being in byte form
             try:
+                if b"\\" == stream[0]:
+                    return str(stream[0],"utf-8")
                 if "\\" in repr(stream[0]):
                     return stream[0]
                 return str(stream[0],"utf-8")

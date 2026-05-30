@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from . import ChatBot
+from . import Ollama_ChatBot
 from . import ai_tools
 
 def help_text():
@@ -21,7 +21,7 @@ def main(args):
 
     # Get ready
     print("Starting Up...")
-    bot = ChatBot(args.model)
+    bot = Ollama_ChatBot(args.model)
 
     ROLE = "user"
     CHAT = True
@@ -89,13 +89,13 @@ def main(args):
             case "chat":
                 
                 # Change mode
-                print(f"[command] Mode switched to 'chat'")
+                print("[command] Mode switched to 'chat'")
                 CHAT = True
                 
             case "tell":
                 
                 # Change mode
-                print(f"[command] Mode switched to 'tell'")
+                print("[command] Mode switched to 'tell'")
                 CHAT = False
                 
             case "exit":

@@ -36,6 +36,11 @@
                     "type":"string",
                     "add_type":"llama_model",
                     "description": "The default Ollama model to use (use Ollama list to see installed)"
+                },
+                "loud_tools": {
+                    "default":false,
+                    "type":"boolean",
+                    "description": "If the tool calls and errors run by AI should be announced in stdout"
                 }
             }
         },

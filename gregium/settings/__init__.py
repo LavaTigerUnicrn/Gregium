@@ -1,10 +1,10 @@
 """
 Standardized settings of gregium
 """
-from .settings_helper import settings_loader
-from .settings_helper.settings_loader import Language,TTS_Voice
+from . import settings_loader
+from .settings_loader import Language,TTS_Voice
 import os
-from .logger.basic_logs import *
+from ..logger.basic_logs import *
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -28,6 +28,7 @@ TTS_VOICE:TTS_Voice = settings_loader.LOADED_SETTINGS["tts"]["tts_voice"] # Defa
 
 ## AI
 DEFAULT_MODEL:str = settings_loader.LOADED_SETTINGS["ai"]["default_model"]
+LOUD_TOOLS:bool = settings_loader.LOADED_SETTINGS["ai"]["loud_tools"]
 
 ## AI Tools
 CUSTOM_SEARCH_API_KEY:str = os.environ["GOOGLE_API_TOKEN"] # The API key to use for google searches

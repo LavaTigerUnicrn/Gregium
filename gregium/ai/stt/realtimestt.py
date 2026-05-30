@@ -1,4 +1,8 @@
-from RealtimeSTT import AudioToTextRecorder
+try:
+    from RealtimeSTT import AudioToTextRecorder
+except ModuleNotFoundError:
+    print("RealtimeSTT is not installed automatically as it takes up a large amount of space\nUse 'pip install realtimestt' to install it")
+    quit()
 from ...settings import LANGUAGE
 
 def generate_recorder(lang:str=LANGUAGE,spinner:bool=False,realtime_func=None):

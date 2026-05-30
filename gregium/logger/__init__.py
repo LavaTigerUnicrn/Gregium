@@ -7,10 +7,20 @@ from io import TextIOWrapper
 import sys
 import time
 
-OPEN_LOGGER:TextIOWrapper = open("log.log","w",encoding="utf-8") # TextIOWrapper to write logs to (can be file or stdout)
+OPEN_LOGGER:TextIOWrapper = None # TextIOWrapper to write logs to (can be file or stdout)
+# Do not generate log file until a log must be written
 IS_STDOUT:bool = False # Toggle for ANSI color sequences (sequences are only used in stdout)
 PATH:str = "log.txt" # The most recent path that has been set
     
+def chklog():
+    """
+    Ensures a logger is open and opens one if the case
+    """    
+    global OPEN_LOGGER
+    
+    if OPEN_LOGGER is None:
+        OPEN_LOGGER = open("log.log","w",encoding="utf-8")
+
 def designate_file(path:str):
     """
     Reassigns the file to log to
@@ -44,6 +54,8 @@ def clear():
     Empties the current logging file or clears stdout
     """
     global OPEN_LOGGER
+    
+    chklog()
     
     # Use STDOUT clear code
     if IS_STDOUT:
@@ -80,6 +92,11 @@ def write_log(text:str,log_level:level="INFO",parent:str|None=None):
             Optional parent filename to log (will appear like log level)
             *It's best to use __name__ in this argument
     """   
+    
+    if parent is None:
+        parent = "Unknown"
+    
+    chklog()
     
     # Find current timestamp
     timestamp:time.struct_time = time.localtime(time.time())

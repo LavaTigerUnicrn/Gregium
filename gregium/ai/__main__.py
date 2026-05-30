@@ -1,6 +1,6 @@
 from . import llm
 from .llm import ai_tools
-from . import stt
+from .stt import realtimestt as stt
 from . import tts
 import threading
 from argparse import ArgumentParser

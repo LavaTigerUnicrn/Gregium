@@ -15,8 +15,8 @@ pythonInput = input
 pythonPrint = print
 
 # Define new print
-def print(text="",end:str="\n\r",Flush:bool=True):
-    pythonPrint(text,end=end,flush=Flush)
+def print(text="",end:str="\n",flush:bool=True):
+    pythonPrint(text,end=end,flush=flush)
 
 # Get the system
 system = os.name
@@ -47,8 +47,8 @@ except Exception:
 # Define clear function
 def clear():
         
-        # Clear screen, reset cursor, clear colors
-        print("\x1b[2J\x1b[H\x1b[0m",end="")
+    # Clear screen, reset cursor, clear colors
+    print("\x1b[2J\x1b[3J\x1b[H\x1b[0m",end="")
 
 # Generates options kwargs from a dictionary of options
 def options_from_dict(options:dict[Any,dict[str,str]]) -> dict:
@@ -81,7 +81,7 @@ def options_from_dict(options:dict[Any,dict[str,str]]) -> dict:
     return {"options":gen_options,"optionsName":gen_optionsName,"optionsDesc":gen_optionsDesc}
 
 # Choosing function    
-def choice(options:list[str],optionsName:list[str]|None=None,optionsDesc:list[str]|None=None,help:bool=DEFAULT_TERMINAL_CHOICE_HELP) -> str:
+def choice(options:list[Any],optionsName:list[str]|None=None,optionsDesc:list[str]|None=None,help:bool=DEFAULT_TERMINAL_CHOICE_HELP,customEscOut:Any|None=None) -> Any:
     
     # Fill in blank data
     if optionsName is None:
@@ -91,13 +91,14 @@ def choice(options:list[str],optionsName:list[str]|None=None,optionsDesc:list[st
     
     # Set selected to the start
     selected = 0
+    starting_line = get_cursor_position()[0]
     
     # Loop until an option is chosen
     while True:
         
         # Show choice help text
         if help:
-            print("(Use arrow keys and enter)")
+            print("(Use arrow keys"+(", esc, " if customEscOut is not None else " ")+"and enter)")
         
         # Lower and upper bounds
         lower = ((selected - int(TERMINAL_CAROUSEL/2)) if len(optionsName) > TERMINAL_CAROUSEL else 0)
@@ -128,12 +129,68 @@ def choice(options:list[str],optionsName:list[str]|None=None,optionsDesc:list[st
                 selected += 1
             case keycodes.ENTER:
                 return options[selected]
+            case keycodes.ESC:
+                if customEscOut is not None:
+                    return customEscOut
         
         # Loop selected output
         selected = selected%len(options)
         
         # Set cursor back up to top of the choice menu
-        print(f"\x1b[{1*int(help)+n+1}F",end="")
+        print(f"\x1b[{starting_line+1};{0}H",end="")
+        
+def choice_centered(options:list[str],optionsName:list[str]|None=None,optionsDesc:list[str]|None=None,help:bool=DEFAULT_TERMINAL_CHOICE_HELP,startLine:int=None) -> Any:
+    
+    # Fill in blank data
+    if optionsName is None:
+        optionsName = [str(x) for x in options]
+    if optionsDesc is None:
+        optionsDesc = [""]*len(options)
+    
+    # Set selected to the start
+    selected = 0
+    if startLine is None:
+        startLine = get_cursor_position()[0]
+    
+    # Loop until an option is chosen
+    while True:
+        
+        # Show choice help text
+        if help:
+            centered_print("(Use arrow keys and enter)",line=startLine)
+        
+        # Lower and upper bounds
+        lower = ((selected - int(TERMINAL_CAROUSEL/2)) if len(optionsName) > TERMINAL_CAROUSEL else 0)
+        upper = (selected + int(TERMINAL_CAROUSEL/2)) % len(optionsName)
+        
+        # Get section
+        selectedOptions = []
+        if lower < 0 or upper < lower:
+            selectedOptions = optionsName[lower:] + optionsName[:upper]
+        else:
+            selectedOptions = optionsName[lower:upper]
+            
+        if len(optionsName) <= TERMINAL_CAROUSEL:
+            selectedOptions = optionsName
+        
+        # Show each option and the brackets around the hovered option
+        for n,option in enumerate(selectedOptions):
+            if n + lower == selected:
+                centered_print(f"\x1b[2K[{option}]{' - ' if optionsDesc[n] != '' else ''}{optionsDesc[n]}",line=n+startLine+int(help))
+            else:
+                centered_print(f"\x1b[2K{option} ",line=n+startLine+int(help))
+                
+        # Get up down or enter input
+        match getch():
+            case keycodes.UP:
+                selected -= 1
+            case keycodes.DOWN:
+                selected += 1
+            case keycodes.ENTER:
+                return options[selected]
+        
+        # Loop selected output
+        selected = selected%len(options)
         
 def input(text:str) -> str:
     print(text,end="")
@@ -304,3 +361,84 @@ def input_single_line() -> str:
     
     # Return the entered text
     return entered
+
+def get_terminal_length() -> int:
+    
+    # Reset cursor
+    print("\x1b[HChecking terminal size (This may take some time)\n",end="")
+    
+    # Get start position
+    orig_y = get_cursor_position()[0]
+    x_max = 0
+    
+    jump = 50
+    while True:
+        
+        # Update cursor position
+        y, x = get_cursor_position()
+        x_max = max(x,x_max)
+        if jump == 1:
+            print(" ",end="")
+        else:
+            print(f"\x1b[{orig_y + 1};{x_max + 1}H"+" "*jump,end="")
+        
+        # When y changes (move line) run back
+        if y > orig_y:
+            if jump == 1:
+                return x_max + 1
+            jump = max(int(jump/2),1)
+            print(f"\x1b[{orig_y + 1};{x_max + 1}H"+" "*jump,end="")
+        
+def get_terminal_height() -> int:
+    
+    # Set cursor to max position
+    print("\x1b[5000;5000H",end="")
+    
+    # Get y position
+    y = get_cursor_position()[0]
+    
+    # Clear and return
+    clear()
+    
+    return y + 1
+        
+def verify_terminal_length(min_size:int) -> bool:
+    
+    # Reset cursor
+    print(f"\x1b[HVerifying terminal size (Min: {min_size})\n",end="")
+    
+    # Get cursor position
+    orig_y = get_cursor_position()[0]
+    
+    # Try to move cursor to very edge
+    print(f"\x1b[{orig_y + 1};{min_size - 1}H  ",end="")
+    
+    # If y has moved, fail
+    if orig_y != get_cursor_position()[0]:
+        return False
+    return True
+
+WIDTH, HEIGHT = 0,0
+def get_size():
+    
+    global WIDTH, HEIGHT
+    
+    WIDTH = get_terminal_length()
+    HEIGHT = get_terminal_height()
+    
+    return WIDTH,HEIGHT
+
+def centered_print(text:str,flush:bool=True,line:int=1):
+    
+    if WIDTH == 0 or HEIGHT == 0:
+        
+        raise Exception("Please run 'get_size' before using centered_print")
+    
+    for n,text_line in enumerate(text.split("\n")):
+        
+        line_len = len(text_line)
+        
+        cursor_x = int(WIDTH/2 - line_len/2)
+
+        print(f"\x1b[{n+line};{cursor_x}H{text_line}",flush=False)
+    print(end="",flush=flush)

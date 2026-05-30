@@ -64,7 +64,7 @@ setup(
     url="https://github.com/LavaTigerUnicrn/Gregium",
     packages=pkgs,
     package_data=pkgdata,
-    install_requires=["edge-tts", "ollama", "beautifulsoup4", "pillow", "pygame-ce","realtimestt","realtimetts","requests","dotenv"],
+    install_requires=["edge-tts", "ollama", "beautifulsoup4", "pillow", "pygame-ce","requests","dotenv"],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",

@@ -49,6 +49,8 @@ def check_library(library_name:str,library_pip:str,version:str="",system:System=
     """
     Makes sure a library exists before importing
     
+    **Run install_all to install checked libraries**
+    
     Arguments:
         library_name:
             The directory name of the library (what you use to import it)

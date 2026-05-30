@@ -1,4 +1,4 @@
-from . import generate_recorder
+from .realtimestt import generate_recorder
 import sys
 
 def main():

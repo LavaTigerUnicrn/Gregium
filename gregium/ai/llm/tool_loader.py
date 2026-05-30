@@ -19,7 +19,7 @@ def func_from_annotation(function) -> dict:
     
     # Split doc by section
     split_doc = [x.strip().lower() for x in doc.splitlines()]
-    arg_index = split_doc.index("arguments:")
+    arg_index = split_doc.index("args:")
     rtrn_index = split_doc.index("returns:")
     
     # Get parameter descriptions
@@ -51,7 +51,7 @@ def add_numbers(a:int, b:int=3) -> int:
     """
     Adds two numbers together
     
-    Arguments:
+    Args:
         a (int): The first number
         b (int): The second number
     Returns:

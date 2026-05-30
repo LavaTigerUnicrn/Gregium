@@ -199,7 +199,7 @@ class display:
             ratio:
                 The ratio of width to height of each character (on most terminals is about 0.6)
         """
-        sys.stdout.write("\x1b[H\x1b[2J")
+        sys.stdout.write("\x1b[H\x1b[2\x1b[3J\x1b[3J")
         if ratio == 1:
             sys.stdout.write(WINDOW.__str__())
         else:
@@ -226,7 +226,7 @@ class display:
                 Will clear the terminal on each update (this may cause flickering)
         """
         if clr_terminal:
-            sys.stdout.write("\x1b[H\x1b[2J")
+            sys.stdout.write("\x1b[H\x1b[2J\x1b[3J")
         else:
             sys.stdout.write("\x1b[H")
         if ratio == 1:

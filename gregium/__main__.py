@@ -22,6 +22,7 @@ if __name__ == "__main__":
     
     # Add verify argument
     parser.add_argument("--verify",action="store_true",help="Makes Gregium verify all libraries before running")
+    parser.add_argument("--settings",action="store_true",help="Runs settings changer on Gregium")
     
     # Parse
     args = parser.parse_args()
@@ -37,6 +38,14 @@ if __name__ == "__main__":
     from .terminal import inputs as inp
     from .terminal import keycodes
     import ollama
+    
+    if args.settings:
+        
+        # Start settings
+        inp.start()
+        inp.clear()
+        from .settings import settings_editor as settings_main
+        settings_main.main()
     
     # Start inputs
     inp.start()
@@ -127,7 +136,7 @@ if __name__ == "__main__":
         case "Settings":
             
             # Start settings
-            from .settings_helper import settings_editor as settings_main
+            from .settings import settings_editor as settings_main
             settings_main.main()
         
         case "Exit":

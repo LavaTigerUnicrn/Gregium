@@ -1,9 +1,10 @@
 # ![gregiumNameHD](https://github.com/user-attachments/assets/bf3c96d2-e1aa-4117-91cb-93d896145211)
 
-[![PyPi](https://img.shields.io/badge/pypi-v2.0.4-%233775A9?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/gregium)
-[![Github](https://img.shields.io/badge/github-2.0.4-%23181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LavaTigerUnicrn/Gregium)
+[![PyPi](https://img.shields.io/badge/pypi-v2.1.1-%233775A9?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/gregium)
+[![Github](https://img.shields.io/badge/github-2.1.1-%23181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LavaTigerUnicrn/Gregium)
 [![License](https://img.shields.io/badge/license-MIT-%233DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/license/MIT)
 [![Discord](https://img.shields.io/badge/discord-LTU-%235865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/SeKhDF4m5W)
+[![Wiki](https://img.shields.io/badge/wiki-informational?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/LavaTigerUnicrn/Gregium/wiki)
 
 > Completely remade and ready to not work when you need it most
 
@@ -17,6 +18,7 @@
 - [Commands](#commands)
 - [Engine](#engine)
 - [Logger](#logger)
+- [Markdown](#markdown)
 - [Misc](#misc)
 - [Server](#server)
 - [Settings](#settings)
@@ -66,13 +68,13 @@ Easy LLM using `ChatBot` that allows for interface of Ollama and HuggingFace.
 > Note that Ollama is locally hosted and may have large resource usage on lower-end devices.
 
 ```python
-from gregium.ai.llm import ChatBot
+from gregium.ai.llm import Ollama_ChatBot
 
 # Set the model (otherwise will use Gregium default)
 MODEL_NAME = "gregium3.3:latest"
 
 # Generate the bot
-bot = ChatBot(MODEL_NAME)
+bot = Ollama_ChatBot(MODEL_NAME)
 
 # Setup query (tell returns no response)
 bot.tell("Say the meaning of a sentence given by the user",role="system")
@@ -315,6 +317,30 @@ debug("Debug message",__name__)
 critical("Program is stopped",__name__)
 ```
 
+## Markdown
+
+Partial support of markdown tags in Gregium
+
+> Uses Discord-like syntax for underscores
+
+Supports:
+
+- ~~Strikethrough~~ (~~)
+- **Bolding** (**)
+- *Italicization* (*)
+- ***Bold & Italicization*** (***)
+- <u>Underline</u> (__)
+- `Blocks` (`)
+
+```python
+import gregium.markdown as md
+
+text = md.format("**bold** *italicize* ***bold & italicize*** ~~strikethrough~~ __underscore__ `block`")
+
+```
+
+> **bold** *italicize* ***bold & italicize*** ~~strikethrough~~ <u>underscore</u> `block`
+
 ## Misc
 
 Quite a few random functions that may come in handy in certain programs.
@@ -395,6 +421,8 @@ print(host.recv())
 ## Settings
 
 Stores settings found in Gregium. Use `gregium.settings` to reference setting values.
+
+For custom settings use `gregium.settings_helper.Settings` object
 
 > Use `python -m gregium.settings_helper` or `python -m gregium` to edit settings
 
