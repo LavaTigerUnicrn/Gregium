@@ -1,13 +1,14 @@
-from pygame.typing import *
-from typing import *
-from pygame import *
-import pygame.freetype as freetype
+
+from pygame import Rect, Surface, freetype
 from pygame.freetype import STYLE_DEFAULT
+
 from .. import rendering
+from ..typing import Color_RGB, Color_RGBA, Point2_I
+
 
 class Font(freetype.Font):
     
-    def __init__(self,file:FileLike|None,size:float=0,font_index:int=0,resolution:int=0,ucs4:int=False):
+    def __init__(self,file:str|None,size:float=0,font_index:int=0,resolution:int=0,ucs4:int=False):
         
         super().__init__(file,size,font_index,resolution,ucs4)
     
@@ -40,10 +41,10 @@ class Font(freetype.Font):
     def render_to_centered(
             self,
             surf: Surface,
-            dest: RectLike,
-            text: Optional[str],
-            fgcolor: Optional[ColorLike] = None,
-            bgcolor: Optional[ColorLike] = None,
+            dest: Point2_I,
+            text: str|None,
+            fgcolor: Color_RGB|Color_RGBA|None = None,
+            bgcolor: Color_RGB|Color_RGBA|None = None,
             style: int = STYLE_DEFAULT,
             rotation: int = 0,
             size: float = 0,

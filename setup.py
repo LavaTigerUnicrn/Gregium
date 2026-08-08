@@ -1,6 +1,8 @@
-from setuptools import setup
 import os
 from pathlib import Path
+
+from setuptools import setup
+
 import gregium
 
 pkgdata = {}
@@ -39,7 +41,7 @@ pkgs = ["gregium"]
 
 while len(tree) > 0:
     tree_list = os.listdir(tree[0])
-    if "__init__.py" in tree_list or any([".py" in x for x in tree_list]):
+    if "__init__.py" in tree_list or any(".py" in x for x in tree_list):
         pkgs.append(tree[0].replace("/", "."))
 
     tree = tree + prune(os.listdir(tree[0]), tree[0] + "/")
@@ -52,19 +54,19 @@ with open("README.md", "r", encoding="utf-8") as r:
 ver = (
     gregium.VERSION
 )
-print(f"Gregium V{ver}:\nPackages Found:{pkgs}\nPackage Data Found:{pkgdata}\n\n\n")
+print(f"Gregium {ver}:\nPackages Found:{pkgs}\nPackage Data Found:{pkgdata}\n\n\n")
 
 setup(
     name="gregium",
     version=ver,
-    description="A package with a ton of different useful code snippets",
+    description="A package full of prebuilt modules for various common functions",
     long_description=longdesc,
     author="LavaTigerUnicrn",
     author_email="lavatigerunicrn@gmail.com",
     url="https://github.com/LavaTigerUnicrn/Gregium",
     packages=pkgs,
     package_data=pkgdata,
-    install_requires=["edge-tts", "ollama", "beautifulsoup4", "pillow", "pygame-ce","requests","dotenv"],
+    install_requires=["pillow","requests","dotenv","pygame-ce"],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",

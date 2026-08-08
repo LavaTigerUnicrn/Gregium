@@ -1,6 +1,8 @@
 import pygame
+
 from . import buttons
 from .base import UIBase
+
 
 class ContainerBase(UIBase):
     
@@ -47,13 +49,11 @@ class ContainerBase(UIBase):
         
         The base container does nothing to them
         """
-        pass
     
     def custom_arrange(self,_:"ContainerBase"):
         """
         The custom arrange function, this doesn't do anything
         """
-        pass
     
     def set_custom_arrange(self,arrange_func):
         """
@@ -64,7 +64,7 @@ class ContainerBase(UIBase):
                 The new function to arrange objects
         """
         self.uses_custom_arrange = True
-        setattr(self,"custom_arrange",arrange_func)
+        self.custom_arrange = arrange_func
     
     def update(self,mouse_position:pygame.typing.Point,mouse_buttons:tuple[bool,bool,bool]):
         """

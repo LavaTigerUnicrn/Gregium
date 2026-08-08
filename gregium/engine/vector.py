@@ -1,12 +1,3 @@
-
-import pygame
-import math
-from typing import Literal
-
-import pygame.freetype
-
-pygame.init()
-
 class vector2:
     
     x:float
@@ -87,7 +78,7 @@ class vector2:
 
         return (self.x ** 2 + self.y ** 2) ** (1/2)
     
-    def direction(self) -> float:
+    def direction(self) -> "vector2":
         """
         Gets the relative values of the direction of the vector (0-1)
         

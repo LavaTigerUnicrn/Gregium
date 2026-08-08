@@ -1,17 +1,20 @@
 import pygame
-from ..text import ARIAL,Font
-from .base import UIBase
+
 from .. import rendering
+from ..text import ARIAL, Font
+from ..typing import Color_RGB
+from .base import UIBase
+
 
 class Button(UIBase):
     
-    color:pygame.Color
-    hover_color:pygame.Color
-    clicked_color:pygame.Color
+    color:Color_RGB
+    hover_color:Color_RGB
+    clicked_color:Color_RGB
     clicked:bool
     hovered:bool
     
-    def __init__(self,rect:pygame.Rect,color:pygame.Color=(128,128,128),hover_color:pygame.Color=(255,255,255),clicked_color:pygame.Color=(128,128,128),click_function=None):
+    def __init__(self,rect:pygame.Rect,color:Color_RGB=(128,128,128),hover_color:Color_RGB=(255,255,255),clicked_color:Color_RGB=(128,128,128),click_function=None):
         """
         A button to easily render to pygame window
         
@@ -124,10 +127,10 @@ class TextButton(Button):
     
     text:str
     font:Font
-    fgcolor:pygame.Color
+    fgcolor:Color_RGB
     size:int
     
-    def __init__(self,rect:pygame.Rect,text:str,color:pygame.Color=(128,128,128),hover_color:pygame.Color=(255,255,255),clicked_color:pygame.Color=(128,128,128),click_function=None,font:Font=ARIAL,fgcolor:pygame.Color=(0,0,0),size:int=25):
+    def __init__(self,rect:pygame.Rect,text:str,color:Color_RGB=(128,128,128),hover_color:Color_RGB=(255,255,255),clicked_color:Color_RGB=(128,128,128),click_function=None,font:Font=ARIAL,fgcolor:Color_RGB=(0,0,0),size:int=25):
         """
         A button to easily render to pygame window
         

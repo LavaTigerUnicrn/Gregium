@@ -4,7 +4,8 @@ All functions must take an input from 0 to 1 and
 will always output from 0 to 1.
 """
 # Run imports
-import math 
+import math
+
 
 # Sinusoidal Easing (Both)
 def easeInOutSine(progress: float) -> float:

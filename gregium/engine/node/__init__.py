@@ -1,6 +1,7 @@
 import pygame
-from ..vector import vector2
+
 from ..rendering import clip_abs
+
 
 class Node2D:
     

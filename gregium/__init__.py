@@ -3,6 +3,9 @@ Gregium is a library made up of a ton of Qol prebuilt scripts for a variety of d
 
 See https://github.com/lavatigerunicrn/gregium
 """
-import os
+import logging
 
-VERSION = "2.1.1"
+# Ensure all logging within Gregium functions goes through
+logging.getLogger(__name__).setLevel(logging.DEBUG)
+
+VERSION = "2.2.0"

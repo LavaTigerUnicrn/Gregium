@@ -1,5 +1,5 @@
 from pygame import Rect, Surface
-from pygame.typing import Point
+
 from ..vector import vector2
 
 class Node2D:
@@ -10,7 +10,7 @@ class Node2D:
     _h:int
     _position:vector2
     rect:Rect
-    children:list["Node2D"]
+    children:list[Node2D]
     
     def __init__(self,rect:Rect):
         """
@@ -21,7 +21,7 @@ class Node2D:
                 The rectangle for the node to be
         """
         
-    def add_child(self,child:"Node2D"):
+    def add_child(self,child:Node2D):
         """
         Add a child to the node
         
@@ -30,7 +30,7 @@ class Node2D:
                 The child to add
         """
         
-    def remove_child(self,child:"Node2D"):
+    def remove_child(self,child:Node2D):
         """
         Remove a child from the node
         
@@ -39,7 +39,7 @@ class Node2D:
                 The child to remove
         """
         
-    def list_children(self) -> list["Node2D"]:
+    def list_children(self) -> list[Node2D]:
         """
         Lists all children of the node
         """

@@ -1,7 +1,6 @@
-import pygame
-from pygame.typing import RectLike
+from pygame import Rect
 
-def clip_abs(rect:pygame.Rect,area:pygame.Rect):
+def clip_abs(rect:Rect,area:Rect):
     """
     Generates a new clipping mask for pygame to use to clip objects
     
@@ -17,9 +16,9 @@ def clip_abs(rect:pygame.Rect,area:pygame.Rect):
     area_width = area.w - rect.x + area.x
     area_height = area.h - rect.y + area.y
     
-    return pygame.Rect(area_left,area_top,area_width,area_height)
+    return Rect(area_left,area_top,area_width,area_height)
 
-def clip_rect(rect:RectLike,area:RectLike) -> RectLike:
+def clip_rect(rect:Rect,area:Rect) -> Rect:
     """
     Clip a rectangle into area bounds
     
@@ -42,4 +41,4 @@ def clip_rect(rect:RectLike,area:RectLike) -> RectLike:
     new_h = min(rect.h,area.h)
     
     # Generate new rect
-    return pygame.Rect(new_x,new_y,new_w,new_h)
+    return Rect(new_x,new_y,new_w,new_h)
