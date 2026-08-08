@@ -131,10 +131,6 @@ class ChatBot:
                 assistant - The AI bot
                 system - For setting model attributes (how the model should act) on the current instance, this has the highest power
                 tool - For tool responses
-            output_raw:
-                Will output the full raw data of the output content as opposed to just the message
-            skip_send:
-                Will entirely ignore inputted prompt on this call
 
         Returns:
             The response message content of the AI
@@ -154,10 +150,6 @@ class ChatBot:
                 assistant - The AI bot
                 system - For setting model attributes (how the model should act) on the current instance, this has the highest power
                 tool - For tool responses
-            output_raw:
-                Will output the full raw data of the output content as opposed to just the message
-            skip_send:
-                Will entirely ignore inputted prompt on this call
 
         Returns:
             The response message content of the AI
@@ -177,10 +169,6 @@ class ChatBot:
                 assistant - The AI bot
                 system - For setting model attributes (how the model should act) on the current instance, this has the highest power
                 tool - For tool responses
-            output_raw:
-                Will output the full raw data of the output content as opposed to just the message
-            skip_send:
-                Will entirely ignore inputted prompt on this call
 
         Returns:
             The response of the AI
@@ -200,10 +188,6 @@ class ChatBot:
                 assistant - The AI bot
                 system - For setting model attributes (how the model should act) on the current instance, this has the highest power
                 tool - For tool responses
-            output_raw:
-                Will output the full raw data of the output content as opposed to just the message
-            skip_send:
-                Will entirely ignore inputted prompt on this call
 
         Returns:
             The response of the AI

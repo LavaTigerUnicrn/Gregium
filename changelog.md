@@ -12,6 +12,7 @@ Within each they are categorized by which module they pertain to
 ## Versions
 
 - [2.2.0](#220)
+- [2.2.1](#221)
 
 ## 2.2.0
 
@@ -114,6 +115,12 @@ Within each they are categorized by which module they pertain to
 #### Json-Matcher
 
 - Fixed issue with dictionary paths being formatted using os.path.pardir
+
+## 2.2.1
+
+### Fixes
+
+- LLM Functions erroneously included nonexistent arguments in docstring
 
 ## Upcoming
 
