@@ -5,7 +5,7 @@ A list of *almost* all changes made from versions 2.2.0 onward
 
 Changes are formatted into sections of Changes, Fixes
 
-Additionally at the bottom contain upcoming Planned (changes), and (known) Bugs
+Additionally, found at the bottom, are upcoming Planned (changes), and (known) Bugs
 
 Within each they are categorized by which module they pertain to
 
@@ -13,6 +13,7 @@ Within each they are categorized by which module they pertain to
 
 - [2.2.0](#220)
 - [2.2.1](#221)
+- [Upcoming](#upcoming)
 
 ## 2.2.0
 
@@ -121,6 +122,42 @@ Within each they are categorized by which module they pertain to
 ### Fixes
 
 - LLM Functions erroneously included nonexistent arguments in docstring
+
+## 2.2.2
+
+### Changes
+
+#### Engine (D)
+
+- Removed engine (moved vectors to dedicated file)
+
+#### LLM
+
+- Moved severity of tooling running to INFO
+
+#### JSON Matcher
+
+- Added setitem dunder method
+
+#### Vector
+
+- Changed function names to make more sense and added some additional functions
+- Added dunder methods for all standard operations
+- Added higher dimension Vectors
+
+### Fixes
+
+#### LLM
+
+- Added 'Role' type to the standard init file, allowing for use in sub-ChatBots
+- Fixed type of 'add_tool' function
+- Fixed issue where running 'run_tools' would not clear the tool queue
+- Fixed issue where bot messages on Ollama bot would not be saved causing the bot to go into an infinite loop
+
+#### JSON Matcher
+
+- 'Value' parameter of 'set' function now reflects the allowed 'Any' and not just 'str'
+- Clears JSON file instead of raising global exception when loading
 
 ## Upcoming
 

@@ -44,6 +44,8 @@ class OllamaChatBot(ChatBot):
         response:ollama.ChatResponse = ollama.chat(self.model,self.message_history,tools=self.tools)
         message = response.message
 
+        self.message_history.append(message)
+
         # Queue tools
         if message.tool_calls is not None:
             for tool in message.tool_calls:
@@ -68,6 +70,8 @@ class OllamaChatBot(ChatBot):
                     for tool in message.tool_calls:
                 
                         self.queued_tools.append({"name":tool.function.name,"arguments":tool.function.arguments})
+
+                        self.message_history.append(message)
 
                 return message
             else:

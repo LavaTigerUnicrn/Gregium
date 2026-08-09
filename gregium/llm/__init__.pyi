@@ -12,9 +12,9 @@ class ChatBot:
     The base ChatBot
 
     This has almost no function but is built as a base for other bots for standard syntax
-    
+
     #### WHEN MAKING SUBCLASS
-    
+
     1) Overwrite the __init__ and class docstring
     2) If implementing a custom __init__ method, call `super().__init__()`
     3) Implement the 'flush' method
@@ -25,7 +25,7 @@ class ChatBot:
     "A list of callable tools as python functions"
     message_history: list[dict[str, Any]]
     "The message history"
-    queued_tools:list[dict[str,Any]]
+    queued_tools: list[dict[str, Any]]
     "The currently waiting tools to be run"
 
     def __init__(self):
@@ -35,7 +35,7 @@ class ChatBot:
         This does nothing by itself
 
         #### WHEN MAKING SUBCLASS
-        
+
         1) Overwrite the __init__ and class docstring
         2) If implementing a custom __init__ method, call `super().__init__()`
         3) Implement the 'flush' method
@@ -47,7 +47,7 @@ class ChatBot:
         Wipes all memory of the bot (does not clear tools)
         """
 
-    def add_tool(self, tool) -> None:
+    def add_tool(self, tool: Callable) -> None:
         """
         Adds a tool to the given bot that it can call whenever
 
@@ -217,16 +217,16 @@ class ChatBot:
     def flush_stream(self) -> Iterator[dict]:
         """
         Prompts the AI to generate the next message as a stream
-        
+
         Returns:
             The response of the AI
 
         #### WHEN MAKING SUBCLASS
-    
+
         This is the primary function to overwrite for the ChatBot to function (along with flush)
-    
+
         It should
-    
+
         1) Prompt the AI to generate a new response with streaming enabled
         2) Yield until the stream finishes (once done continue to 3-5)
         3) Add the message to the 'message_history'

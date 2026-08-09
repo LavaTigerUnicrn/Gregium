@@ -1,6 +1,8 @@
 import logging
 from collections.abc import Callable, Iterator
-from typing import Any
+from typing import Any, Literal, TypeAlias
+
+Role: TypeAlias = Literal["user", "system", "assistant", "tool"]
 
 # Setup
 logger = logging.getLogger(__name__)
@@ -20,7 +22,7 @@ class ChatBot:
     def clear_history(self) -> None:
         self.message_history = []
 
-    def add_tool(self,tool) -> None:
+    def add_tool(self,tool: Callable) -> None:
 
         # Add tool
         self.tools.append(tool)
@@ -35,7 +37,7 @@ class ChatBot:
         
         # Run the function
         try:
-            logger.debug(f"Running tool [{tool_name}] with arguments: {arguments}")
+            logger.info(f"Running tool [{tool_name}] with arguments: {arguments}")
             output = tool_inst(**arguments)
         except Exception as e:
             logger.exception("Tool failed to run")
@@ -58,6 +60,8 @@ class ChatBot:
                 id = tool["id"]
 
             self.run_tool(tool["name"],tool["arguments"],id)
+
+        self.queued_tools = []
 
     def tell(self,prompt:str,role:str="user"):
 

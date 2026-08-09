@@ -64,7 +64,7 @@ class Matcher:
 
                 self.loaded = json.load(r)
 
-        except FileNotFoundError:
+        except (FileNotFoundError,json.JSONDecodeError):
             with open(self.json_path,"w") as w:
 
                 w.write("{}")
@@ -242,7 +242,7 @@ class Matcher:
                     return value["default"]
             return None
 
-    def set(self,path:str,value:str) -> bool:
+    def set(self,path:str,value:Any) -> bool:
         """
         Sets a setting at path
         
@@ -263,6 +263,36 @@ class Matcher:
         Returns False on failure
         """
 
+        try:
+            read_dict_from_path(self.loaded, ".".join(path.split(".")[:-1]))[
+                path.split(".")[-1]
+            ] = value
+            return True
+        except KeyError:
+            return False
+
+    def __setitem__(self,path:str,value:Any) -> bool:
+
+        """
+        Sets a setting at path
+        
+        `This will only work on dictionaries, attempting to traverse a list key wont work (Must do get("partial.path")[index] = value)`
+        
+        Arguments:
+            path:
+                The path where the value is found at
+        
+                This must be in dot notation
+                `foo.baz.bar`
+        
+                This is equivalent to
+                {"foo":{"baz":{"bar":"value"}}}
+            value:
+                The value to set
+        
+        Returns False on failure
+        """
+        
         try:
             read_dict_from_path(self.loaded, ".".join(path.split(".")[:-1]))[
                 path.split(".")[-1]

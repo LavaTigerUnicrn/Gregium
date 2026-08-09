@@ -8,4 +8,4 @@ import logging
 # Ensure all logging within Gregium functions goes through
 logging.getLogger(__name__).setLevel(logging.DEBUG)
 
-VERSION = "2.2.1"
+VERSION = "2.2.2"
