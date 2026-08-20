@@ -11,5 +11,3 @@ tts_with_rvc==0.1.9
 requests
 dotenv
 vosk
-wheel
-pyaudio
