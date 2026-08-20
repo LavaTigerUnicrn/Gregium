@@ -15,7 +15,8 @@ Within each they are categorized by which module they pertain to
   - [2.2.0](#220)
   - [2.2.1](#221)
   - [2.2.2](#222)
-  - [2.2.3](#223)
+- 2.3
+  - [2.3.0](#230)
 - [Upcoming](#upcoming)
 
 ## 2.2.0
@@ -162,7 +163,7 @@ Within each they are categorized by which module they pertain to
 - 'Value' parameter of 'set' function now reflects the allowed 'Any' and not just 'str'
 - Clears JSON file instead of raising global exception when loading
 
-## 2.2.3
+## 2.3.0
 
 ### Changes
 
