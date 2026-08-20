@@ -9,7 +9,7 @@ build:
     python: "3.12"
   jobs:
     pre_install:
-      - sudo apt install portaudio19-dev python3-pyaudio
+      - apt install portaudio19-dev python3-pyaudio
 
 sphinx:
    configuration: docs/source/conf.py
