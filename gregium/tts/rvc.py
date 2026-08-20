@@ -1,11 +1,15 @@
 import logging
-import os
 import threading
 import time
-from pathlib import Path
 
 from ..verification import verify_exists
-from . import Queue, _get_default_voice, get_number, set_default_voice, dispatch_checker_thread
+from . import (
+    Queue,
+    _get_default_voice,
+    dispatch_checker_thread,
+    get_number,
+    set_default_voice,
+)
 
 verify_exists("tts_with_rvc", "tts_with_rvc")
 
@@ -57,23 +61,16 @@ class Queue_RVC(Queue):
 
     Allow for generating and playing edge tts audio at high speeds and robustly
 
-    Attributes:
-        generate (function): to generate a prompt and play
-        queue_play (function): to queue a play path
-        check_generate (function): to check for new things to generate (run every frame)
-        check_play (function): to check for new things to play (run every frame)
-        remove_generate (function): to remove a generate request from queue
-        remove_play (function): to remove a play request from queue
-        wipe_dir (function): to remove all generated files (at the start of program)
-        check_played (function): to check if something has started playing yet
-        terminate (function): Stops all queue functions
-        
-        generate_queue (dict): The queue for generating new tts messages
-        generating (bool): If the queue is generating
-        force_completion (bool): Instantly ends all playing audio when true
-        play_queue (dict): The queue for playing tts messages
-        playing (bool): If the queue is playing
-        terminated (bool): If the queue is stopped entirely
+    :param path: The path of the PTH file
+    :type path: str
+    :param index: The path of the index file
+    :type index: str
+    :param device: The device to perform AI calculations (generally cuda for gpu and cpu for cpu)
+    :type device: str, optional
+    :param voice: The edge tts voice (https://gist.github.com/BettyJJ/17cbaa1de96235a7f5773b8690a20462)
+    
+        Can be none if a voice has been specified by `set_default_voice()`
+    :type voice: str, optional
     """
 
     generate_queue: dict[int, list[QueuedRVCObject]]
@@ -85,18 +82,6 @@ class Queue_RVC(Queue):
         device: str = "cuda:0",
         voice: str | None = None,
     ):
-        """
-        Generate a new queue
-
-        Arguments:
-            path: The path of the PTH file
-            index: The path of the index file
-            device: The device to perform AI calculations (generally cuda for gpu and cpu for cpu)
-            voice:
-                The edge tts voice (https://gist.github.com/BettyJJ/17cbaa1de96235a7f5773b8690a20462)
-
-                Can be none if a voice has been specified by `set_default_voice()`
-        """
 
         if voice is None:
 
@@ -135,23 +120,31 @@ class Queue_RVC(Queue):
         """
         Generates speech from text using Edge TTS and converts it using RVC.
 
-        Args:
-            text (str): The text to synthesize.
-            pitch (int, optional): Pitch change (transpose) for RVC in semitones. Defaults to 0.
-            tts_rate (int, optional): Speed adjustment for Edge TTS in percentage (+-). Defaults to 0.
-            tts_volume (int, optional): Volume adjustment for Edge TTS in percentage (+-). Defaults to 0.
-            tts_pitch (int, optional): Pitch adjustment for Edge TTS in Hz (+-). Defaults to 0.
-            output_filename (str, optional): Name for the output file. If None, a unique name is generated. Defaults to None.
-            index_rate (float, optional): Contribution of the RVC index file (0 to 1). Defaults to 0.75.
-            resample_sr (int, optional): Sample rate to resample audio to. 0 means no resampling. Defaults to 0.
-            rms_mix_rate (float, optional): Volume envelope scaling (0-1). Lower values mimic original volume. Defaults to 0.5.
-            protect (float, optional): Protection for voiceless consonants and breaths (0-1). Lower values increase protection. 0.5 disables. Defaults to 0.33.
-            priority (int, optional): The urgency of the audio to be played (lower will be played first)
-            timeout (int, optional): How long until the generate request should be canceled (Seconds)
+        :param text: The text to synthesize.
+        :type text: str
+        :param pitch: Pitch change (transpose) for RVC in semitones. Defaults to 0.
+        :type pitch: int, optional
+        :param tts_rate: Speed adjustment for Edge TTS in percentage (+-). Defaults to 0.
+        :type tts_rate: int, optional
+        :param tts_volume: Volume adjustment for Edge TTS in percentage (+-). Defaults to 0.
+        :type tts_volume: int, optional
+        :param tts_pitch: Pitch adjustment for Edge TTS in Hz (+-). Defaults to 0.
+        :type tts_pitch: int, optional
+        :param index_rate: Contribution of the RVC index file (0 to 1). Defaults to 0.75.
+        :type index_rate: float, optional
+        :param resample_sr: Sample rate to resample audio to. 0 means no resampling. Defaults to 0.
+        :type resample_sr: int, optional
+        :param rms_mix_rate: Volume envelope scaling (0-1). Lower values mimic original volume. Defaults to 0.5.
+        :type rms_mix_rate: float, optional
+        :param protect: Protection for voiceless consonants and breaths (0-1). Lower values increase protection. 0.5 disables. Defaults to 0.33.
+        :type protect: float, optional
+        :param priority: The urgency of the audio to be played (lower will be played first)
+        :type priority: int, optional
+        :param timeout: How long until the generate request should be canceled (Seconds)
+        :type timeout: int, optional
 
-        Raises:
-            RuntimeError: If TTS or RVC process fails.
-            ValueError: If parameters are invalid.
+        :raise RuntimeError: If TTS or RVC process fails.
+        :raise ValueError: If parameters are invalid.
         """
 
         # Get the generate queue

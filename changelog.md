@@ -11,8 +11,11 @@ Within each they are categorized by which module they pertain to
 
 ## Versions
 
-- [2.2.0](#220)
-- [2.2.1](#221)
+- 2.2
+  - [2.2.0](#220)
+  - [2.2.1](#221)
+  - [2.2.2](#222)
+  - [2.2.3](#223)
 - [Upcoming](#upcoming)
 
 ## 2.2.0
@@ -159,19 +162,46 @@ Within each they are categorized by which module they pertain to
 - 'Value' parameter of 'set' function now reflects the allowed 'Any' and not just 'str'
 - Clears JSON file instead of raising global exception when loading
 
+## 2.2.3
+
+### Changes
+
+- Created docs
+- Rewrote most docstrings
+
+#### Command Tree
+
+- Improved parsing, error checking, and type checking
+
+#### LLM
+
+- tool_loader now uses ollama library tool loading
+
+#### Markdown (D)
+
+- Merged into misc under name "format_md"
+
+#### Vector
+
+- Added method `from_polar`
+- Vector2, Vector3, and Vector4 now are generators for a standard Vector and not a type
+
+#### Verification
+
+- Fixed pip install command when installing multiple modules with `check_all`
+
 ## Upcoming
 
 ### Planned
 
-- Making wiki
+#### TTS
 
-#### Engine
-
-- Making the engine
+- Rewrite for more coherence, speed, and stability
 
 #### JSON Matcher
 
 - Adding support for lists (arrays) in JSON schemas in matcher
+- Rewrite for better stability and functions
 
 ### Bugs
 

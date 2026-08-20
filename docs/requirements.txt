@@ -1,0 +1,14 @@
+sphinx_rtd_theme
+pygame-ce
+edge-tts
+blessed
+ollama
+beautifulsoup4
+pillow
+pygame-ce
+SpeechRecognition
+tts_with_rvc==0.1.9
+requests
+dotenv
+vosk
+PyAudio

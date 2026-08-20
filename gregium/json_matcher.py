@@ -14,28 +14,25 @@ class SchemaLoadError(Exception):
     pass
 
 class Matcher:
+    """
+    Loads from JSON
+
+    This allows for custom settings loaders or JSON matching
+
+    :param json_path: The path to the JSON
+    :type json_path: str
+    :param schema_path: The path to the JSON schema
+
+        This is required for fix and reset
+    :type schema_path: str, optional               
+
+    The schema keys must all have "type", "default", and "description"
+    """
 
     loaded:dict[Any,Any]
     schema:dict[str,Any]
 
     def __init__(self,json_path:str,schema_path:str|None=None):
-        """
-        Loads from JSON
-        
-        This allows for custom settings loaders or JSON matching
-        
-        Arguments:
-            json_path:
-                The path to the JSON
-            schema_path:
-                The path to the JSON schema
-                
-                This is required for fix and reset
-                
-        The schema keys must all have "type" and "description"
-        
-        For custom typing use the "add_type" key
-        """
 
         # Set paths
         self.json_path:str = json_path
@@ -219,18 +216,20 @@ class Matcher:
         
         `This will only work on dictionaries, attempting to traverse a list key wont work (Must do get("partial.path")[index])`
         
-        Arguments:
-            path:
-                The path where the value is found at
-                
-                This must be in dot notation
-                `foo.baz.bar`
-                
-                This is equivalent to
-                {"foo":{"baz":{"bar":"value"}}}
+        :param path: The path where the value is found at
+        
+            This must be in dot notation
+            `foo.baz.bar`
+        
+            This is equivalent to
+            {"foo":{"baz":{"bar":"value"}}}
+        :type path: str
                 
         Will return None if no setting is present
         If schema was defined will instead return default value (but using `.fix_settings` is recommended)
+
+        :return: The data at the given path (or None if it can't be found)
+        :rtype: Any | None
         """
 
         try:
@@ -248,19 +247,19 @@ class Matcher:
         
         `This will only work on dictionaries, attempting to traverse a list key wont work (Must do get("partial.path")[index] = value)`
         
-        Arguments:
-            path:
-                The path where the value is found at
+        :param path: The path where the value is found at
                 
-                This must be in dot notation
-                `foo.baz.bar`
-                
-                This is equivalent to
-                {"foo":{"baz":{"bar":"value"}}}
-            value:
-                The value to set
-                
-        Returns False on failure
+            This must be in dot notation
+            `foo.baz.bar`
+            
+            This is equivalent to
+            {"foo":{"baz":{"bar":"value"}}}
+        :type path: str
+        :param value: The value to set
+        :type value: Any
+         
+        :return: Returns False on failure
+        :rtype: boo
         """
 
         try:
@@ -272,25 +271,24 @@ class Matcher:
             return False
 
     def __setitem__(self,path:str,value:Any) -> bool:
-
         """
         Sets a setting at path
         
         `This will only work on dictionaries, attempting to traverse a list key wont work (Must do get("partial.path")[index] = value)`
         
-        Arguments:
-            path:
-                The path where the value is found at
+        :param path: The path where the value is found at
         
-                This must be in dot notation
-                `foo.baz.bar`
+            This must be in dot notation
+            `foo.baz.bar`
         
-                This is equivalent to
-                {"foo":{"baz":{"bar":"value"}}}
-            value:
-                The value to set
+            This is equivalent to
+            {"foo":{"baz":{"bar":"value"}}}
+        :type path: str
+        :param value: The value to set
+        :type value: Any
         
-        Returns False on failure
+        :return: Returns False on failure
+        :rtype: boo
         """
         
         try:
@@ -302,6 +300,26 @@ class Matcher:
             return False
 
     def __getitem__(self,key:str):
+        """
+        Gets a value at path
+        
+        `This will only work on dictionaries, attempting to traverse a list key wont work (Must do get("partial.path")[index])`
+        
+        :param path: The path where the value is found at
+        
+            This must be in dot notation
+            `foo.baz.bar`
+        
+            This is equivalent to
+            {"foo":{"baz":{"bar":"value"}}}
+        :type path: str
+        
+        Will return None if no setting is present
+        If schema was defined will instead return default value (but using `.fix_settings` is recommended)
+        
+        :return: The data at the given path (or None if it can't be found)
+        :rtype: Any | None
+        """
 
         try:
             return self.loaded[key]
@@ -315,23 +333,27 @@ class Matcher:
 def read_dict_from_path(read:dict[str,Any],path:str) -> Any:
     """
     Reads a place in a dictionary from a path
-    
-    Arguments:
-        read: The dictionary to be read
-        path: The path to read (format of foo.baz.bar)
+
+    :param read: The dictionary to read
+    :type read: dict
+    :param path: The path to read (format of foo.baz.bar)
+    :type path: str
+
+    :return: The data at the path
+    :rtype: Any
     """
-    
+
     # Edge case of blank path
     if path == "":
         return read
-    
+
     # Split path by dots
     paths:list = path.split(".")
-        
+
     # Go through path
     while len(paths) > 0:
         section = paths[0]
         paths = paths[1:]
         read = read[section]
-        
+
     return read

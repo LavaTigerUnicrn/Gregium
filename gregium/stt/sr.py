@@ -20,9 +20,8 @@ def adjust(duration: float = 1) -> None:
     """
     Adjusts current ambient noise level
 
-    Arguments:
-        duration:
-            The max amount of time to adjust in sections (must be at least 0.5s)
+    :param duration: The max amount of time to adjust in sections (must be at least 0.5s)
+    :type duration: float, optional
     """
 
     with sr.Microphone() as source:

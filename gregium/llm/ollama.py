@@ -20,6 +20,9 @@ logger = logging.getLogger(__name__)
 class OllamaChatBot(ChatBot):
     """
     A ChatBot using Ollama
+
+    :param model: The model name
+    :type model: str
     """
 
     model:str
@@ -28,13 +31,6 @@ class OllamaChatBot(ChatBot):
     "The message history, can contain Ollama messages or normal dictionaries (same format)"
 
     def __init__(self,model:str):
-        """
-        A ChatBot using Ollama
-
-        Arguments:
-            model:
-                The model name
-        """
 
         super().__init__()
         self.model = model

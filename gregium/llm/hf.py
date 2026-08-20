@@ -5,11 +5,12 @@ Use .ollama for Ollama version
 """
 
 import logging
+from collections.abc import Callable
 
 import requests
 
 from . import ChatBot
-from . import tool_loader
+from .tool_loader import func_from_annotation
 
 logger = logging.getLogger(__name__)
 
@@ -35,20 +36,21 @@ def set_hf_key(api_key: str):
 def chat_hf(
     model: str,
     messages: list[dict],
-    tools: list | None = None,
+    tools: list[Callable] | None = None,
 ) -> dict:
     """
     Requests output from HuggingFace servers
 
-    Arguments:
-        model:
-            The API link of the HuggingFace model
-        messages:
-            The previous messages in a dictionary
-        tools:
-            The tools for the AI to use
-    """
+    :param model: The API link of the HuggingFace model
+    :type model: str
+    :param messages: The previous messages as a dictionary in standard format
+    :type messages: list[dict]
+    :param tools: The tools for the AI to use
+    :type tools: list[Callable], optional
 
+    :return: The response from the HuggingFace servers
+    :rtype: dict
+    """
 
     if API_KEY is None:
         raise ValueError(
@@ -71,7 +73,7 @@ def chat_hf(
         tools_list = []
         for tool in tools:
 
-            tools_list.append(tool_loader.func_from_annotation(tool))
+            tools_list.append(func_from_annotation(tool))
 
         payload["tools"] = tools_list
 
@@ -83,20 +85,16 @@ def chat_hf(
 class HFChatBot(ChatBot):
     """
     A ChatBot using HuggingFace
+    
+    :param model: The API link of the HuggingFace model, for example: Qwen/Qwen3-Coder-30B-A3B-Instruct:scaleway
+        This can generally be found on the page under "deploy" (if it isn't present then it doesn't exist)
+    :type model: str
     """
 
     api: str
     "The api link"
 
     def __init__(self, api: str):
-        """
-        A ChatBot using HuggingFace
-
-        Arguments:
-            model:
-                The API link of the HuggingFace model, for example: Qwen/Qwen3-Coder-30B-A3B-Instruct:scaleway
-                This can generally be found on the page under "deploy" (if it isn't present then it doesn't exist)
-        """
 
         super().__init__()
         self.api = api

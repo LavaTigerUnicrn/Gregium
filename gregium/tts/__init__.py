@@ -1,9 +1,7 @@
 """
 Text-To-Speech Queues for Edge-TTS
 
-**These will not work properly if you are already playing sound via the pygame.mixer.music (as they use the same audio pipe)**
-
-If none of these work, try `RealtimeTTS`
+If this doesn't work, try `RealtimeTTS`
 """
 # Import libraries
 import asyncio
@@ -45,9 +43,8 @@ def set_default_voice(voice:str):
     """
     Sets the default voice to use
     
-    Arguments:
-        voice:
-            The voice (shortname) for the AI to use (https://github.com/bytectlgo/edge-tts/blob/main/voice-list.md)
+    :param voice: The voice (shortname) for the AI to use (https://github.com/bytectlgo/edge-tts/blob/main/voice-list.md)
+    :type voice: str
     """
     
     global TTS_DEFAULT_VOICE
@@ -64,25 +61,6 @@ def _get_default_voice() -> str|None:
 class Queue:
     """
     Allow for generating and playing edge tts audio at high speeds and robustly
-    
-    Attributes:
-        generate (function): To generate a prompt and play
-        queue_play (function): To queue a play path
-        check_generate (function): To check for new things to generate (run every frame)
-        check_play (function): To check for new things to play (run every frame)
-        remove_generate (function): To remove a generate request from queue
-        remove_play (function): To remove a play request from queue
-        wipe_dir (function): To remove all generated files (at the start of program)
-        check_played (function): To check if something has started playing yet
-        has_completed (function): Checks if all functions have completed
-        terminate (function): Stops all queue functions
-
-        generate_queue (dict): The queue for generating new tts messages
-        generating (bool): If the queue is generating
-        force_completion (bool): Instantly ends all playing audio when true
-        play_queue (dict): The queue for playing tts messages
-        playing (bool): If the queue is playing
-        terminated (bool): If the queue is stopped entirely
     """
     
     generate_queue:dict[int,list[tuple]]
@@ -93,9 +71,6 @@ class Queue:
     terminated:bool = False
         
     def __init__(self):
-        """
-        Generate a new queue
-        """
         
         # Generate queue to prevent overlapping generates
         self.generate_queue = {}
@@ -138,25 +113,22 @@ class Queue:
         """
         Request a generate
         
-        Arguments:
-            queue:
-                The queue to append play request to
-            text:
-                The text for the AI to speak
-            voice:
-                The voice (shortname) for the AI to use (https://github.com/bytectlgo/edge-tts/blob/main/voice-list.md)
-                
-                Can be none if voice has been specified by `set_default_voice()`
-            rate:
-                The additional speed of the voice (%) this can be positive or negative
-            volume:
-                The additional volume of the voice (%) this can be positive or negative
-            pitch:
-                The additional pitch of the voice (Hz) this can be positive or negative
-            priority:
-                The urgency of the audio to be played (lower will be played first)
-            timeout:
-                How long until the generate request should be canceled (Seconds)
+        :param text: The text to speak
+        :type text: str
+        :param voice: The voice (shortname) for the AI to use (https://github.com/bytectlgo/edge-tts/blob/main/voice-list.md)
+
+            Can be none if voice has been specified by `set_default_voice()`
+        :type voice: str, optional        
+        :param rate: The additional speed of the voice (%) this can be positive or negative
+        :type rate: int, optional
+        :param volume: The additional volume of the voice (%) this can be positive or negative
+        :type volume: int, optional
+        :param pitch: The additional pitch of the voice (Hz) this can be positive or negative
+        :type pitch: int, optional
+        :param priority: The urgency of the audio to be played (lower will be played first)
+        :type priority: int, optional
+        :param timeout: How long until the generate request should be canceled (Seconds)
+        :type timeout: float
         """
         
         if voice is None:
@@ -184,17 +156,16 @@ class Queue:
         """
         Queues a play (usually by generate function)
         
-        Arguments:
-            path:
-                The path to play on
-            priority:
-                The priority of the play request
-            text:
-                The original text message of the generate request
-            ready:
-                If the sound should be played once the queue has reached it or if the program should wait for ready_play() to called
-            no_delete:
-                If the file should be preserved once playing is completed
+        :param path: The path to play on
+        :type path: str
+        :param priority: The priority of the play request
+        :type priority: int, optional
+        :param text: The original text message of the generate request
+        :type text: str, optional
+        :param ready: If the sound should be played once the queue has reached it or if the program should wait for ready_play() to called
+        :type ready: bool, optional
+        :param no_delete: If the file should be preserved once playing is completed
+        :type no_delete: bool, optional
         """
         
         # Get the play queue
@@ -215,11 +186,10 @@ class Queue:
         Makes a play request ready to be played
         This prevents sounds of lower priority from getting played first and makes the function always prioritize lower priority
         
-        Arguments:
-            path:
-                The path of the play request
-            priority:
-                The priority of the play request (this helps with tracking down the play request)
+        :param path: The path of the play request
+        :type path: str
+        :param priority: The priority of the play request (this helps with tracking down the play request)
+        :type priority: int, optional
         """
         
         # Get the queue
@@ -240,11 +210,10 @@ class Queue:
         """
         Returns true if the sound has started playing, returns false if it is still queued
         
-        Arguments:
-            text:
-                The text the original generate was called with
-            priority:
-                The priority of the play call (same as generate request)
+        :param text: The text the original generate was called with
+        :type text: str
+        :param priority: The priority of the play call (same as generate request)
+        :type priority: int
         """
         
         # Checking play queue
@@ -338,11 +307,10 @@ class Queue:
         """
         Removes an item from the generation queue if it still exists
         
-        Arguments:
-            text:
-                The text the generate was requested with
-            priority:
-                The priority of the generate request (this helps with tracking down the generate request)
+        :param text: The text the generate was requested with
+        :type text: str
+        :param priority: The priority of the generate request (this helps with tracking down the generate request)
+        :type priority: int, optional
         """
         
         # Get the generate queue
@@ -371,11 +339,10 @@ class Queue:
         """
         Removes an item from the play queue if it still exists
         
-        Arguments:
-            text:
-                The path the play was requested with
-            priority:
-                The priority of the play request (this helps with tracking down the play request)
+        :param text: The path the play was requested with
+        :type text: str
+        :type priority: The priority of the play request (this helps with tracking down the play request)
+        :type priority: int, optional
         """
         
         # Get the play queue
@@ -481,26 +448,25 @@ class Queue:
 async def generate(queue:Queue,text:str,voice:str|None=None,volume:int=0,rate:int=0,pitch:int=0,priority:int=0,path:str=".\\tts\\output.mp3"):
     """
     Request immediate generation from edge servers
-        
-    Arguments:
-        queue:
-            The queue to append play request to
-        text:
-            The text for the AI to speak
-        voice:
-            The voice (shortname) for the AI to use (https://github.com/bytectlgo/edge-tts/blob/main/voice-list.md)
-            
-            Can be none if a voice has been specified by `set_default_voice()`
-        rate:
-            The additional speed of the voice (%) this can be positive or negative
-        volume:
-            The additional volume of the voice (%) this can be positive or negative
-        pitch:
-            The additional pitch of the voice (Hz) this can be positive or negative
-        priority:
-            The urgency of the audio to be played (lower will be played first)
-        path:
-            The location to store the file
+    
+    :param queue: The original queue object
+    :type queue: Queue
+    :param text: The text to speak
+    :type text: str
+    :param voice: The voice (shortname) for the AI to use (https://github.com/bytectlgo/edge-tts/blob/main/voice-list.md)
+    
+        Can be none if voice has been specified by `set_default_voice()`
+    :type voice: str, optional        
+    :param rate: The additional speed of the voice (%) this can be positive or negative
+    :type rate: int, optional
+    :param volume: The additional volume of the voice (%) this can be positive or negative
+    :type volume: int, optional
+    :param pitch: The additional pitch of the voice (Hz) this can be positive or negative
+    :type pitch: int, optional
+    :param priority: The urgency of the audio to be played (lower will be played first)
+    :type priority: int, optional
+    :param timeout: How long until the generate request should be canceled (Seconds)
+    :type timeout: float
     """
     
     if voice is None:
@@ -537,22 +503,23 @@ async def generate(queue:Queue,text:str,voice:str|None=None,volume:int=0,rate:in
 async def generate_no_play(text:str,voice:str|None=None,volume:int=0,rate:int=0,pitch:int=0,path:str=".\\tts\\output.mp3"):
     """
     Request immediate generation from edge servers and not play
-        
-    Arguments:
-        text:
-            The text for the AI to speak
-        voice:
-            The voice (shortname) for the AI to use (https://github.com/bytectlgo/edge-tts/blob/main/voice-list.md)
-            
-            Can be none if a voice has been set by `set_default_voice()`
-        rate:
-            The additional speed of the voice (%) this can be positive or negative
-        volume:
-            The additional volume of the voice (%) this can be positive or negative
-        pitch:
-            The additional pitch of the voice (Hz) this can be positive or negative
-        path:
-            The location to store the file
+    
+    :param text: The text to speak
+    :type text: str
+    :param voice: The voice (shortname) for the AI to use (https://github.com/bytectlgo/edge-tts/blob/main/voice-list.md)
+    
+        Can be none if voice has been specified by `set_default_voice()`
+    :type voice: str, optional        
+    :param rate: The additional speed of the voice (%) this can be positive or negative
+    :type rate: int, optional
+    :param volume: The additional volume of the voice (%) this can be positive or negative
+    :type volume: int, optional
+    :param pitch: The additional pitch of the voice (Hz) this can be positive or negative
+    :type pitch: int, optional
+    :param priority: The urgency of the audio to be played (lower will be played first)
+    :type priority: int, optional
+    :param timeout: How long until the generate request should be canceled (Seconds)
+    :type timeout: float
     """
 
     if voice is None:
@@ -607,13 +574,12 @@ def play(queue:Queue,path:str,no_delete:bool=False):
     """
     Starts playing an audio clip
     
-    Arguments:
-        queue:
-            The queue to allow play request to work properly
-        path:
-            Path to play the sound on
-        no_delete:
-            If the file should be preserved once playing is completed
+    :param queue: The queue to allow play request to work properly
+    :type queue: Queue
+    :param path: Path to play the sound on
+    :type path: str
+    :param no_delete: If the file should be preserved once playing is completed
+    :type no_delete: bool, optional
     """
 
     # Log play
@@ -653,9 +619,8 @@ def dispatch_checker_thread(queue:Queue):
     """
     Makes a daemon thread that checks for updates to the queue automatically
     
-    Arguments:
-        queue:  
-            The queue instance
+    :param queue: The queue instance
+    :type queue: Queue
     """
     
     threading.Thread(target=_checker_thread,args=(queue,),daemon=True).start()

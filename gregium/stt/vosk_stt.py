@@ -13,18 +13,17 @@ from vosk import KaldiRecognizer, Model
 
 
 class Recognizer:
-    def __init__(self,model_path:str):
-        """
-        Generates a vosk interpreter
-        
-        Use get_audio to get audio
-        
-        Arguments:  
-            model_path:
-                Find models at: https://alphacephei.com/vosk/models
-
-                *The model should be the path to the model folder within the zip*
-        """
+    """
+    Generates a vosk interpreter
+    
+    Use get_audio to get audio
+    
+    :param model_path: Find models at: https://alphacephei.com/vosk/models
+    
+        *The model should be the path to the model folder within the zip*
+    :type model_path: str
+    """
+    def __init__(self,model_path:str): 
         
         # Make model
         model = Model(model_path)
@@ -35,7 +34,10 @@ class Recognizer:
         self.stream = p.open(format=pyaudio.paInt16, channels=1, rate=160000, input=True,frames_per_buffer=8192)
         self.stream.start_stream()
         
-    def get_audio(self):
+    def get_audio(self) -> str:
+        """
+        Reads audio and returns the text
+        """
         
         # Read audio
         data = self.stream.read(4096, exception_on_overflow=False)
@@ -46,3 +48,5 @@ class Recognizer:
             
             # Return the result
             return result["text"]
+
+        return ""

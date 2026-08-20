@@ -1,7 +1,7 @@
 """
 A few easing functions for easing in various applications. 
-All functions must take an input from 0 to 1 and 
-will always output from 0 to 1.
+All functions must take an input from 0 to 1 and will always output from 0 to 1.
+All functions will output 0 with an input of 0 and 1 with an input of 1
 """
 # Run imports
 import math
@@ -10,11 +10,13 @@ import math
 # Sinusoidal Easing (Both)
 def easeInOutSine(progress: float) -> float:
     """
-    Generates a sinusoidal in-out easing, will return a value of 0 to 1 based on current progress
+    Generates a sinusoidal in-out easing
     
-    Arguments:
-        progress:
-            The progress (0 to 1) in which the transition has progressed
+    :param progress: The progress [0-1] in which the transition has progressed
+    :type progress: float
+    
+    :returns: The eased progress from [0-1]
+    :rtype: float
     """
     
     return -0.5*math.cos(progress * math.pi)+0.5
@@ -22,11 +24,13 @@ def easeInOutSine(progress: float) -> float:
 # Sinusoidal Easing (In)
 def easeInSine(progress: float) -> float:
     """
-    Generates a sinusoidal in easing, will return a value of 0 to 1 based on current progress
+    Generates a sinusoidal in easing
     
-    Arguments:
-        progress:
-            The progress (0 to 1) in which the transition has progressed
+    :param progress: The progress [0-1] in which the transition has progressed
+    :type progress: float
+    
+    :returns: The eased progress from [0-1]
+    :rtype: float
     """
     
     return -1*math.cos(progress*math.pi/2) + 1
@@ -34,11 +38,13 @@ def easeInSine(progress: float) -> float:
 # Sinusoidal Easing (Out)
 def easeOutSine(progress: float) -> float:
     """
-    Generates a sinusoidal out easing, will return a value of 0 to 1 based on current progress
+    Generates a sinusoidal out easing
     
-    Arguments:
-        progress:
-            The progress (0 to 1) in which the transition has progressed
+    :param progress: The progress [0-1] in which the transition has progressed
+    :type progress: float
+    
+    :returns: The eased progress from [0-1]
+    :rtype: float
     """
     
     return -1*math.cos(math.pi/2*(progress+1))
@@ -46,11 +52,13 @@ def easeOutSine(progress: float) -> float:
 # Quadratic Easing (Both)
 def easeInOutQuad(progress: float) -> float:
     """
-    Generates a quadratic in-out easing, will return a value of 0 to 1 based on current progress
+    Generates a quadratic in-out easing
     
-    Arguments:
-        progress:
-            The progress (0 to 1) in which the transition has progressed
+    :param progress: The progress [0-1] in which the transition has progressed
+    :type progress: float
+    
+    :returns: The eased progress from [0-1]
+    :rtype: float
     """
     
     return 2*progress**2 if progress < 0.5 else 1 - ((-2 * progress + 2)**2)/2
@@ -58,11 +66,13 @@ def easeInOutQuad(progress: float) -> float:
 # Quadratic Easing (In)
 def easeInQuad(progress: float) -> float:
     """
-    Generates a quadratic in-out easing, will return a value of 0 to 1 based on current progress
+    Generates a quadratic in-out easing
     
-    Arguments:
-        progress:
-            The progress (0 to 1) in which the transition has progressed
+    :param progress: The progress [0-1] in which the transition has progressed
+    :type progress: float
+    
+    :returns: The eased progress from [0-1]
+    :rtype: float
     """
     
     return progress ** 2
@@ -70,11 +80,13 @@ def easeInQuad(progress: float) -> float:
 # Quadratic Easing (Out)
 def easeOutQuad(progress:int) -> float:
     """
-    Generates a quadratic in-out easing, will return a value of 0 to 1 based on current progress
+    Generates a quadratic in-out easing
     
-    Arguments:
-        progress:
-            The progress (0 to 1) in which the transition has progressed
+    :param progress: The progress [0-1] in which the transition has progressed
+    :type progress: float
+    
+    :returns: The eased progress from [0-1]
+    :rtype: float
     """
     
     return 1-(progress-1)**2
@@ -82,11 +94,13 @@ def easeOutQuad(progress:int) -> float:
 # Monomic Easing (In)
 def easeInMono(progress:float,degree:int) -> float:
     """
-    Generates a monomic in easing with a degree of {degree}, will return a value of 0 to 1 based on current progress
+    Generates a monomic in easing with a degree of {degree}
     
-    Arguments:
-        progress:
-            The progress (0 to 1) in which the transition has progressed
+    :param progress: The progress [0-1] in which the transition has progressed
+    :type progress: float
+    
+    :returns: The eased progress from [0-1]
+    :rtype: float
     """
     
     return progress**degree
@@ -94,11 +108,13 @@ def easeInMono(progress:float,degree:int) -> float:
 # Monomic Easing (In)
 def easeOutMono(progress:float,degree:int) -> float:
     """
-    Generates a monomic out easing with a degree of {degree}, will return a value of 0 to 1 based on current progress
+    Generates a monomic out easing with a degree of {degree}
     
-    Arguments:
-        progress:
-            The progress (0 to 1) in which the transition has progressed
+    :param progress: The progress [0-1] in which the transition has progressed
+    :type progress: float
+    
+    :returns: The eased progress from [0-1]
+    :rtype: float
     """
     
     return 1-(progress-1)**degree if degree%2==0 else 1+(progress-1)**degree
@@ -106,11 +122,13 @@ def easeOutMono(progress:float,degree:int) -> float:
 # Monomic Easing (In-Out)
 def easeInOutMono(progress:float,degree:int) -> float:
     """
-    Generates a monomic in-out easing with a degree of {degree}, will return a value of 0 to 1 based on current progress
+    Generates a monomic in-out easing with a degree of {degree}
     
-    Arguments:
-        progress:
-            The progress (0 to 1) in which the transition has progressed
+    :param progress: The progress [0-1] in which the transition has progressed
+    :type progress: float
+    
+    :returns: The eased progress from [0-1]
+    :rtype: float
     """
     
     return 2**(degree-1) * progress ** degree if progress < 0.5 else (1+((2*progress-2)**degree)/2 if degree%2 == 1 else 1-((2*progress-2)**degree)/2)

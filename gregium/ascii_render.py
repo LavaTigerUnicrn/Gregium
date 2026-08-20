@@ -44,9 +44,11 @@ def colorPixel(pixel: tuple[int, int, int, int]) -> tuple[str, str]:
     """
     Returns the correct pixel with color
 
-    Arguments:
-        pixel:
-            Color using r,g,b,a values
+    :param pixel: Color using r,g,b,a values
+    :type pixel: tuple[int,int,int,int]
+
+    :return: The color code with symbol attached, followed by only the smybol
+    :rtype: tuple[str,str]
     """
 
     alpha = pixel[3]
@@ -105,6 +107,16 @@ def averageTuplesWeighted(
 
 
 class Surface:
+    """
+    Generates a new surface that is able to be blitted to another or viewed with __str__
+    
+    :param width: The width of the surface
+    :type width: int
+    :param height: The height of the surface
+    :type height: int
+    :param forceNoData: Generates the surface blank if true (data must be added manually)
+    :type forceNoData: bool
+    """
     width: int
     height: int
     alpha: int
@@ -115,19 +127,6 @@ class Surface:
         height: int,
         forceNoData: bool = False,
     ):
-        """
-        Generates a new surface that is able to be blitted to another or viewed with __str__
-
-        Arguments:
-            width:
-                The width of the surface
-            height:
-                The height of the surface
-            forceNoData:
-                Generates the surface blank if true (data must be added manually)
-
-                This will still generate alpha pixels when applicable
-        """
         self.width: int = width
         self.height: int = height
         self.alpha: int = 1
@@ -149,6 +148,11 @@ class Surface:
         Copies all pixels to the given surface
 
         To blit faster while ignoring alpha blending use blit_no_alpha()
+
+        :param surface: The surface to blit
+        :type surface: Surface
+        :param coordinates: The position to blit to
+        :type coordinates: tuple[int,int]
         """
 
         # Get important values
@@ -202,6 +206,11 @@ class Surface:
         **THIS WILL STILL COPY ALPHA OF PIXELS**
 
         Should be decently faster
+
+        :param surface: The surface to blit
+        :type surface: Surface
+        :param coordinates: The position to blit to
+        :type coordinates: tuple[int,int]
         """
 
         # Get important values
@@ -256,11 +265,17 @@ class Surface:
         """
         Returns a subsurface of this surface
 
-        Arguments:
-            left: The leftmost pixel to include
-            right: The rightmost pixel (this is shifted down by 1, like [left:right])
-            top: The topmost pixel to include (which is the lowest value since the data stretches from top->bottom low->high)
-            bottom: The bottommost pixel (this is shifted down by 1, like [top:bottom])
+        :param left: The leftmost pixel to include
+        :type left: int
+        :param right: The rightmost pixel (this is shifted down by 1, like [left:right])
+        :type right: int
+        :param top: The topmost pixel to include (which is the lowest value since the data stretches from top->bottom low->high)
+        :type top: int
+        :param bottom: The bottommost pixel (this is shifted down by 1, like [top:bottom])
+        :type bottom: int
+
+        :return: The surface with the edges removed
+        :rtype: Surface
         """
 
         data = self.data
@@ -277,6 +292,10 @@ WINDOW: Surface = Surface(0, 0)
 
 
 class display:
+    """
+    Tools for the display (stdout)
+    """
+
     @staticmethod
     def set_mode(width: int, height: int):
         """
@@ -293,9 +312,8 @@ class display:
 
         This does not work on CMD terminal, use `display.write_flip_safe()` instead
 
-        Arguments:
-            ratio:
-                The ratio of width to height of each character (on most terminals is about 0.6)
+        :param ratio: The ratio of width to height of each character (on most terminals is about 0.6)
+        :type ratio: float
         """
         sys.stdout.write("\x1b[H\x1b[2\x1b[3J\x1b[3J")
         if ratio == 1:
@@ -316,6 +334,9 @@ class display:
 
 
 class image:
+    """
+    Tools for loading images
+    """
 
     @staticmethod
     def load_pygame(surf: pygame.Surface) -> Surface:
@@ -324,9 +345,11 @@ class image:
 
         This needs to be flipped across the x and rotated 90 degrees in order to render properly
 
-        Arguments:
-            surf:
-                The pygame surface
+        :param surf: The pygame surface
+        :type surf: pygame.Surface
+
+        :return: The output surface
+        :rtype: Surface
         """
 
         return image.from_bytes(
@@ -339,9 +362,11 @@ class image:
         """
         Loads an image from the web
 
-        Arguments:
-            url:
-                The url to load from
+        :param url: The url to load from
+        :type url: str
+        
+        :return: The output surface
+        :rtype: Surface
         """
         response: HTTPResponse = urllib.request.urlopen(
             url
@@ -354,9 +379,11 @@ class image:
         """
         Loads an image from a pillow image instance
 
-        Arguments:
-            img:
-                The pillow image instance
+        :param img: The pillow image instance
+        :type img: Image
+        
+        :return: The output surface
+        :rtype: Surface
         """
 
         width, height = img.width, img.height
@@ -378,13 +405,15 @@ class image:
         """
         Loads an image to a surface directly from bytes
 
-        Arguments:
-            data:
-                The bytes data of the image
-            size:
-                The size of the image (width,height)
-
+        :param data: The bytes data of the image
+        :type data: bytes
+        :param size: The size of the image (width,height)
+        :type size: tuple[int,int]
+        
         **THE IMAGE MUST BE IN RGBA FORMAT**
+
+        :return: The output surface
+        :rtype: Surface
         """
 
         width, height = size
@@ -418,17 +447,33 @@ class image:
         """
         Loads an image from your drive
 
-        Arguments:
-            path:
-                The path to the image
+        :param path: The path to the image
+        :type path: str
+
+        :return: The output surface
+        :rtype: Surface
         """
 
         return image.load_pil(PIL_Image.open(path))
 
 
 class transform:
+    """
+    Tools for modifying existing Surfaces
+    """
     @staticmethod
     def scale(original: Surface, coordinates: tuple[int, int]) -> Surface:
+        """
+        Scales the image to the given coordinates
+
+        :param original: The original Surface
+        :type original: Surface
+        :param coordinates: The new size to scale to
+        :type coordinates: tuple[int,int]
+
+        :return: The output surface
+        :rtype: Surface
+        """
         width = coordinates[0]
         height = coordinates[1]
         x_ratio = original.width / width
@@ -448,6 +493,17 @@ class transform:
 
     @staticmethod
     def scale_by(original: Surface, factor: float) -> Surface:
+        """
+        Scales the image by the given factor (snapping to int if required)
+        
+        :param original: The original Surface
+        :type original: Surface
+        :param factor: The factor to scale by
+        :type factor: float
+        
+        :return: The output surface
+        :rtype: Surface
+        """
 
         return transform.scale(
             original, (int(original.width * factor), int(original.height * factor))
@@ -455,6 +511,17 @@ class transform:
 
     @staticmethod
     def rotate(original: Surface, angle_degree: float) -> Surface:
+        """
+        Rotates the image, changing the image bounds if required
+        
+        :param original: The original Surface
+        :type original: Surface
+        :param angle_degree: The angle (in degrees) to rotate by
+        :type angle_degree: float
+        
+        :return: The output surface
+        :rtype: Surface
+        """
         angle_radian = math.radians(angle_degree)
         width = original.width
         height = original.height
@@ -516,6 +583,15 @@ class transform:
 
     @staticmethod
     def auto_trim(original: Surface) -> Surface:
+        """
+        Automatically trims the sides of a Surface down, removing sides that don't render (alpha 0)
+        
+        :param original: The original Surface
+        :type original: Surface
+        
+        :return: The output surface
+        :rtype: Surface
+        """
         width = original.width
         height = original.height
         data = original.data.copy()

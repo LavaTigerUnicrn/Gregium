@@ -12,7 +12,9 @@ HostName = socket.gethostname()
 
 # Scan for IP
 IP_10: str = ""
+"The IP address prefixed by 10, 10.X.X.X"
 IP_192: str = ""
+"The IP address prefixed by 192, 192.168.X.X"
 for addr in socket.getaddrinfo(HostName, None):
 
     # Find the first address that has 10. and 192. prefix
@@ -30,7 +32,50 @@ for addr in socket.getaddrinfo(HostName, None):
 class Server:
 
     """
-    A HTTP Server
+    Creates a server on the port
+    
+    **Methods you should overwrite**
+    
+    * .GET
+
+    * .POST
+    
+    **Additional supported methods**
+    
+    * .HEAD 1
+
+    * .TRACE 2
+
+    * .PUT
+
+    * .PATCH
+
+    * .OPTIONS
+
+    * .DELETE
+    
+    1. HEAD uses the same method as GET since HEAD is the same as GET without a body
+    2. TRACE is run automatically
+    
+    *more coming soon*
+    
+    Use the .serve() method to begin serving
+    
+    :param port: The port to host on
+    :type port: int
+        The port to host on
+        
+        For localhost any port is generally fine
+        
+        For hosting a machine IP, generally
+        80 is for HTTP connection
+        443 is for HTTPS connection **Use Server_Secure for HTTPS protocol**
+    :param icon: The path of the icon (or None for no icon)
+    :type icon: str, optional
+    :param ip: The IP address (127.0.0.1 is for localhost)
+
+        To get the machine IP use ghttp.IP_10 for 10. IP, use ghttp.IP_192 for 192. IP
+    :type ip: str, optional
     """
 
     _server: HTTPServer
@@ -39,52 +84,8 @@ class Server:
     close: bool = False
     children: list[HTTPChild]
 
-    def __init__(self, port: int, icon: str | None = None, /, ip: str = "127.0.0.1"):
-        """
-        Creates a server on the port
-
-        **Methods you should overwrite**
-        - .GET
-        - .POST
-
-        **Additional supported methods**
-        - .HEAD*
-        - .TRACE**
-        - .PUT
-        - .PATCH
-        - .OPTIONS
-        - .DELETE
-
-        *HEAD uses the same method as GET since HEAD is the same as GET without a body
-        **TRACE is run automatically
-
-        *more coming soon*
-
-        Use the .serve() method to begin serving
-
-        Arguments:
-            port:
-                The port to host on
-
-                For localhost any port is generally fine
-
-                For hosting a machine IP
-                80 is for HTTP connection
-                443 is for HTTPS connection **Use Server_Secure for HTTPS protocol**
-            icon:
-                The path of the icon (or none for no icon)
-            icon_type:
-                The format of the icon file (none will try to auto assume)
-
-                For example:
-                image/png
-                image/jpeg
-                image/x-icon
-                ...
-            ip:
-                The IP address (127.0.0.1 is for localhost)
-                To get the machine IP use ghttp.IP_10 for 10. IP, use ghttp.IP_192 for 192. IP
-        """
+    def __init__(self, port: int, icon: str | None = None, ip: str = "127.0.0.1"):
+        
 
         # Make server
         self._server = HTTPServer(port, ip)
@@ -113,12 +114,11 @@ class Server:
         """
         The base GET method
 
-        Arguments:
-            response:
-                The response from the client
-
-        Return:
-            The return from the server
+        :param response: The response from the client
+        :type response: HTTPResponse
+        
+        :return: The return from the server
+        :rtype: HTTPReturn
         """
 
         logger.debug(f"GET at redirect: '{response.redirect}'")
@@ -141,13 +141,12 @@ class Server:
     def _post(self, response: HTTPResponse) -> HTTPReturn:
         """
         The base POST method
-
-        Arguments:
-            response:
-                The response from the client
-
-        Return:
-            The return from the server
+        
+        :param response: The response from the client
+        :type response: HTTPResponse
+        
+        :return: The return from the server
+        :rtype: HTTPReturn
         """
 
         logger.debug("POST at redirect: '" + response.redirect + "'")
@@ -171,13 +170,12 @@ class Server:
     def _put(self, response: HTTPResponse) -> HTTPReturn:
         """
         The base PUT method
-
-        Arguments:
-            response:
-                The response from the client
-
-        Return:
-            The return from the server
+        
+        :param response: The response from the client
+        :type response: HTTPResponse
+        
+        :return: The return from the server
+        :rtype: HTTPReturn
         """
 
         logger.debug("PUT at redirect: '" + response.redirect + "'")
@@ -201,13 +199,12 @@ class Server:
     def _patch(self, response: HTTPResponse) -> HTTPReturn:
         """
         The base PATCH method
-
-        Arguments:
-            response:
-                The response from the client
-
-        Return:
-            The return from the server
+        
+        :param response: The response from the client
+        :type response: HTTPResponse
+        
+        :return: The return from the server
+        :rtype: HTTPReturn
         """
 
         logger.debug("PATCH at redirect: '" + response.redirect + "'")
@@ -231,13 +228,12 @@ class Server:
     def _options(self, response: HTTPResponse) -> HTTPReturn:
         """
         The base OPTIONS method
-
-        Arguments:
-            response:
-                The response from the client
-
-        Return:
-            The return from the server
+        
+        :param response: The response from the client
+        :type response: HTTPResponse
+        
+        :return: The return from the server
+        :rtype: HTTPReturn
         """
 
         logger.debug("OPTIONS at redirect: '" + response.redirect + "'")
@@ -261,13 +257,12 @@ class Server:
     def _delete(self, response: HTTPResponse) -> HTTPReturn:
         """
         The base DELETE method
-
-        Arguments:
-            response:
-                The response from the client
-
-        Return:
-            The return from the server
+        
+        :param response: The response from the client
+        :type response: HTTPResponse
+        
+        :return: The return from the server
+        :rtype: HTTPReturn
         """
 
         logger.debug(f"DELETE at redirect: '{response.redirect}'")
@@ -290,13 +285,12 @@ class Server:
     def _head(self, response: HTTPResponse) -> HTTPReturn:
         """
         The base HEAD method
-
-        Arguments:
-            response:
-                The response from the client
-
-        Return:
-            The return from the server
+        
+        :param response: The response from the client
+        :type response: HTTPResponse
+        
+        :return: The return from the server
+        :rtype: HTTPReturn
         """
 
         logger.debug("HEAD at redirect: '" + response.redirect + "'")
@@ -324,12 +318,11 @@ class Server:
         """
         The base TRACE method
         
-        Arguments:
-            response:
-                The response from the client
+        :param response: The response from the client
+        :type response: HTTPResponse
         
-        Return:
-            The return from the server
+        :return: The return from the server
+        :rtype: HTTPReturn
         """
         
         logger.debug("TRACE at redirect: '" + response.redirect + "'")
@@ -354,14 +347,13 @@ class Server:
         """
         HTTP GET method
 
-        Arguments:
-            redirect:
-                The redirect location (or a blank string for no redirects)
+        :param redirect: The redirect location (or a blank string for no redirects)
 
-                For example: hyperlink/location/test/foo/baz/bar
+            For example: hyperlink/location/test/foo/baz/bar
+        :type redirect: str
 
-        Return:
-            The HTML response
+        :return: The response (see connector.Returns for easy responses)
+        :rtype: HTTPReturn
         """
 
         raise NotImplementedError(
@@ -372,16 +364,15 @@ class Server:
         """
         HTTP POST method
 
-        Arguments:
-            redirect:
-                The redirect location (or a blank string for no redirects)
+        :param redirect: The redirect location (or a blank string for no redirects)
 
-                For example: hyperlink/location/test/foo/baz/bar
-            content:
-                The content sent
+            For example: hyperlink/location/test/foo/baz/bar
+        :type redirect: str
+        :param content: The content sent
+        :type content: bytes
 
-        Return:
-            The HTTPResponse instance
+        :return: The response (see connector.Returns for easy responses)
+        :rtype: HTTPReturn
         """
 
         raise NotImplementedError(
@@ -392,16 +383,15 @@ class Server:
         """
         HTTP PUT method
 
-        Arguments:
-            redirect:
-                The redirect location (or a blank string for no redirects)
+        :param redirect: The redirect location (or a blank string for no redirects)
 
-                For example: hyperlink/location/test/foo/baz/bar
-            content:
-                The content sent
+            For example: hyperlink/location/test/foo/baz/bar
+        :type redirect: str
+        :param content: The content sent
+        :type content: bytes
 
-        Return:
-            The HTTPResponse instance
+        :return: The response (see connector.Returns for easy responses)
+        :rtype: HTTPReturn
         """
 
         raise NotImplementedError(
@@ -412,16 +402,15 @@ class Server:
         """
         HTTP OPTIONS method
 
-        Arguments:
-            redirect:
-                The redirect location (or a blank string for no redirects)
+        :param redirect: The redirect location (or a blank string for no redirects)
 
-                For example: hyperlink/location/test/foo/baz/bar
-            content:
-                The content sent
+            For example: hyperlink/location/test/foo/baz/bar
+        :type redirect: str
+        :param content: The content sent
+        :type content: bytes
 
-        Return:
-            The HTTPResponse instance
+        :return: The response (see connector.Returns for easy responses)
+        :rtype: HTTPReturn
         """
 
         raise NotImplementedError(
@@ -432,16 +421,15 @@ class Server:
         """
         HTTP PATCH method
 
-        Arguments:
-            redirect:
-                The redirect location (or a blank string for no redirects)
+        :param redirect: The redirect location (or a blank string for no redirects)
 
-                For example: hyperlink/location/test/foo/baz/bar
-            content:
-                The content sent
+            For example: hyperlink/location/test/foo/baz/bar
+        :type redirect: str
+        :param content: The content sent
+        :type content: bytes
 
-        Return:
-            The HTTPResponse instance
+        :return: The response (see connector.Returns for easy responses)
+        :rtype: HTTPReturn
         """
 
         raise NotImplementedError(
@@ -452,14 +440,13 @@ class Server:
         """
         HTTP DELETE method
 
-        Arguments:
-            redirect:
-                The redirect location (or a blank string for no redirects)
+        :param redirect: The redirect location (or a blank string for no redirects)
 
-                For example: hyperlink/location/test/foo/baz/bar
+            For example: hyperlink/location/test/foo/baz/bar
+        :type redirect: str
 
-        Return:
-            The HTTPResponse instance
+        :return: The response (see connector.Returns for easy responses)
+        :rtype: HTTPReturn
         """
 
         raise NotImplementedError(
@@ -475,9 +462,10 @@ class Server:
 
         To close the server run .close_force() and all connected clients will attempt to close as well
 
-        Arguments:
-            backlog:
-                Maximum number of queued connections before refusing more
+        :param backlog: Maximum number of queued connections before refusing more
+
+            Higher numbers use more resources
+        :type backlog: int, optional
         """
 
         # Listen
@@ -513,6 +501,11 @@ class Server:
             child.close_force()
 
     def client(self, instance: HTTPChild) -> None:
+        """
+        The threaded code that is run for each connected client
+
+        This should not be overwritten
+        """
 
         # Begin serving
         while not instance.close:
@@ -589,68 +582,66 @@ class Server:
 class Server_Secure(Server):
 
     """
-    A HTTPS Server
+    Creates a server on the port
+    
+    Make sure to have a certificate and key
+    
+    Can be self-signed using 
+    `openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -nodes -days 365 -subj "/CN=localhost"`
+    
+    *Almost all browsers will reject self-signed certificates*
+    
+    **Methods you should overwrite**
+
+    * .GET
+
+    * .POST
+    
+    **Additional supported methods**
+    
+    * .HEAD 1
+
+    * .TRACE 2
+
+    * .PUT
+
+    * .PATCH
+
+    * .OPTIONS
+
+    * .DELETE
+    
+    1. HEAD uses the same method as GET since HEAD is the same as GET without a body
+    2. TRACE is run automatically
+    
+    *more coming soon*
+    
+    Use the .serve() method to begin serving
+    
+    :param port: The port to host on
+    :type port: int
+        The port to host on
+    
+        For localhost any port is generally fine
+    
+        For hosting a machine IP, generally
+        80 is for HTTP connection
+        443 is for HTTPS connection **Use Server_Secure for HTTPS protocol**
+    :param cert_path: The path to the certificate (should be a .pem file)
+    :type cert_path: str
+    :param key_path: The path to the key (should be a .pem file)
+    :type key_path: str
+    :param password: The password for the certification (only if it is specified)
+    :type password: str, optional
+    :param icon: The path of the icon (or None for no icon)
+    :type icon: str, optional
+    :param ip: The IP address (127.0.0.1 is for localhost)
+
+        To get the machine IP use ghttp.IP_10 for 10. IP, use ghttp.IP_192 for 192. IP
+    :type ip: str, optional
     """
 
-    def __init__(self, port: int, cert_path:str, key_path:str, password:str|None=None, icon: str | None = None, /, ip: str = "127.0.0.1"):
-        """
-        Creates a server on the port
-
-        Make sure to have a certificate and key
-
-        Can be self-signed using 
-        `openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -nodes -days 365 -subj "/CN=localhost"`
-
-        Almost all browsers will reject self-signed certificates
-    
-        **Methods you should overwrite**
-        - .GET
-        - .POST
-    
-        **Additional supported methods**
-        - .HEAD*
-        - .TRACE**
-        - .PUT
-        - .PATCH
-        - .OPTIONS
-        - .DELETE
-    
-        *HEAD uses the same method as GET since HEAD is the same as GET without a body
-        **TRACE is run automatically
-    
-        *more coming soon*
-    
-        Use the .serve() method to begin serving
-    
-        Arguments:
-            port:
-                The port to host on
-    
-                For localhost any port is generally fine
-    
-                For hosting a machine IP
-                80 is for HTTP connection
-                443 is for HTTPS connection **Use Server_Secure for HTTPS protocol**
-            icon:
-                The path of the icon (or none for no icon)
-            icon_type:
-                The format of the icon file (none will try to auto assume)
-    
-                For example:
-                image/png
-                image/jpeg
-                image/x-icon
-                ...
-            cert_path:
-                The path to the certificate (should be a .pem file)
-            key_path:
-                The path to the key (should be a .pem file)
-            password:
-                The password for the certification (only if it is specified)
-            ip:
-                The IP address (127.0.0.1 is for localhost)
-                To get the machine IP use ghttp.IP_10 for 10. IP, use ghttp.IP_192 for 192. IP
-        """
+    def __init__(self, port: int, cert_path:str, key_path:str, password:str|None=None, icon: str | None = None, ip: str = "127.0.0.1"):
 
         # Make context
         self.context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
@@ -676,9 +667,9 @@ class Server_Secure(Server):
         # Wrap
         try:
             conn = self.context.wrap_socket(conn,True)
-        except ssl.SSLError as e:
+        except ssl.SSLError:
     
-            logger.exception(f"Error while wrapping connection (Likely invalid certificate)\n{e}",exc_info=None)
+            logger.exception("Error while wrapping connection (Likely invalid certificate)")
             return None
     
         # Make a child
@@ -692,10 +683,11 @@ class Server_Secure(Server):
         Connected clients will be new created threads
     
         To close the server run .close_force() and all connected clients will attempt to close as well
-    
-        Arguments:
-            backlog:
-                Maximum number of queued connections before refusing more
+
+        :param backlog: Maximum number of queued connections before refusing more
+        
+            Higher numbers use more resources
+        :type backlog: int, optional
         """
 
         # Listen

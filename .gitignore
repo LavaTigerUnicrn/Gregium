@@ -11,3 +11,4 @@ gregium.egg-info
 /dist
 /mypy_cache
 /build
+env/

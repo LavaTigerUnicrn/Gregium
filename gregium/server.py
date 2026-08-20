@@ -61,6 +61,8 @@ def recv_data(socket: socket.socket) -> bytes:
 class ClientInst:
     """
     An instantiated server client
+
+    These are instantiated by the server
     """
 
     data: Any = None
@@ -71,11 +73,6 @@ class ClientInst:
     _started: bool = False
 
     def __init__(self, conn: socket.socket, addr: tuple[str, int], parent: "Server"):
-        """
-        **THIS SHOULD NOT BE USED FOR MAKING CLIENTS**
-
-        **THIS IS ONLY FOR SOCKET CONNECTIONS TO THE SERVER**
-        """
 
         # Set values
         self._parent = parent
@@ -137,7 +134,38 @@ class ClientInst:
 
 class Server:
     """
-    Basic server to send bytes data across
+    Creates a socket server
+    Always uses AF_INET and SOCK_STREAM
+    
+    To start the sever run .serve()
+    
+    **Ensure the .START and .RUN methods have been defined**
+    **Either define manually, with child class, or using @Server.event decorator**
+    
+    *The on_disconnect event may be redefined in the same way, but are not required*
+    
+    :param port: The port to host on
+    :type port: int
+    :param address: The IP address to host on (Should always be one of the host addresses)
+    :type address: str, optional
+    
+    .. code-block:: python3
+    
+        from gregium.server import Server
+
+        server = Server()
+    
+        # Runs a single time on instantiating client
+        def START(self:Server,client:ClientInst):
+            client.data = "HELLO!" # Data can be set at any time and will be the parameter in RUN
+            # Generally data should be in an instantiated class or object
+        server.START = START
+    
+        # Runs constantly
+        @server.event
+        def RUN(self:Server,client:ClientInst,data:str): # Note that data type is known to be a string from the START function
+            print(client.recv())
+            client.send(data.encode('utf-8')) # Will send "HELLO!"
     """
 
     __port: int
@@ -147,40 +175,6 @@ class Server:
     _children: list[ClientInst]
 
     def __init__(self, port: int, address: str = HOST_ADDRESS):
-        """
-        Creates a socket server
-        Always uses AF_INET and SOCK_STREAM
-
-        To start the sever run .serve()
-
-        **Ensure the .START and .RUN methods have been defined**
-        **Either define manually, with child class, or using @Server.event decorator**
-
-        *The on_disconnect event may be redefined in the same way, but are not required*
-
-        Arguments:
-            port:
-                The port to host on
-            address:
-                The IP address to host on (generally should always be the host address)
-
-        Examples:
-        ```python
-            server = Server()
-
-            # Runs a single time on instantiating client
-            def START(self:Server,client:ClientInst):
-                client.data = "HELLO!" # Data can be set at any time and will be the parameter in RUN
-                # Generally data should be in an instantiated class or object
-            server.START = START
-
-            # Runs constantly
-            @server.event
-            def RUN(self:Server,client:ClientInst,data:str): # Note that data type is known to be a string from the START function
-                print(client.recv())
-                client.send(data.encode('utf-8')) # Will send "HELLO!"
-        ```
-        """
 
         # Set values
         self.__port = port
@@ -277,6 +271,9 @@ class Server:
         Will also create a thread to prune children (this thread will be killed on .close())
 
         Connected clients will be new created threads
+
+        :param backlog: The maximum amount of connections waiting to connect to the server
+        :type backlog: int, optional
         """
 
         self.listen(backlog)
@@ -302,6 +299,9 @@ class Server:
     def START(self, client: ClientInst) -> None:
         """
         This function is run on clients when they are instantiated
+        
+        :param client: The instance of the client
+        :type client: ClientInst
         """
 
         logger.error('No method has been set for "START" on the server')
@@ -310,6 +310,11 @@ class Server:
     def RUN(self, client: ClientInst, data: Any) -> None:
         """
         This function is run on clients after instantiating until they close
+
+        :param client: The instance of the client
+        :type client: ClientInst
+        :param data: The stored data on the given client (can be anything), can be changed via setting client.data
+        :type data: Any
         """
 
         logger.error('No method has been set for "RUN" on the server')
@@ -320,11 +325,14 @@ class Server:
         This function is run only when the connection to the client ends without logger.error
 
         Note that send and recv functions will not work on a closed connection
+
+        :param client: The instance of the client
+        :type client: ClientInst
         """
 
     def event(self, func):
         """
-        A decorator for setting RUN or START methods
+        A decorator for setting RUN, START, or on_disconnect methods
         """
 
         # Add self argument
@@ -345,33 +353,32 @@ class Server:
                 logger.info('Registered "on_disconnect" function')
             case _:
                 raise NameError(
-                    f'Unknown function name "{func.__name__}" (should be of "START" or "RUN")'
+                    f'Unknown function name "{func.__name__}" (should be "START", "RUN", or "on_disconnect")'
                 )
 
         return func
 
 
 class Client:
+    """
+    Makes a socket client
+    Always uses AF_INET and SOCK_STREAM
+    
+    To connect the client run .connect()
+    
+    Use .send() and .recv() to run the given actions
+    
+    :param port: The port to connect to
+    :type port: int
+    :param address: The IP address to connect to
+    :type address: str
+    """
 
     __port: int
     __address: str
     _sock: socket.socket
 
     def __init__(self, port: int, address: str):
-        """
-        Makes a socket client
-        Always uses AF_INET and SOCK_STREAM
-
-        To connect the client run .connect()
-
-        Use .send() and .recv() to run the given actions
-
-        Arguments:
-            port:
-                The port to connect to
-            address:
-                The IP address to connect to
-        """
 
         # Set values
         self.__port = port

@@ -1,18 +1,17 @@
 # ![gregiumNameHD](https://github.com/user-attachments/assets/bf3c96d2-e1aa-4117-91cb-93d896145211)
 
 [![PyPi](https://img.shields.io/badge/pypi-2.2.2-%233775A9?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/gregium)
-[![Github](https://img.shields.io/badge/github-2.2.2-%23181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LavaTigerUnicrn/Gregium)
+[![Github](https://img.shields.io/badge/github-2.2.3a1-%23181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LavaTigerUnicrn/Gregium)
 [![License](https://img.shields.io/badge/license-MIT-%233DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/license/MIT)
 [![Discord](https://img.shields.io/badge/discord-LTU-%235865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/SeKhDF4m5W)
-[![Wiki](https://img.shields.io/badge/wiki-informational?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/LavaTigerUnicrn/Gregium/wiki)
 
-> Completely remade and ready to not work when you need it most
+> Completely remade and ready to fail when you need it most
 
 ## What is Gregium
 
-Gregium is a library full of various classes and methods that serve various purposes in many different projects
+Gregium is a library of prebuilt code for various functions
 
-**Check the [wiki](https://github.com/LavaTigerUnicrn/Gregium/wiki) for more details on the modules of Gregium**
+**Check the docs for more details on the modules of Gregium**
 
 Please note that Gregium is always in development, large changes can come at any time *(although you can read the [changelog](changelog.md) for most changes)*
 

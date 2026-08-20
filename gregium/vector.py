@@ -1,29 +1,30 @@
 import math
 from collections.abc import Sequence
+from typing import TypeVar
 
 pi = math.pi
 hpi = math.pi / 2
 
+T = TypeVar("T",int,float)
+
+
 class Vector[T: int | float](Sequence):
     """
-    Generic vector with any number of dimensions
+    A vector that can be any length
+
+    .. code-block:: python3
+
+        from gregium.vector import Vector
+
+        Vector(1,2,3)
+        Vector(5)
+        Vector(5,10,15,20,25,30,35,...)
+        Vector(*(1.3,1.5,0.3,0.2))
     """
 
     position: tuple[T, ...]
 
     def __init__(self, *args: T):
-        """
-        Makes a new vector
-
-        Can be any length
-
-        ```
-        Vector(1,2,3)
-        Vector(5)
-        Vector(5,10,15,20,25,30,35,...)
-        Vector(*(1.3,1.5,0.3,0.2))
-        ```
-        """
 
         self.position = tuple(args)
 
@@ -39,7 +40,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x + y for x, y in zip(self, other)))
 
@@ -73,7 +74,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x - y for x, y in zip(self, other)))
 
@@ -107,7 +108,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x * y for x, y in zip(self, other)))
 
@@ -141,7 +142,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x / y for x, y in zip(self, other)))
 
@@ -162,11 +163,11 @@ class Vector[T: int | float](Sequence):
                 f"unsupported operand type(s) for /=: '{type(self).__name__}' and '{type(other).__name__}'"
             )
 
-    def __floordiv__(self, other: "Vector[T]|T") -> "Vector[T]":
+    def __floordiv__(self, other: "Vector[T]|T") -> "Vector[int]":
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x // y for x, y in zip(self, other)))
 
@@ -178,7 +179,7 @@ class Vector[T: int | float](Sequence):
             f"unsupported operand type(s) for //: '{type(self).__name__}' and '{other_type.__name__}'"
         )
 
-    def __ifloordiv__(self, other: "Vector[T]|T") -> "Vector[T]":
+    def __ifloordiv__(self, other: "Vector[T]|T") -> "Vector[int]":
 
         try:
             return self.__floordiv__(other)
@@ -191,7 +192,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x % y for x, y in zip(self, other)))
 
@@ -216,7 +217,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x << y for x, y in zip(self, other)))
 
@@ -241,7 +242,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x >> y for x, y in zip(self, other)))
 
@@ -269,7 +270,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x**y for x, y in zip(self, other)))
 
@@ -294,7 +295,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x ^ y for x, y in zip(self, other)))
 
@@ -319,7 +320,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x & y for x, y in zip(self, other)))
 
@@ -344,7 +345,7 @@ class Vector[T: int | float](Sequence):
 
         other_type = type(other)
 
-        if other_type is type(self):
+        if type(other) is Vector:
 
             return Vector(*(x | y for x, y in zip(self, other)))
 
@@ -411,7 +412,7 @@ class Vector[T: int | float](Sequence):
 
     def __repr__(self):
 
-        return repr(self.position)
+        return type(self).__name__ + repr(self.position)
 
     def magnitude(self) -> float:
         """
@@ -445,32 +446,18 @@ class Vector[T: int | float](Sequence):
 
         return (self - other).unit()
 
-
-class Vector2[T: float | int](Vector):
-
-    position: tuple[T, T]
-
-    def __init__(self, x: T, y: T):
-        """
-        2D vector
-        """
-        super().__init__(x, y)
-
-    @property
-    def x(self) -> T:
-        return self.position[0]
-
-    @property
-    def y(self) -> T:
-        return self.position[1]
-
     def angle(self) -> float:
         """
         Gets the angle of the Vector [0-2π)
+
+        Only works if the Vector is 2D
         """
 
-        x = self.x
-        y = self.y
+        if len(self.position) != 2:
+            raise ValueError('Vector must be 2D to run "angle"')
+
+        x = self.position[0]
+        y = self.position[1]
 
         if x == 0:
             return hpi + (pi if y < 0 else 0)
@@ -481,56 +468,84 @@ class Vector2[T: float | int](Vector):
         Returns the vector as a polar coordinate (r,θ)
 
         Uses radians
+
+        Only works if the Vector is 2D
         """
 
         return (self.magnitude(), self.angle())
 
-
-class Vector3[T: float | int](Vector):
-
-    position: tuple[T, T, T]
-
-    def __init__(self, x: T, y: T, z: T):
+    @classmethod
+    def from_polar(cls, coordinate: tuple[float, float]) -> "Vector[float]":
         """
-        3D vector
+        Creates a new vector using the polar coordinate (r,θ)
+
+        :param coordinate: The polar coordinate (r,θ)
+        :type coordinate: tuple[float,float]
+
+        Uses radians
         """
-        super().__init__(x, y, z)
+
+        x: float = coordinate[0] * math.cos(coordinate[1])
+        y: float = coordinate[0] * math.sin(coordinate[1])
+
+        return cls(x, y)
 
     @property
     def x(self) -> T:
+        """
+        The X value of the Vector
+
+        Will raise error if Vector has < 1 dimensions
+        """
         return self.position[0]
 
     @property
     def y(self) -> T:
+        """
+        The Y value of the Vector
+
+        Will raise error if Vector has < 2 dimensions
+        """
         return self.position[1]
 
     @property
     def z(self) -> T:
-        return self.position[2]
-
-
-class Vector4[T: float | int](Vector):
-
-    position: tuple[T, T, T, T]
-
-    def __init__(self, x: T, y: T, z: T, w: T):
         """
-        4D vector
+        The Z value of the Vector
+
+        Will raise error if Vector has < 3 dimensions
         """
-        super().__init__(x, y, z, w)
-
-    @property
-    def x(self) -> T:
-        return self.position[0]
-
-    @property
-    def y(self) -> T:
-        return self.position[1]
-
-    @property
-    def z(self) -> T:
         return self.position[2]
 
     @property
     def w(self) -> T:
+        """
+        The W value of the Vector
+
+        Will raise error if Vector has < 4 dimensions
+        """
         return self.position[3]
+
+
+def Vector2(x: T, y: T) -> Vector[T]:
+    """
+    Generator for a 2D vector
+    """
+
+    return Vector(x, y)
+
+
+def Vector3(x: T, y: T, z: T) -> Vector[T]:
+    """
+    Generator for a 3D vector
+    """
+
+    return Vector(x, y, z)
+
+
+def Vector4(x: T, y: T, z: T, w: T) -> Vector[T]:
+    """
+    Generator for a 4D vector
+    """
+
+    return Vector(x, y, z, w)

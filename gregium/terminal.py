@@ -1,7 +1,7 @@
 """
 Adds additional functions for interacting with the standard terminal
 
-**For many additional functions use [blessed](https://blessed.readthedocs.io/en/latest/terminal.html#clearing-the-screen) (Terminal based on blessed)**
+For many additional functions use `blessed <https://blessed.readthedocs.io/en/latest/>`_
 """
 
 from typing import TypeVar
@@ -10,9 +10,7 @@ from blessed import Terminal
 
 term = Terminal()
 
-
 T = TypeVar("T")
-
 
 TERMINAL_CAROUSEL: int = 10
 DEFAULT_TERMINAL_CHOICE_HELP: bool = False
@@ -45,7 +43,7 @@ def getch() -> str:
 
 def bell() -> None:
     """
-    Triggers the terminal bell using \\a
+    Triggers the terminal bell using \\\\a
     """
     print("\a", end="")
 
@@ -54,20 +52,21 @@ def choice(options: dict[T, dict[str, str]], help: bool | None = None) -> T:
     """
     Makes a choice input for given choices in terminal
 
-    Arguments:
-        options:
-            The valid choices, formatted as ```{"choice_1":{"name":"custom_choice_name","desc":"custom_choice_description"}}```
+    :param options: The valid choices, formatted as ```{"choice_1":{"name":"custom_choice_name","desc":"custom_choice_description"}}```
 
-            And the text on the terminal would be formatted as "custom_choice_name" normally or "[custom_choice_name] - custom_choice_description" when hovered and would return "choice_1" when enter is pressed
+        And the text on the terminal would be formatted as "custom_choice_name" normally or "[custom_choice_name] - custom_choice_description" when hovered and would return "choice_1" when enter is pressed
+        
+        Keys can be omitted up to ```{"choice_1":{}}``` in which the description would be assumed to be none and the name would be treated as the choice
+        
+        Any type can be used as the possible option, but only a string is allowed as the name (if the name is left empty it will be changed to a string)
+        
+        If too many choices are present the choices will go into carousel mode in which only the maximum amount will be shown at any given time, change this amount using `TERMINAL_CAROUSEL`
+    :type options: dict
+    :param help: Whether or not the help text should show (change default with `DEFAULT_TERMINAL_CHOICE_HELP`)
+    :type help: bool, optional
 
-            Keys can be omitted up to ```{"choice_1":{}}``` in which the description would be assumed to be none and the name would be treated as the choice
-
-            Any type can be used as the possible option, but only a string is allowed as the name (if the name is left empty it will be changed to a string)
-
-            If too many choices are present the choices will go into carousel mode in which only the maximum amount will be shown at any given time, change this amount using `TERMINAL_CAROUSEL`
-
-        help:
-            Whether or not the help text should show (change default with `DEFAULT_TERMINAL_CHOICE_HELP`)
+    :return: The selected option by the user
+    :rtype: The same type as the given options
     """
 
     # Update help option
@@ -171,13 +170,13 @@ def confirm(title: str = "Are you sure", help: bool | None = None) -> bool:
     """
     Confirmation using the terminal
 
-    Outputs true for yes and false for no
+    :param title: The title string
+    :type title: str, optional
+    :param help: Whether or not the help text should show (change default with `DEFAULT_TERMINAL_CHOICE_HELP`)
+    :type help: bool, optional
 
-    Arguments:
-        title:
-            A title to use
-        help:
-            Whether or not the help text should show (change default with `DEFAULT_TERMINAL_CHOICE_HELP`)
+    :return: True (yes) or False (no)
+    :rtype: bool
     """
 
     print(title)

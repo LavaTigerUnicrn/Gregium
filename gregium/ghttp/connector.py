@@ -13,26 +13,31 @@ ENCODING = "utf-8"
 class HTTPResponse:
     """
     A generic HTTP response
+
+    This comes from the *client* side
+
+    :param data: Raw receive data
+    :type data: bytes
+    :param parent: The server parent in case more data must be gotten
+    :type parent: HTTPChild
     """
 
     data:bytes
+    "The raw data"
     type:str
+    "HTTP type"
     version:str
+    "HTTP Version"
     headers:dict[str,str]
+    "The raw loaded headers"
     redirect:str
+    "The redirect"
     content:bytes = b""
+    "The content data"
     cookie:dict[str,str]|None = None
+    "Loaded cookies, or none if none are found"
 
     def __init__(self,data:bytes,parent:"HTTPChild"):
-        """
-        Initialize response
-        
-        Arguments:
-            data:
-                Raw receive data
-            parent:
-                The server parent in case more data must be gotten
-        """
 
         # Save data
         self.data = data
@@ -107,34 +112,37 @@ class HTTPResponse:
 
 class HTTPReturn:
     """
-    A HTTP Return response from the server
+    A generic HTTP Return
+     
+    This comes from the *server* side
     """
     
     version:str
+    "HTTP Version"
     headers:dict[str,str]
+    "The raw loaded headers"
     code:str
+    "The completion code (such as 200 OK)"
     
-    def __init__(self,content:bytes,code:str="200 OK",content_type:str=f"text/html; charset={ENCODING}",version:str="1.1",connection:Literal["keep-alive","close"]="keep-alive",**kwargs):
+    def __init__(self,content:bytes,code:str="200 OK",content_type:str=f"text/html; charset={ENCODING}",connection:Literal["keep-alive","close"]="keep-alive",**kwargs:str):
         """
         Makes a HTTP return for the server
         
-        Arguments:
-            content:
-                The return data
-            code:
-                The return code
-            content_type:
-                The type of the content to return
-                
-                text/html
-                application/json
-                ...
-            version:
-                The HTML version
-            connection:
-                A header of if to keep the connection open
-            kwargs:
-                Any additional headers (underscores will be replaced with hyphens)
+        :param content: The return data
+        :type content: bytes
+        :param code: The return code (such as 200 OK)
+        :type code: str, optional
+        :param content_type: The type of the content to return
+
+            text/html
+            application/json
+            image/png
+            ...
+        :type content_type: str
+        :param connection: A header if to keep the connection open (generally should be true)
+        :type connection: str,optional
+        :kwargs: Any additional headers (underscores will be replaced with hyphens)
+        :type kwargs: str
         """
         
         # Add header
@@ -154,7 +162,7 @@ class HTTPReturn:
         
         self.code = code
         
-        self.version = version
+        self.version = "1.1" # Always the same
 
     def disable_cache(self) -> None:
         """
@@ -168,14 +176,14 @@ class HTTPReturn:
     @property
     def content(self) -> bytes:
         """
-        Payload
+        The payload
         """
         return self._content
     
     @content.setter
     def content(self,value:bytes) -> None:
         """
-        Payload
+        The payload
         """
         
         self._content = value
@@ -185,11 +193,10 @@ class HTTPReturn:
         """
         Sets a specific header
         
-        Arguments:
-            header_name:
-                The name of the header (such as 'Connection')
-            header_value:
-                The value of the header (such as 'keep-alive')
+        :param header_name: The name of the header (such as 'Connection')
+        :type header_name: str
+        :param header_value: The value of the header (such as 'keep-alive')
+        :type header_value: str
         """
         
         self.headers[header_name] = header_value
@@ -198,9 +205,7 @@ class HTTPReturn:
         """
         Removes a specific header
         
-        Arguments:
-            header_name:
-                The name of the header (such as 'Connection')
+        :param header_name: The name of the header (such as 'Connection')
         """
         
         self.headers.pop(header_name)
@@ -230,7 +235,14 @@ class HTTPReturn:
 
 class HTTPChild:
     """
-    A HTTP Child
+    A HTTP Child that can recv and send connections
+
+    :param conn: The socket connection
+    :type conn: socket.socket
+    :param address: The address connected to
+
+        (IP,port)
+    :type address: tuple[str,int]
     """
 
     close:bool = False
@@ -240,9 +252,6 @@ class HTTPChild:
     _conn:socket.socket
 
     def __init__(self,conn:socket.socket,address:tuple[str,int]):
-        """
-        A child that can recv and post connections
-        """
         
         self._conn = conn
         self.client_address = address
@@ -251,9 +260,8 @@ class HTTPChild:
         """
         Sends over content to the client
         
-        Arguments:
-            content:
-                The content to send
+        :param content: The content to send
+        :type content: bytes
         """
         
         # Send data
@@ -263,9 +271,11 @@ class HTTPChild:
         """
         Receives data from the client
         
-        Arguments:
-            bufsize:
-                The size of the buffer
+        :param bufsize: The size of the buffer
+        :type bufsize: int
+
+        :return: The data
+        :rtype: bytes
         """
         
         # Get data
@@ -320,9 +330,8 @@ class HTTPChild:
         """
         Sends over content to the client
         
-        Arguments:
-            content:
-                The content to send as a HTTPReturn
+        :param data: The data to send as a HTTPReturn
+        :type data: HTTPReturn
         """
         
         # Close if needed
@@ -355,23 +364,20 @@ class HTTPChild:
 
 class HTTPServer:
     """
-    A HTTP Server
+    A socket server
+    
+    :param port: The port to connect to
+    :type port: int
+    :param ip: The IP address (127.0.0.1 is for localhost) 
+    :type ip: str
     """
+
     # Self address and socket
     address:tuple[str,int]
     server:socket.socket
     
         
     def __init__(self,port:int,ip:str="127.0.0.1"):
-        """
-        Initializes a socket server and reserves port
-        
-        Arguments:
-            port:
-                The port to connect to
-            ip:
-                The IP address (127.0.0.1 is for localhost) 
-        """
         
         # Update address
         self.address = (ip,port)
@@ -478,7 +484,7 @@ class Returns:
     @staticmethod
     def error404():
         """
-        Stub for not found errors
+        Stub for file not found errors
         """
         return HTTPReturn(b"",code="404 Not Found",content_type="text/plain")
 
@@ -501,7 +507,7 @@ class Returns:
         """
         Stub for redirecting to a given location
         
-        Arguments:
+        Args:
             url:
                 The url location to redirect to
         """
@@ -538,7 +544,7 @@ class Returns:
         
         Will try to guess the encoding and file type of the given file
         
-        Arguments:
+        Args:
             path:
                 The file location
         """

@@ -10,6 +10,17 @@ def strip_webform(response: "HTTPResponse") -> list[dict]:
     Takes the data from a webform and returns a list of each segment
 
     Additional information (such as 'filename') in headers will be prefixed with a '*'
+
+    :param response: The original response from the client
+    :type response: HTTPResponse
+    
+    :return: The cookies as a list of each cookie
+
+        .. code-block:: python3
+        
+            [{"*name":"cookie_1","content":"cookie_content"},...]
+
+    :rtype: list[dict]
     """
     content_type = response.headers["Content-Type"]
 

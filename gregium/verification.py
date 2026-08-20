@@ -6,13 +6,13 @@ def install_pip(pip_name: str) -> bool:
     """
     Installs or updates a module using pip and reports if an error occurred
 
-    (Can also use specific versions for modules with ==)
-
     Returns True on success and False on failure
 
-    Arguments:
-        pip_name:
-            The name of the module as found on PyPI (the name you would use for `pip install {pip_name}`)
+    :param pip_name: The name of the module as found on PyPI (the name you would use for `pip install {pip_name}`), "name==version"
+    :type pip_name: str
+            
+    :return: If the install command succeeded
+    :rtype: bool
     """
 
     print(f"Installing: {pip_name}\x1b]9;4;3\x07")
@@ -47,18 +47,19 @@ def verify_exists(name: str, pip_name: str) -> None:
 
     Also preloads the given module
 
-    Arguments:
-        name:
-            The name of the module (the name you would use for `import {name}`)
-        pip_name:
-            The name of the module as found on PyPI (the name you would use for `pip install {pip_name}`)
+    If the module doesn't exist, it will prompt stdin to install
 
-    Examples:
-        ```
+    :param name: The name of the module (the name you would use for `import {name}`)
+    :type name: str
+    :param pip_name: The name of the module as found on PyPI (the name you would use for `pip install {pip_name}`), "name==version"
+    :type pip_name: str
+
+    .. code-block:: python3
+
         # Check for Pygame-CE
 
         verify_exists("pygame","pygame-ce")
-        ```
+
     """
 
     try:
@@ -83,13 +84,10 @@ def verify_exists(name: str, pip_name: str) -> None:
 
 def check_all(pip_names: list[str]) -> None:
     """
-    Checks all given modules and allows a user to install them
+    Checks all given modules and allows a user to install them from stdin
 
-    Arguments:
-        pip_name:
-            The name of the module as found on PyPI (the name you would use for `pip install {pip_name}`)
-
-            Also supports version checks
+    :param pip_names: The names of the modules as found on PyPI (the name you would use for `pip install {pip_name}`), "name==version"
+    :type pip_names: list[str]
     """
 
     # Ensure at least 1 name specified
@@ -164,4 +162,4 @@ def check_all(pip_names: list[str]) -> None:
 
         print("\x1b[H\x1b[2J\x1b[3J", end="")
 
-    install_pip("; ".join(x for i,x in zip(choices,pip_names) if i))
+    install_pip(" ".join(x for i,x in zip(choices,pip_names) if i))
