@@ -8,5 +8,5 @@ import logging
 # Ensure all logging within Gregium functions goes through
 logging.getLogger(__name__).setLevel(logging.DEBUG)
 
-VERSION:str = "2.2.3a1"
+VERSION:str = "2.2.3a5"
 "The current version of Gregium"

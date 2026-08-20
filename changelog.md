@@ -182,6 +182,10 @@ Within each they are categorized by which module they pertain to
 
 - Merged into misc under name "format_md"
 
+#### STT
+
+- Made warning for missing PyAudio module instead of installation for Linux machines
+
 #### Vector
 
 - Added method `from_polar`

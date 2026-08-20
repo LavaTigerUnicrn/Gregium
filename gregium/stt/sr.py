@@ -3,13 +3,22 @@ A method of speech-to-text on the microphone using online tools (google stt)
 """
 
 import logging
+import sys
 
 from ..verification import verify_exists
 
 logger = logging.getLogger(__name__)
 
 verify_exists("speech_recognition", "SpeechRecognition")
-verify_exists("pyaudio","PyAudio")
+if sys.platform.startswith("linux"):
+    try:
+        import pyaudio
+    except ModuleNotFoundError:
+        logger.warning(
+            "Missing module PyAudio, this module requires extra installation for Linux machines, see https://pypi.org/project/PyAudio/"
+        )
+else:
+    verify_exists("pyaudio","PyAudio")
 
 import speech_recognition as sr
 
